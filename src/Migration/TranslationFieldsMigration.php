@@ -37,6 +37,12 @@ use Doctrine\DBAL\Connection;
  * Die Tabelle `tl_translation_fields` bleibt unangetastet: Sie kann noch von
  * anderen Erweiterungen benutzt werden, und ein zweiter Anlauf der Migration
  * soll moeglich bleiben.
+ *
+ * **Wichtig fuer die Fehlersuche:** `shouldRun()` und `run()` benutzen
+ * dieselbe Methode {@see self::analyse()}. Das ist keine Kosmetik,
+ * sondern Bedingung: Meldete `shouldRun()` Arbeit, die `run()` dann nicht
+ * erledigen kann, bliebe die Migration ewig als „ausstehend“ stehen und der
+ * Installationsassistent liefe im Kreis.
  */
 class TranslationFieldsMigration extends AbstractMigration
 {
@@ -66,6 +72,16 @@ class TranslationFieldsMigration extends AbstractMigration
 	private $connection;
 
 	/**
+	 * Zwischenspeicher fuer aufgeloeste Verweisnummern.
+	 *
+	 * Ein Verweis kommt haeufig in mehreren Datensaetzen vor; ohne diesen
+	 * Speicher liefe je Datensatz eine eigene Abfrage.
+	 *
+	 * @var array<int, string|null>
+	 */
+	private $arrTranslations = array();
+
+	/**
 	 * @param Connection $connection Wird per Autowiring gesetzt
 	 */
 	public function __construct(Connection $connection)
@@ -84,10 +100,13 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Prueft, ob es ueberhaupt etwas umzuziehen gibt.
+	 * Prueft, ob es etwas umzuziehen gibt, das sich auch wirklich umziehen laesst.
 	 *
-	 * @return bool true, wenn mindestens ein Feld noch eine Verweisnummer
-	 *              enthaelt, zu der es einen Text gibt
+	 * Ein Verweis, zu dem es keinen brauchbaren Text gibt, zaehlt hier
+	 * ausdruecklich **nicht** als Arbeit — sonst bliebe die Migration
+	 * dauerhaft ausstehend.
+	 *
+	 * @return bool true, wenn mindestens ein Feld ersetzt werden kann
 	 */
 	public function shouldRun(): bool
 	{
@@ -100,12 +119,7 @@ class TranslationFieldsMigration extends AbstractMigration
 		{
 			foreach ($arrFields as $strField)
 			{
-				if (!$this->isTextColumn($strTable, $strField))
-				{
-					continue;
-				}
-
-				if (!empty($this->findReferences($strTable, $strField)))
+				if (!empty($this->analyse($strTable, $strField)['updates']))
 				{
 					return true;
 				}
@@ -124,71 +138,107 @@ class TranslationFieldsMigration extends AbstractMigration
 	public function run(): MigrationResult
 	{
 		$arrMessages = array();
+		$intWithoutText = 0;
+		$intChained = 0;
 
 		foreach (self::FIELDS as $strTable => $arrFields)
 		{
 			foreach ($arrFields as $strField)
 			{
-				if (!$this->isTextColumn($strTable, $strField))
+				$arrResult = $this->analyse($strTable, $strField);
+
+				$intWithoutText += $arrResult['withoutText'];
+				$intChained += $arrResult['chained'];
+
+				foreach ($arrResult['updates'] as $arrUpdate)
 				{
-					continue;
+					$this->connection->update(
+						$strTable,
+						array($strField => $arrUpdate['content']),
+						array('id' => $arrUpdate['id'])
+					);
 				}
 
-				$intCount = $this->migrateField($strTable, $strField);
-
-				if ($intCount > 0)
+				if (!empty($arrResult['updates']))
 				{
-					$arrMessages[] = sprintf('%s.%s: %d Datensaetze', $strTable, $strField, $intCount);
+					$intCount = \count($arrResult['updates']);
+					$arrMessages[] = sprintf('%s.%s: %d %s', $strTable, $strField, $intCount, 1 === $intCount ? 'Datensatz' : 'Datensaetze');
 				}
 			}
 		}
 
-		if (empty($arrMessages))
+		$strResult = empty($arrMessages)
+			? 'Es waren keine Verweise auf tl_translation_fields zu ersetzen.'
+			: 'Texte aus tl_translation_fields uebernommen — '.implode(', ', $arrMessages).'.';
+
+		// Uebergangene Verweise werden gemeldet, weil in diesen Feldern
+		// weiterhin eine nackte Nummer steht und jemand von Hand nachsehen muss
+		if ($intWithoutText > 0)
 		{
-			return $this->createResult(true, 'Es waren keine Verweise auf tl_translation_fields zu ersetzen.');
+			$strResult .= 1 === $intWithoutText
+				? ' Zu einem Verweis steht in tl_translation_fields kein Text; dort bleibt die Nummer stehen.'
+				: sprintf(' Zu %d Verweisen steht in tl_translation_fields kein Text; dort bleibt die Nummer stehen.', $intWithoutText);
 		}
 
-		return $this->createResult(true, 'Texte aus tl_translation_fields uebernommen — '.implode(', ', $arrMessages).'.');
+		if ($intChained > 0)
+		{
+			$strResult .= 1 === $intChained
+				? ' Ein Verweis zeigt auf einen Text, der selbst wieder wie eine Verweisnummer aussieht; er bleibt unangetastet.'
+				: sprintf(' %d Verweise zeigen auf einen Text, der selbst wieder wie eine Verweisnummer aussieht; sie bleiben unangetastet.', $intChained);
+		}
+
+		return $this->createResult(true, $strResult);
 	}
 
 	/**
-	 * Ersetzt in einem Feld alle Verweisnummern durch den zugehoerigen Text.
+	 * Ermittelt die Datensaetze, die sich in einem Feld wirklich ersetzen lassen.
+	 *
+	 * Ausgeschlossen werden zwei Faelle:
+	 *
+	 * 1. Zu der Verweisnummer gibt es keinen oder nur einen leeren Text. Ihn
+	 *    durch nichts zu ersetzen waere schlimmer als die Nummer stehen zu
+	 *    lassen — die Nummer ist der letzte Anhaltspunkt, um den Text von Hand
+	 *    wiederzufinden.
+	 * 2. Der gefundene Text besteht selbst nur aus Ziffern **und** liesse sich
+	 *    seinerseits als Verweis aufloesen. Nach dem Ersetzen saehe das Feld
+	 *    wieder wie ein Verweis aus, und die Migration wuerde beim naechsten
+	 *    Lauf erneut zuschlagen.
 	 *
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
 	 *
-	 * @return int Zahl der geaenderten Datensaetze
+	 * @return array{updates: array<int, array{id: mixed, content: string}>, withoutText: int, chained: int}
+	 *         Die zu aendernden Datensaetze sowie die Zahl der uebergangenen
+	 *         Verweise, nach Grund getrennt
 	 */
-	private function migrateField(string $strTable, string $strField): int
+	private function analyse(string $strTable, string $strField): array
 	{
-		$arrRows = $this->findReferences($strTable, $strField);
+		$arrUpdates = array();
+		$intWithoutText = 0;
+		$intChained = 0;
 
-		if (empty($arrRows))
-		{
-			return 0;
-		}
-
-		$intCount = 0;
-
-		foreach ($arrRows as $arrRow)
+		foreach ($this->findReferences($strTable, $strField) as $arrRow)
 		{
 			$strContent = $this->findTranslation((int) $arrRow['value']);
 
 			if (null === $strContent)
 			{
+				++$intWithoutText;
+
 				continue;
 			}
 
-			$this->connection->update(
-				$strTable,
-				array($strField => $strContent),
-				array('id' => $arrRow['id'])
-			);
+			if (preg_match('/^[0-9]+$/', $strContent) && null !== $this->findTranslation((int) $strContent))
+			{
+				++$intChained;
 
-			++$intCount;
+				continue;
+			}
+
+			$arrUpdates[] = array('id' => $arrRow['id'], 'content' => $strContent);
 		}
 
-		return $intCount;
+		return array('updates' => $arrUpdates, 'withoutText' => $intWithoutText, 'chained' => $intChained);
 	}
 
 	/**
@@ -198,6 +248,9 @@ class TranslationFieldsMigration extends AbstractMigration
 	 * `tl_translation_fields` gibt — sonst wuerde eine Beschreibung, die
 	 * zufaellig nur aus Ziffern besteht, faelschlich als Verweis gelten.
 	 *
+	 * Fehlt die Spalte oder ist sie noch eine Ganzzahlspalte, kommt eine leere
+	 * Liste zurueck (siehe {@see self::isTextColumn()}).
+	 *
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
 	 *
@@ -205,6 +258,11 @@ class TranslationFieldsMigration extends AbstractMigration
 	 */
 	private function findReferences(string $strTable, string $strField): array
 	{
+		if (!$this->isTextColumn($strTable, $strField))
+		{
+			return array();
+		}
+
 		$strSql = sprintf(
 			'SELECT t.id AS id, t.%1$s AS value
 			 FROM %2$s t
@@ -221,8 +279,8 @@ class TranslationFieldsMigration extends AbstractMigration
 	/**
 	 * Liest den Text zu einer Verweisnummer.
 	 *
-	 * Bevorzugt wird die deutsche Fassung; gibt es sie nicht, wird die Zeile
-	 * mit der kleinsten Datensatznummer genommen. Ein leerer Text gilt als
+	 * Bevorzugt wird die deutsche Fassung; gibt es sie nicht oder ist sie leer,
+	 * wird die erste Zeile mit Inhalt genommen. Ein leerer Text gilt als
 	 * „nichts gefunden“, damit ein vorhandener Wert nicht durch Leere ersetzt
 	 * wird.
 	 *
@@ -232,8 +290,13 @@ class TranslationFieldsMigration extends AbstractMigration
 	 */
 	private function findTranslation(int $intFid): ?string
 	{
+		if (\array_key_exists($intFid, $this->arrTranslations))
+		{
+			return $this->arrTranslations[$intFid];
+		}
+
 		$strContent = $this->connection->fetchOne(
-			'SELECT content FROM tl_translation_fields WHERE fid = ? AND language = ? LIMIT 1',
+			'SELECT content FROM tl_translation_fields WHERE fid = ? AND language = ? AND content <> \'\' LIMIT 1',
 			array($intFid, self::PREFERRED_LANGUAGE)
 		);
 
@@ -245,12 +308,11 @@ class TranslationFieldsMigration extends AbstractMigration
 			);
 		}
 
-		if (false === $strContent || null === $strContent || '' === $strContent)
-		{
-			return null;
-		}
+		$this->arrTranslations[$intFid] = (false === $strContent || null === $strContent || '' === $strContent)
+			? null
+			: (string) $strContent;
 
-		return (string) $strContent;
+		return $this->arrTranslations[$intFid];
 	}
 
 	/**

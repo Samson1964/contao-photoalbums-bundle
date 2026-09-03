@@ -39,6 +39,18 @@ und auf die heutigen Contao-Schnittstellen umgestellt.
   DCA-Dateien, sondern in eigenen Klassen unter `src/EventListener/DataContainer`.
   Das umgeht die Falle, dass Contao 5 zusammengeführte DCA-Dateien samt
   Rückrufklasse zwischenspeichert.
+* Fix: Die Migration blieb dauerhaft als „ausstehend" stehen und der
+  Installationsassistent lief im Kreis: Er bot die Migration an, meldete
+  „Es waren keine Verweise auf tl_translation_fields zu ersetzen." und bot sie
+  danach erneut an. Ursache war, dass `shouldRun()` einen Verweis schon dann
+  als Arbeit zählte, wenn es die Zeile in `tl_translation_fields` überhaupt
+  gab, während `run()` nur bei **nicht leerem** Text ersetzte. Beide benutzen
+  jetzt dieselbe Auswertung. Zusätzlich bleibt ein Verweis unangetastet, dessen
+  Text selbst wieder wie eine Verweisnummer aussieht — sonst hätte die Migration
+  beim nächsten Lauf erneut zugeschlagen.
+* Change: Die Migration meldet am Ende, zu wie vielen Verweisen kein Text
+  hinterlegt ist und wie viele auf eine weitere Nummer zeigen. In diesen
+  Feldern bleibt die Nummer stehen, und jemand muss von Hand nachsehen.
 * Change: Der `replace`-Eintrag auf `contao-legacy/photoalbums2` ist entfallen.
   Er stammte aus der Urfassung und führte dazu, dass Composer beim Umstieg
   „They all replace contao-legacy/photoalbums2” meldete — also ein Paket aus

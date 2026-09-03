@@ -139,8 +139,19 @@ die Meldung das richtige Paket.
 
 ## Wenn nach dem Umzug noch Zahlen erscheinen
 
-Dann gab es zu der Nummer keine Zeile in `tl_translation_fields` — der Text ist
-dann bereits vor dem Umzug verlorengegangen. Prüfen lässt sich das so:
+Die Migration lässt eine Nummer bewusst stehen, wenn sie sie nicht sinnvoll
+ersetzen kann. Drei Fälle gibt es:
+
+1. **Es gibt gar keine Zeile zu der Nummer.** Dann ist die Zahl vermutlich echt
+   — ein Ereignis „1968" etwa — und wird gar nicht erst als Verweis behandelt.
+2. **Die Zeile gibt es, aber ohne Text.** Der Text ist schon vor dem Umzug
+   verlorengegangen. Ihn durch nichts zu ersetzen wäre schlimmer als die Nummer
+   stehen zu lassen: Die Nummer ist der letzte Anhaltspunkt.
+3. **Der hinterlegte Text besteht selbst nur aus Ziffern und ließe sich wieder
+   als Verweis lesen.** Solche Ketten rührt die Migration nicht an.
+
+Die Fälle 2 und 3 nennt die Migration am Ende ihrer Meldung mit Anzahl. Prüfen
+lässt sich das so:
 
 ```sql
 SELECT id, event, place, photographer
