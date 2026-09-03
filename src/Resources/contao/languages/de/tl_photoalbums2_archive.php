@@ -31,7 +31,7 @@ $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['language'] = array('Feed-Sprache
 $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['modulePage'] = array('Modul URL', 'Bitte geben Sie hier die URL zur Detailseite, welche das Fotoalben-Modul nutzt, an.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['maxItems'] = array('Maximale Anzahl an Alben', 'Hier können Sie die Anzahl der Alben limitieren. Geben Sie 0 ein, um alle zu exportieren.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['feedBase'] = array('Basis-URL', 'Bitte geben Sie die Basis-URL mit Protokoll (z.B. <em>http://</em>) ein.');
-$GLOBALS['TL_LANG']['tl_photoalbums2_archive']['alias'] = array('Feed-Alias', 'Hier können Sie einen eindeutigen Dateinamen (ohne Endung) eingeben. Die XML-Datei wird automatisch im Wurzelverzeichnis Ihrer Contao-Installation erstellt, z.B. als <em>name.xml</em>.');
+$GLOBALS['TL_LANG']['tl_photoalbums2_archive']['alias'] = array('Feed-Alias', 'Hier können Sie einen eindeutigen Dateinamen (ohne Endung) eingeben. Die XML-Datei wird automatisch im Verzeichnis <em>share</em> unterhalb des Webverzeichnisses erstellt, z.B. als <em>share/name.xml</em>.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['description'] = array('Feed-Beschreibung', 'Bitte geben Sie eine kurze Beschreibung des Fotoarchiv-Feeds ein.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_archive']['tstamp'] = array('Änderungsdatum', 'Datum und Uhrzeit der letzten Änderung');
 

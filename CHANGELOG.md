@@ -48,6 +48,17 @@ und auf die heutigen Contao-Schnittstellen umgestellt.
   jetzt dieselbe Auswertung. Zusätzlich bleibt ein Verweis unangetastet, dessen
   Text selbst wieder wie eine Verweisnummer aussieht — sonst hätte die Migration
   beim nächsten Lauf erneut zugeschlagen.
+* Fix: Der Hilfetext zum Feed-Alias nannte in beiden Sprachen noch das
+  Wurzelverzeichnis als Ablageort der XML-Datei. Die Feeds liegen jetzt im
+  Verzeichnis `share` unterhalb des Webverzeichnisses.
+* Fix: Die englische Beschriftung der Album-Einstellung „Erstes Vorschau Foto"
+  (`albumPreviewImageTypes.first_preview_image`) fehlte; in einem englischen
+  Backend erschien dort der rohe Schlüssel. Der tote Schlüssel
+  `previewImageModuleTypes.first_image`, den es nur im Englischen gab, ist
+  entfallen.
+* Add: Die Hilfetexte der beiden Sortier-Assistenten erklären die Bedienung —
+  Ziehen mit der Maus oder Verschieben mit Strg und den Pfeiltasten, und dass
+  die Reihenfolge erst beim Speichern übernommen wird.
 * Fix: Eine Verweisnummer, die im Rich-Text-Editor gelandet und dabei in Markup
   verpackt worden war (`<p>2071</p>`), hat die Migration übersehen — die Zahl
   blieb im Backend und im Frontend stehen. Betrifft die Felder mit Editor,

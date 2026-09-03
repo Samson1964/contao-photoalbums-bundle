@@ -19,7 +19,7 @@ $GLOBALS['TL_LANG']['tl_module']['pa2OverviewPage']              = array('Alben-
 $GLOBALS['TL_LANG']['tl_module']['pa2DetailPage']                = array('Foto-Ansicht Seite', 'Wählen Sie die Foto-Ansicht Seite aus, in der Sie dieses Modul einbinden.');
 $GLOBALS['TL_LANG']['tl_module']['pa2Archives']                  = array('Fotoalben-Archive', 'Bitte wählen Sie ein oder mehrere Fotoalben-Archive.');
 $GLOBALS['TL_LANG']['tl_module']['pa2AlbumSortType']             = array('Alben sortieren', 'Wählen Sie hier die Sortierung der Fotoalben für die Übersichtsseite aus.');
-$GLOBALS['TL_LANG']['tl_module']['pa2AlbumSort']                 = array('Alben sortieren', 'Hier können Sie die Alben individuell sortieren.');
+$GLOBALS['TL_LANG']['tl_module']['pa2AlbumSort']                 = array('Alben sortieren', 'Ziehen Sie die Alben mit der Maus in die gewünschte Reihenfolge. Mit der Tastatur geht es auch: Album anklicken und mit Strg und den Pfeiltasten verschieben. Übernommen wird die Reihenfolge erst beim Speichern des Moduls.');
 
 $GLOBALS['TL_LANG']['tl_module']['pa2AlbumViewTemplate']         = array('Alben-Übersicht Template', 'Wählen Sie hier das Template für die Alben-Übersicht aus.');
 $GLOBALS['TL_LANG']['tl_module']['pa2ImageViewTemplate']         = array('Foto-Ansicht Template', 'Wählen Sie hier das Template für die Foto-Ansicht aus.');

@@ -19,7 +19,7 @@ $GLOBALS['TL_LANG']['tl_module']['pa2OverviewPage']              = array('Album 
 $GLOBALS['TL_LANG']['tl_module']['pa2DetailPage']                = array('Image view page', 'Select the image view page, where you include this module.');
 $GLOBALS['TL_LANG']['tl_module']['pa2Archives']                  = array('Image album archive', 'Please choose one or more image album archives.');
 $GLOBALS['TL_LANG']['tl_module']['pa2AlbumSortType']             = array('Sort albums', 'Here you can select the order of photo albums for the summary page.');
-$GLOBALS['TL_LANG']['tl_module']['pa2AlbumSort']                 = array('Sort albums', 'Here you can sort the albums individually.');
+$GLOBALS['TL_LANG']['tl_module']['pa2AlbumSort']                 = array('Sort albums', 'Drag the albums into the desired order with the mouse. The keyboard works too: click an album and move it with Ctrl and the arrow keys. The order is applied when you save the module.');
 
 $GLOBALS['TL_LANG']['tl_module']['pa2AlbumViewTemplate']         = array('Album overview template', 'Here you can select the template for the album overview.');
 $GLOBALS['TL_LANG']['tl_module']['pa2ImageViewTemplate']         = array('Image view template', 'Here you can select the template for the image view.');
