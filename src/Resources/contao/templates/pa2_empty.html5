@@ -1,0 +1,18 @@
+<?php
+/*
+ * Ersatzausgabe, wenn es nichts zu zeigen gibt.
+ *
+ * @license LGPL-3.0-or-later
+ */
+?>
+<!-- indexer::stop -->
+<section class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+  <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+  <?php endif; ?>
+
+  <p class="empty"><?= $this->empty ?></p>
+
+</section>
+<!-- indexer::continue -->

@@ -1,0 +1,42 @@
+<?php
+/*
+ * Kachel eines Fotos in der Foto-Ansicht.
+ *
+ * Fotos, die auf einer anderen Seite der Blaetterliste stehen, werden mit
+ * $this->show === false uebergeben: Sie erscheinen nur als versteckter Verweis,
+ * damit die Lightbox das ganze Album kennt, laden aber kein Bild nach.
+ *
+ * @license LGPL-3.0-or-later
+ */
+?>
+<?php if ($this->show): ?>
+
+  <?php if ($this->rowStart): ?><div class="imagewrap <?= $this->rowClass ?>"><?php endif; ?>
+
+  <section class="image block<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"<?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+    <div class="imageInside">
+      <?php if ($this->addImage): ?>
+        <figure class="image_container"<?php if ($this->margin): ?> style="<?= $this->margin ?>"<?php endif; ?>>
+          <a href="<?= $this->href ?>" title="<?= $this->title ?>" data-lightbox="pa2_<?= $this->albumID ?>">
+            <img src="<?= $this->src ?>"<?= $this->imgSize ?> alt="<?= $this->alt ?>" loading="lazy">
+          </a>
+        </figure>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <?php if ($this->rowEnd): ?></div><?php endif; ?>
+
+<?php else: ?>
+
+  <?php /* Der Inline-Stil wiederholt bewusst, was das Stylesheet ohnehin
+         setzt: Ein eigenes Rahmen-Template ohne die Klasse mod_photoalbums2
+         wuerde die Regel sonst nicht treffen, und die versteckten Verweise
+         wuerden sichtbar. */ ?>
+  <div class="hide" style="display:none!important;position:absolute!important;top:0!important;left:0!important;width:0!important;height:0!important;overflow:hidden!important">
+    <a href="<?= $this->href ?>" title="<?= $this->title ?>" data-lightbox="pa2_<?= $this->albumID ?>">
+      <img src="<?= $this->src ?>"<?= $this->imgSize ?> alt="<?= $this->alt ?>">
+    </a>
+  </div>
+
+<?php endif; ?>

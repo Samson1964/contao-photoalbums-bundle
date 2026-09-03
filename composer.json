@@ -1,0 +1,52 @@
+{
+    "name": "schachbulle/contao-photoalbums-bundle",
+    "type": "contao-bundle",
+    "description": "Fotoalben fuer Contao 4.13 und Contao 5 - Nachfolger von photoalbums2, ohne Fremdabhaengigkeiten.",
+    "keywords": [
+        "contao",
+        "fotoalbum",
+        "galerie",
+        "bilder"
+    ],
+    "homepage": "https://github.com/Samson1964/contao-photoalbums-bundle",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Frank Binding",
+            "homepage": "https://www.schachbulle.de/"
+        },
+        {
+            "name": "Daniel Kiesel",
+            "homepage": "http://craffft.de",
+            "role": "Autor der Urfassung photoalbums2"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "^4.13 || ^5.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0",
+        "craffft/contao-photoalbums2": "*",
+        "schachbulle/contao-photoalbums2": "*"
+    },
+    "replace": {
+        "contao-legacy/photoalbums2": "*"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0"
+    },
+    "extra": {
+        "contao-manager-plugin": "Schachbulle\\ContaoPhotoalbumsBundle\\ContaoManager\\Plugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Schachbulle\\ContaoPhotoalbumsBundle\\": "src/"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/Samson1964/contao-photoalbums-bundle/issues",
+        "source": "https://github.com/Samson1964/contao-photoalbums-bundle"
+    }
+}

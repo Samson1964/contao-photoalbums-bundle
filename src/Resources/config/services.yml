@@ -1,0 +1,21 @@
+# Dienstdefinitionen der Fotoalben.
+#
+# Registriert werden nur die Klassen, die Contao selbst aufrufen muss:
+# der taegliche Cron-Auftrag fuer die RSS-/Atom-Feeds und die Migration,
+# die die Altdaten aus tl_translation_fields in die Textfelder zurueckholt.
+#
+# Frontend-Module, Inhaltselement und Widgets haengen dagegen in den globalen
+# Feldern FE_MOD, TL_CTE und BE_FFL (siehe Resources/contao/config/config.php);
+# die Rueckrufe der Datenbereiche stehen als Klassennamen in den DCA-Dateien.
+# Beides funktioniert in Contao 4.13 wie in Contao 5 und braucht keinen Dienst.
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Schachbulle\ContaoPhotoalbumsBundle\Feed\:
+        resource: '../../Feed'
+
+    Schachbulle\ContaoPhotoalbumsBundle\Migration\:
+        resource: '../../Migration'

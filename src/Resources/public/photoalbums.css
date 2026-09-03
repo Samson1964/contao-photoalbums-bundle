@@ -1,0 +1,106 @@
+/*
+ * Grundgestaltung der Fotoalben im Frontend.
+ *
+ * Das Stylesheet macht nur so viel, wie noetig ist, damit die Kacheln in
+ * Zeilen stehen und die versteckten Lightbox-Verweise unsichtbar bleiben.
+ * Alles Weitere gehoert ins Theme. Ueber das Feld "Fotoalben Stylesheet
+ * ignorieren" im Seitenlayout laesst sich die Datei abschalten.
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+.mod_photoalbums2.pa2_album_fluid ul,
+.mod_photoalbums2list.pa2_album_fluid ul,
+.mod_photoalbums2view.pa2_album_fluid ul,
+.ce_photoalbums2.pa2_album_fluid ul,
+.mod_photoalbums2.pa2_album_fluid ul > li,
+.mod_photoalbums2list.pa2_album_fluid ul > li,
+.mod_photoalbums2view.pa2_album_fluid ul > li,
+.ce_photoalbums2.pa2_album_fluid ul > li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mod_photoalbums2 .albumswrap,
+.mod_photoalbums2 .imagewrap,
+.mod_photoalbums2list .albumswrap,
+.mod_photoalbums2list .imagewrap,
+.mod_photoalbums2view .albumswrap,
+.mod_photoalbums2view .imagewrap,
+.ce_photoalbums2 .albumswrap,
+.ce_photoalbums2 .imagewrap {
+	clear: both;
+	display: block;
+	overflow: hidden;
+}
+
+.mod_photoalbums2 .albumswrap .album,
+.mod_photoalbums2 .albumswrap .image,
+.mod_photoalbums2 .imagewrap .album,
+.mod_photoalbums2 .imagewrap .image,
+.mod_photoalbums2list .albumswrap .album,
+.mod_photoalbums2list .albumswrap .image,
+.mod_photoalbums2list .imagewrap .album,
+.mod_photoalbums2list .imagewrap .image,
+.mod_photoalbums2view .albumswrap .album,
+.mod_photoalbums2view .albumswrap .image,
+.mod_photoalbums2view .imagewrap .album,
+.mod_photoalbums2view .imagewrap .image,
+.ce_photoalbums2 .albumswrap .album,
+.ce_photoalbums2 .albumswrap .image,
+.ce_photoalbums2 .imagewrap .album,
+.ce_photoalbums2 .imagewrap .image {
+	box-sizing: border-box;
+	display: block;
+	float: left;
+	overflow: hidden;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.mod_photoalbums2 .albumInside,
+.mod_photoalbums2 .imageInside,
+.mod_photoalbums2list .albumInside,
+.mod_photoalbums2list .imageInside,
+.mod_photoalbums2view .albumInside,
+.mod_photoalbums2view .imageInside,
+.ce_photoalbums2 .albumInside,
+.ce_photoalbums2 .imageInside {
+	overflow: hidden;
+}
+
+.mod_photoalbums2 .album.first,
+.mod_photoalbums2 .image.first,
+.mod_photoalbums2list .album.first,
+.mod_photoalbums2list .image.first,
+.mod_photoalbums2view .album.first,
+.mod_photoalbums2view .image.first,
+.ce_photoalbums2 .album.first,
+.ce_photoalbums2 .image.first {
+	padding-left: 0;
+}
+
+.mod_photoalbums2 .album.last,
+.mod_photoalbums2 .image.last,
+.mod_photoalbums2list .album.last,
+.mod_photoalbums2list .image.last,
+.mod_photoalbums2view .album.last,
+.mod_photoalbums2view .image.last,
+.ce_photoalbums2 .album.last,
+.ce_photoalbums2 .image.last {
+	padding-right: 0;
+}
+
+.mod_photoalbums2 .hide,
+.mod_photoalbums2list .hide,
+.mod_photoalbums2view .hide,
+.ce_photoalbums2 .hide {
+	display: none !important;
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 0 !important;
+	height: 0 !important;
+	overflow: hidden !important;
+}

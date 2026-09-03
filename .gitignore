@@ -1,0 +1,10 @@
+# Composer
+/composer.lock
+/vendor/
+/.DAV
+
+# PhpUnit
+/phpunit.xml
+
+# Private Arbeitsnotiz, gehoert nicht ins Paket
+/TODO.md

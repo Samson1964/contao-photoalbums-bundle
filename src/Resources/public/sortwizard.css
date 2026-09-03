@@ -1,0 +1,71 @@
+/*
+ * Gestaltung der Sortier-Assistenten im Backend.
+ *
+ * Deckt beide Assistenten ab: die Daumennagelreihe der Fotos
+ * (data-pa2-sortwizard="images") und die Auswahlliste der Alben
+ * (data-pa2-sortwizard="options").
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+.tl_imagesortwizard,
+.tl_sortwizard {
+	margin: 0 0 9px;
+	overflow: hidden;
+}
+
+.tl_imagesortwizard ul,
+.tl_sortwizard .sortable {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tl_imagesortwizard .pa2-sortitem {
+	float: left;
+	margin: 0;
+	padding: 0;
+	line-height: 0;
+	cursor: move;
+}
+
+.tl_imagesortwizard .pa2-sortitem img {
+	margin: 2px;
+	border: 1px solid #808080;
+}
+
+.tl_imagesortwizard .pa2-sortitem-name {
+	display: inline-block;
+	margin: 2px;
+	padding: 2px 4px;
+	border: 1px solid #808080;
+	line-height: 1.4;
+	font-size: 11px;
+}
+
+.tl_sortwizard .pa2-sortitem {
+	display: block;
+	overflow: hidden;
+	padding: 2px 4px;
+	cursor: move;
+}
+
+.tl_sortwizard .pa2-sortitem::before,
+.tl_imagesortwizard .pa2-sortitem::before {
+	content: "\2630";
+	margin-right: 6px;
+	opacity: .5;
+}
+
+.tl_imagesortwizard .pa2-sortitem::before {
+	display: none;
+}
+
+.pa2-sortitem:focus {
+	outline: 2px solid #f47c00;
+	outline-offset: -2px;
+}
+
+.pa2-sortitem.pa2-dragging {
+	opacity: .4;
+}

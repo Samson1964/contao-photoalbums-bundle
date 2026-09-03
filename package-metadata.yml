@@ -1,0 +1,34 @@
+# Quelle fuer die Metadaten im Contao Manager (contao/package-metadata).
+# Aenderungen hier werden von Claude in den Fork uebertragen.
+# Der englische Block wird beim Abgleich ergaenzt, falls er fehlt.
+
+de:
+    title: Fotoalben
+    description: >
+        Verwaltet Fotoalben in Archiven und gibt sie im Frontend als
+        Alben-Uebersicht und Foto-Ansicht aus — wahlweise auf einer Seite, auf
+        getrennten Seiten oder ganz ohne Detailseite ueber eine Lightbox. Das
+        Bundle ist der Nachfolger von photoalbums2 und bringt den Sortier-
+        Assistenten fuer Fotos und Alben mit; Fremdabhaengigkeiten braucht es
+        keine mehr. Aufnahmedaten vor 1970 lassen sich eintragen und werden
+        richtig ausgegeben.
+    keywords:
+        - Fotoalbum
+        - Galerie
+        - Bilder
+        - Lightbox
+
+en:
+    title: Photo albums
+    description: >
+        Manages photo albums in archives and outputs them in the front end as
+        an album overview and a photo view — on a single page, on separate
+        pages or without a detail page using a lightbox. This bundle succeeds
+        photoalbums2, ships its own sorting wizards for photos and albums and
+        no longer depends on any third-party extension. Dates before 1970 can
+        be entered and are rendered correctly.
+    keywords:
+        - photo album
+        - gallery
+        - images
+        - lightbox
