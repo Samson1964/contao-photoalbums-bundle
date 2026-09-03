@@ -39,8 +39,13 @@ In diesen Feldern stand nicht der Text, sondern eine Nummer, die auf eine Zeile
 in `tl_translation_fields` verwies. Genau daher rührt der Fehler, dass im
 Backend und im Frontend eine nackte Zahl statt des Textes erscheint.
 
-Die mitgelieferte Migration behandelt jede reine Zahl in diesen Feldern nach
-drei Regeln:
+Erkannt wird die Nummer in zwei Formen: als nackte Zahl (`2071`) und in Markup
+verpackt (`<p>2071</p>`). Die zweite Form entsteht bei den Feldern mit
+Rich-Text-Editor — `description` und die beiden `pa2Teaser` — sobald ein
+Datensatz einmal im Backend geöffnet und gespeichert wurde: Der Editor packt
+die rohe Nummer in einen Absatz.
+
+Die mitgelieferte Migration behandelt jede so erkannte Nummer nach drei Regeln:
 
 1. **Zu der Nummer gibt es eine Zeile mit Text** — der Text tritt an die Stelle
    der Nummer. Bevorzugt wird die deutsche Fassung; gibt es sie nicht, wird die
@@ -166,11 +171,13 @@ Nach den Regeln oben bleibt eine Zahl nur noch in zwei Fällen stehen:
 Prüfen lässt sich der Bestand so:
 
 ```sql
-SELECT id, event, place, photographer
+SELECT id, title, event, place, photographer, description
 FROM tl_photoalbums2_album
 WHERE event REGEXP '^[0-9]+$'
    OR place REGEXP '^[0-9]+$'
-   OR photographer REGEXP '^[0-9]+$';
+   OR photographer REGEXP '^[0-9]+$'
+   OR description REGEXP '^[0-9]+$'
+   OR description REGEXP '^[[:space:]]*<[^>]+>[[:space:]]*[0-9]+[[:space:]]*<';
 ```
 
 Liefert die Abfrage Zeilen, lässt sich zu jeder Nummer nachsehen, ob es sie in

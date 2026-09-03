@@ -75,6 +75,18 @@ class TranslationFieldsMigration extends AbstractMigration
 	private const PREFERRED_LANGUAGE = 'de';
 
 	/**
+	 * Hoechstlaenge eines Feldwertes, der noch als Verweis in Frage kommt.
+	 *
+	 * Eine nackte Nummer ist vier bis fuenf Zeichen lang, eine in Markup
+	 * verpackte („<p>2071</p>") etwa elf. Der grosszuegige Wert laesst auch
+	 * geschachteltes Markup durch, haelt aber echte Fliesstexte davon ab,
+	 * ueberhaupt erst geprueft zu werden.
+	 *
+	 * @var int
+	 */
+	private const MAX_REFERENCE_LENGTH = 100;
+
+	/**
 	 * Die Datenbankverbindung.
 	 *
 	 * @var Connection
@@ -90,6 +102,13 @@ class TranslationFieldsMigration extends AbstractMigration
 	 * @var array<int, string|null>
 	 */
 	private $arrTranslations = array();
+
+	/**
+	 * Zwischenspeicher fuer die Frage, ob es eine Zeile zu einer fid gibt.
+	 *
+	 * @var array<int, bool>
+	 */
+	private $arrExisting = array();
 
 	/**
 	 * @param Connection $connection Wird per Autowiring gesetzt
@@ -240,7 +259,7 @@ class TranslationFieldsMigration extends AbstractMigration
 
 		foreach ($this->findReferences($strTable, $strField) as $arrRow)
 		{
-			$strContent = $this->findTranslation((int) $arrRow['value']);
+			$strContent = $this->findTranslation($arrRow['fid']);
 
 			// Die Zeile gibt es, sie ist aber leer: Dann war das Feld auch unter
 			// photoalbums2 leer, und die Nummer ist nichts als ein Ueberbleibsel
@@ -270,6 +289,12 @@ class TranslationFieldsMigration extends AbstractMigration
 	/**
 	 * Sucht in einem Feld alle Werte, die wie eine Verweisnummer aussehen.
 	 *
+	 * Erkannt wird die nackte Nummer **und** eine in Markup verpackte, etwa
+	 * `<p>2071</p>`. Letzteres entsteht bei den Feldern mit Rich-Text-Editor:
+	 * Wer ein Album im Backend oeffnet und speichert, bekommt die rohe Nummer
+	 * vom Editor in einen Absatz gepackt. Ohne diese zweite Form bliebe genau
+	 * dort die Zahl im Frontend stehen.
+	 *
 	 * Geprueft wird zusaetzlich, ob es zu der Nummer ueberhaupt eine Zeile in
 	 * `tl_translation_fields` gibt — sonst wuerde eine Beschreibung, die
 	 * zufaellig nur aus Ziffern besteht, faelschlich als Verweis gelten.
@@ -280,7 +305,8 @@ class TranslationFieldsMigration extends AbstractMigration
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
 	 *
-	 * @return array<int, array<string, mixed>> Datensatznummer und Feldwert
+	 * @return array<int, array{id: mixed, fid: int}> Datensatznummer und die
+	 *                                                darin gefundene Verweisnummer
 	 */
 	private function findReferences(string $strTable, string $strField): array
 	{
@@ -289,17 +315,97 @@ class TranslationFieldsMigration extends AbstractMigration
 			return array();
 		}
 
+		// Vorauswahl in der Datenbank: nicht leer, nicht "0", kurz genug fuer
+		// eine verpackte Nummer und mit mindestens einer Ziffer. Die Laenge
+		// haelt echte Fliesstexte von vornherein draussen; entschieden wird
+		// danach in PHP, weil sich Markup dort verlaesslicher abstreifen laesst
+		// als mit einem SQL-Muster.
 		$strSql = sprintf(
 			'SELECT t.id AS id, t.%1$s AS value
 			 FROM %2$s t
-			 WHERE t.%1$s REGEXP \'^[0-9]+$\'
+			 WHERE t.%1$s IS NOT NULL
+			   AND t.%1$s <> \'\'
 			   AND t.%1$s <> \'0\'
-			   AND EXISTS (SELECT 1 FROM tl_translation_fields f WHERE f.fid = t.%1$s)',
+			   AND CHAR_LENGTH(t.%1$s) <= %3$d
+			   AND t.%1$s REGEXP \'[0-9]\'',
 			$this->quoteIdentifier($strField),
-			$this->quoteIdentifier($strTable)
+			$this->quoteIdentifier($strTable),
+			self::MAX_REFERENCE_LENGTH
 		);
 
-		return $this->connection->fetchAllAssociative($strSql);
+		$arrReferences = array();
+
+		foreach ($this->connection->fetchAllAssociative($strSql) as $arrRow)
+		{
+			$intFid = $this->extractReference((string) $arrRow['value']);
+
+			if (null === $intFid || !$this->referenceExists($intFid))
+			{
+				continue;
+			}
+
+			$arrReferences[] = array('id' => $arrRow['id'], 'fid' => $intFid);
+		}
+
+		return $arrReferences;
+	}
+
+	/**
+	 * Schaelt aus einem Feldwert die Verweisnummer heraus.
+	 *
+	 * Erlaubt ist ausschliesslich Markup und Leerraum um die Ziffern herum.
+	 * Sobald noch irgendein anderes Zeichen uebrig bleibt — ein Buchstabe, ein
+	 * Punkt, ein zweites Wort —, ist es keine Verweisnummer, sondern ein Text,
+	 * der zufaellig Ziffern enthaelt.
+	 *
+	 * Eine Grenze bleibt: Ein Text aus **zwei** Absaetzen, die je nur Ziffern
+	 * enthalten (`<p>20</p><p>71</p>`), ergibt beim Abstreifen des Markups
+	 * ebenfalls eine Zahl. Ein solcher Wert ist nicht sinnvoll konstruierbar,
+	 * und selbst dann muesste die entstehende Nummer zufaellig eine Zeile in
+	 * `tl_translation_fields` haben, damit ueberhaupt etwas geschieht.
+	 *
+	 * @param string $strValue Der rohe Feldwert
+	 *
+	 * @return int|null Die Verweisnummer oder null, wenn es keine ist
+	 */
+	private function extractReference(string $strValue): ?int
+	{
+		$strBare = strip_tags($strValue);
+		$strBare = html_entity_decode($strBare, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+		// Das geschuetzte Leerzeichen aus dem Editor ist kein normaler Leerraum
+		$strBare = str_replace("\xC2\xA0", ' ', $strBare);
+		$strBare = trim($strBare);
+
+		if ('' === $strBare || '0' === $strBare || !preg_match('/^[0-9]+$/', $strBare))
+		{
+			return null;
+		}
+
+		return (int) $strBare;
+	}
+
+	/**
+	 * Prueft, ob es zu einer Nummer ueberhaupt eine Uebersetzungszeile gibt.
+	 *
+	 * Das unterscheidet einen echten Verweis von einer Zahl, die einfach als
+	 * Wert im Feld steht — ein Ereignis „1968" etwa.
+	 *
+	 * @param int $intFid Die Verweisnummer
+	 *
+	 * @return bool true, wenn mindestens eine Zeile mit dieser fid existiert
+	 */
+	private function referenceExists(int $intFid): bool
+	{
+		if (!isset($this->arrExisting[$intFid]))
+		{
+			$this->arrExisting[$intFid] = (bool) $this->connection->fetchOne(
+				'SELECT 1 FROM tl_translation_fields WHERE fid = ? LIMIT 1',
+				array($intFid)
+			);
+		}
+
+		return $this->arrExisting[$intFid];
 	}
 
 	/**

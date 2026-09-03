@@ -359,7 +359,53 @@ pruefe('Zeitfilter: 1968 faellt heraus', $objFilter->doFilter($intStart, $intEnd
 $objOhneFilter = new \Schachbulle\ContaoPhotoalbumsBundle\Helper\TimeFilter('', '');
 pruefe('Ohne Filter faellt nichts heraus', !$objOhneFilter->doFilter($intStart, $intEnd));
 
-echo "\n8. Dienstdefinitionen\n";
+echo "\n8. Erkennung der Verweisnummern in der Migration\n";
+
+/*
+ * extractReference() entscheidet, ob ein Feldwert ein Verweis auf
+ * tl_translation_fields ist. Zu grosszuegig hiesse: echte Texte werden
+ * geleert. Zu streng hiesse: eine Nummer bleibt im Frontend stehen — genau
+ * das war bei einer im Editor gespeicherten Beschreibung der Fall
+ * (`<p>2071</p>`). Die Faelle sind deshalb hier festgeschrieben.
+ */
+$objMigrationRefl = new \ReflectionClass(\Schachbulle\ContaoPhotoalbumsBundle\Migration\TranslationFieldsMigration::class);
+$objMigration = $objMigrationRefl->newInstanceWithoutConstructor();
+$objExtract = $objMigrationRefl->getMethod('extractReference');
+$objExtract->setAccessible(true);
+
+$arrCases = array(
+	// Wert                             erwartete Nummer (null = kein Verweis)
+	array('2071', 2071),
+	array('<p>2071</p>', 2071),
+	array("  <p>  2071  </p>\n", 2071),
+	array('<p>&nbsp;2071</p>', 2071),
+	array('<div><p>2071</p></div>', 2071),
+	array('<p><strong>2071</strong></p>', 2071),
+	array('', null),
+	array('0', null),
+	array('<p>0</p>', null),
+	array('1968er Jahrgang', null),
+	array('<p>Siehe 2071 Fotos</p>', null),
+	array('2071 und 2072', null),
+	array('20.71', null),
+	array('Berlin, Hauptbahnhof', null),
+	array('<p>Turnierseite: <a href="{{link_url::466}}">Maenner</a></p>', null),
+	array('Frank Hoppe', null),
+);
+
+foreach ($arrCases as $arrCase)
+{
+	$varResult = $objExtract->invoke($objMigration, $arrCase[0]);
+	$strLabel = '' === $arrCase[0] ? '(leer)' : str_replace("\n", '\n', $arrCase[0]);
+
+	pruefe(
+		sprintf('%-52s -> %s', $strLabel, null === $arrCase[1] ? 'kein Verweis' : $arrCase[1]),
+		$varResult === $arrCase[1],
+		null === $varResult ? 'kein Verweis' : (string) $varResult
+	);
+}
+
+echo "\n9. Dienstdefinitionen\n";
 
 try
 {

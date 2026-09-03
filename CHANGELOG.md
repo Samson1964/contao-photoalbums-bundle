@@ -48,6 +48,15 @@ und auf die heutigen Contao-Schnittstellen umgestellt.
   jetzt dieselbe Auswertung. Zusätzlich bleibt ein Verweis unangetastet, dessen
   Text selbst wieder wie eine Verweisnummer aussieht — sonst hätte die Migration
   beim nächsten Lauf erneut zugeschlagen.
+* Fix: Eine Verweisnummer, die im Rich-Text-Editor gelandet und dabei in Markup
+  verpackt worden war (`<p>2071</p>`), hat die Migration übersehen — die Zahl
+  blieb im Backend und im Frontend stehen. Betrifft die Felder mit Editor,
+  also `description` sowie `tl_content.pa2Teaser` und `tl_module.pa2Teaser`,
+  und dort jeden Datensatz, der nach dem Umstieg einmal geöffnet und
+  gespeichert wurde. Erkannt wird jetzt beides: die nackte Zahl und die in
+  Markup verpackte. Umgebender Text schützt weiterhin davor, dass ein echter
+  Inhalt angetastet wird; die Fälle sind in `tools/pruefstand.php`
+  festgeschrieben.
 * Change: Zeigt ein Verweis auf eine Zeile in `tl_translation_fields`, die es
   zwar gibt, die aber **leeren** Text enthält, wird die Nummer jetzt aus dem
   Feld entfernt. Das Feld war unter photoalbums2 auch schon leer; die Nummer
