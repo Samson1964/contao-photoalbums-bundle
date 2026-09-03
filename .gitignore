@@ -8,3 +8,9 @@
 
 # Private Arbeitsnotiz, gehoert nicht ins Paket
 /TODO.md
+
+# Datenbankabzuege zur Fehlersuche. Das Repository ist oeffentlich; ein Dump
+# aus einer echten Installation darf hier unter keinen Umstaenden hineinrutschen.
+*.sql
+*.sql.gz
+*.sql.zip

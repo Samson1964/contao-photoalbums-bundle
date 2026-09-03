@@ -39,10 +39,19 @@ In diesen Feldern stand nicht der Text, sondern eine Nummer, die auf eine Zeile
 in `tl_translation_fields` verwies. Genau daher rührt der Fehler, dass im
 Backend und im Frontend eine nackte Zahl statt des Textes erscheint.
 
-Die mitgelieferte Migration ersetzt jede solche Nummer durch den zugehörigen
-Text. Bevorzugt wird die deutsche Fassung; gibt es sie nicht, wird die erste
-vorhandene genommen. Enthält ein Feld einen Text statt einer Nummer, bleibt er
-unangetastet.
+Die mitgelieferte Migration behandelt jede reine Zahl in diesen Feldern nach
+drei Regeln:
+
+1. **Zu der Nummer gibt es eine Zeile mit Text** — der Text tritt an die Stelle
+   der Nummer. Bevorzugt wird die deutsche Fassung; gibt es sie nicht, wird die
+   erste vorhandene genommen.
+2. **Die Zeile gibt es, sie ist aber leer** — dann war das Feld auch unter
+   photoalbums2 leer, und die Nummer ist nichts als ein Überbleibsel des
+   Übersetzungsverfahrens. Sie kommt weg, das Feld bleibt leer.
+3. **Zu der Nummer gibt es gar keine Zeile** — dann ist die Zahl kein Verweis,
+   sondern ein echter Wert (ein Ereignis „1968" etwa). Sie bleibt unangetastet.
+
+Enthält ein Feld einen Text statt einer Nummer, bleibt er ohnehin unberührt.
 
 Die Tabelle `tl_translation_fields` wird **nicht** verändert und **nicht**
 gelöscht. Wenn keine andere Erweiterung mehr darauf zugreift, kann sie nach dem
@@ -139,19 +148,15 @@ die Meldung das richtige Paket.
 
 ## Wenn nach dem Umzug noch Zahlen erscheinen
 
-Die Migration lässt eine Nummer bewusst stehen, wenn sie sie nicht sinnvoll
-ersetzen kann. Drei Fälle gibt es:
+Nach den Regeln oben bleibt eine Zahl nur noch in zwei Fällen stehen:
 
 1. **Es gibt gar keine Zeile zu der Nummer.** Dann ist die Zahl vermutlich echt
    — ein Ereignis „1968" etwa — und wird gar nicht erst als Verweis behandelt.
-2. **Die Zeile gibt es, aber ohne Text.** Der Text ist schon vor dem Umzug
-   verlorengegangen. Ihn durch nichts zu ersetzen wäre schlimmer als die Nummer
-   stehen zu lassen: Die Nummer ist der letzte Anhaltspunkt.
-3. **Der hinterlegte Text besteht selbst nur aus Ziffern und ließe sich wieder
-   als Verweis lesen.** Solche Ketten rührt die Migration nicht an.
+2. **Der hinterlegte Text besteht selbst nur aus Ziffern und ließe sich wieder
+   als Verweis lesen.** Solche Ketten rührt die Migration nicht an; sie nennt
+   ihre Anzahl am Ende der Meldung.
 
-Die Fälle 2 und 3 nennt die Migration am Ende ihrer Meldung mit Anzahl. Prüfen
-lässt sich das so:
+Prüfen lässt sich der Bestand so:
 
 ```sql
 SELECT id, event, place, photographer
@@ -168,7 +173,10 @@ der Übersetzungstabelle noch gibt:
 SELECT * FROM tl_translation_fields WHERE fid = <Nummer>;
 ```
 
-Kommt dort nichts zurück, muss der Text von Hand nachgetragen werden.
+Kommt dort nichts zurück, ist die Zahl kein Verweis, sondern ein echter Wert —
+sie gehört genau so ins Feld. Kommt eine Zeile zurück, deren Inhalt selbst nur
+aus Ziffern besteht, liegt eine Kette vor; dann hilft nur, den Text von Hand
+nachzutragen.
 
 ## Daten vor 1970
 

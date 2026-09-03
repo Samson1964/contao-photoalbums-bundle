@@ -48,9 +48,18 @@ und auf die heutigen Contao-Schnittstellen umgestellt.
   jetzt dieselbe Auswertung. Zusätzlich bleibt ein Verweis unangetastet, dessen
   Text selbst wieder wie eine Verweisnummer aussieht — sonst hätte die Migration
   beim nächsten Lauf erneut zugeschlagen.
-* Change: Die Migration meldet am Ende, zu wie vielen Verweisen kein Text
-  hinterlegt ist und wie viele auf eine weitere Nummer zeigen. In diesen
-  Feldern bleibt die Nummer stehen, und jemand muss von Hand nachsehen.
+* Change: Zeigt ein Verweis auf eine Zeile in `tl_translation_fields`, die es
+  zwar gibt, die aber **leeren** Text enthält, wird die Nummer jetzt aus dem
+  Feld entfernt. Das Feld war unter photoalbums2 auch schon leer; die Nummer
+  war nur ein Überbleibsel des Übersetzungsverfahrens. Bisher blieb sie stehen
+  und erschien im Backend und im Frontend als nackte Zahl. Eine Zahl **ohne**
+  Zeile in `tl_translation_fields` bleibt weiterhin unangetastet — sie ist dann
+  ein echter Wert und kein Verweis. Geprüft an einem Abzug einer echten
+  Installation: 913 leere Verweise entfernt, danach keine Zahl mehr in
+  `event`, `place`, `photographer` und `description`.
+* Change: Die Migration meldet am Ende, wie viele Texte übernommen und wie
+  viele leere Verweise entfernt wurden, sowie wie viele Verweise auf eine
+  weitere Nummer zeigen und deshalb unangetastet bleiben.
 * Change: Der `replace`-Eintrag auf `contao-legacy/photoalbums2` ist entfallen.
   Er stammte aus der Urfassung und führte dazu, dass Composer beim Umstieg
   „They all replace contao-legacy/photoalbums2” meldete — also ein Paket aus

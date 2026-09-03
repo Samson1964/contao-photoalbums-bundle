@@ -25,8 +25,18 @@ use Doctrine\DBAL\Connection;
  *
  * Dieses Bundle kennt keine Mehrsprachigkeit mehr. Ohne Umzug wuerde im
  * Backend und im Frontend die nackte Nummer erscheinen — genau das Bild, das
- * betroffene Installationen zeigen. Die Migration ersetzt deshalb jede solche
- * Nummer durch den zugehoerigen Text.
+ * betroffene Installationen zeigen.
+ *
+ * Steht in einem Feld eine reine Zahl, wird sie deshalb so behandelt:
+ *
+ * 1. **Zu der Nummer gibt es eine Zeile mit Text** — der Text tritt an die
+ *    Stelle der Nummer.
+ * 2. **Die Zeile gibt es, sie ist aber leer** — dann war das Feld auch unter
+ *    photoalbums2 leer und die Nummer ist nichts als ein Ueberbleibsel des
+ *    Uebersetzungsverfahrens. Sie kommt weg, das Feld bleibt leer.
+ * 3. **Zu der Nummer gibt es gar keine Zeile** — dann ist die Zahl kein
+ *    Verweis, sondern ein echter Wert (ein Ereignis „1968" etwa). Sie bleibt
+ *    unangetastet.
  *
  * Betroffen sind:
  *
@@ -138,7 +148,8 @@ class TranslationFieldsMigration extends AbstractMigration
 	public function run(): MigrationResult
 	{
 		$arrMessages = array();
-		$intWithoutText = 0;
+		$intReplaced = 0;
+		$intCleared = 0;
 		$intChained = 0;
 
 		foreach (self::FIELDS as $strTable => $arrFields)
@@ -147,7 +158,8 @@ class TranslationFieldsMigration extends AbstractMigration
 			{
 				$arrResult = $this->analyse($strTable, $strField);
 
-				$intWithoutText += $arrResult['withoutText'];
+				$intReplaced += $arrResult['replaced'];
+				$intCleared += $arrResult['cleared'];
 				$intChained += $arrResult['chained'];
 
 				foreach ($arrResult['updates'] as $arrUpdate)
@@ -161,25 +173,33 @@ class TranslationFieldsMigration extends AbstractMigration
 
 				if (!empty($arrResult['updates']))
 				{
-					$intCount = \count($arrResult['updates']);
-					$arrMessages[] = sprintf('%s.%s: %d %s', $strTable, $strField, $intCount, 1 === $intCount ? 'Datensatz' : 'Datensaetze');
+					$arrMessages[] = sprintf(
+						'%s.%s: %d uebernommen, %d geleert',
+						$strTable,
+						$strField,
+						$arrResult['replaced'],
+						$arrResult['cleared']
+					);
 				}
 			}
 		}
 
-		$strResult = empty($arrMessages)
-			? 'Es waren keine Verweise auf tl_translation_fields zu ersetzen.'
-			: 'Texte aus tl_translation_fields uebernommen — '.implode(', ', $arrMessages).'.';
+		if (empty($arrMessages))
+		{
+			$strResult = 'Es waren keine Verweise auf tl_translation_fields zu bearbeiten.';
+		}
+		else
+		{
+			$strResult = sprintf(
+				'%d Texte aus tl_translation_fields uebernommen, %d leere Verweise entfernt — %s.',
+				$intReplaced,
+				$intCleared,
+				implode('; ', $arrMessages)
+			);
+		}
 
 		// Uebergangene Verweise werden gemeldet, weil in diesen Feldern
 		// weiterhin eine nackte Nummer steht und jemand von Hand nachsehen muss
-		if ($intWithoutText > 0)
-		{
-			$strResult .= 1 === $intWithoutText
-				? ' Zu einem Verweis steht in tl_translation_fields kein Text; dort bleibt die Nummer stehen.'
-				: sprintf(' Zu %d Verweisen steht in tl_translation_fields kein Text; dort bleibt die Nummer stehen.', $intWithoutText);
-		}
-
 		if ($intChained > 0)
 		{
 			$strResult .= 1 === $intChained
@@ -207,23 +227,28 @@ class TranslationFieldsMigration extends AbstractMigration
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
 	 *
-	 * @return array{updates: array<int, array{id: mixed, content: string}>, withoutText: int, chained: int}
-	 *         Die zu aendernden Datensaetze sowie die Zahl der uebergangenen
-	 *         Verweise, nach Grund getrennt
+	 * @return array{updates: array<int, array{id: mixed, content: string}>, replaced: int, cleared: int, chained: int}
+	 *         Die zu aendernden Datensaetze sowie die Zahl der uebernommenen,
+	 *         der geleerten und der uebergangenen Verweise
 	 */
 	private function analyse(string $strTable, string $strField): array
 	{
 		$arrUpdates = array();
-		$intWithoutText = 0;
+		$intReplaced = 0;
+		$intCleared = 0;
 		$intChained = 0;
 
 		foreach ($this->findReferences($strTable, $strField) as $arrRow)
 		{
 			$strContent = $this->findTranslation((int) $arrRow['value']);
 
+			// Die Zeile gibt es, sie ist aber leer: Dann war das Feld auch unter
+			// photoalbums2 leer, und die Nummer ist nichts als ein Ueberbleibsel
+			// des Uebersetzungsverfahrens. Sie kommt weg.
 			if (null === $strContent)
 			{
-				++$intWithoutText;
+				$arrUpdates[] = array('id' => $arrRow['id'], 'content' => '');
+				++$intCleared;
 
 				continue;
 			}
@@ -236,9 +261,10 @@ class TranslationFieldsMigration extends AbstractMigration
 			}
 
 			$arrUpdates[] = array('id' => $arrRow['id'], 'content' => $strContent);
+			++$intReplaced;
 		}
 
-		return array('updates' => $arrUpdates, 'withoutText' => $intWithoutText, 'chained' => $intChained);
+		return array('updates' => $arrUpdates, 'replaced' => $intReplaced, 'cleared' => $intCleared, 'chained' => $intChained);
 	}
 
 	/**
