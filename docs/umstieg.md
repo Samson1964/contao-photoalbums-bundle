@@ -54,8 +54,15 @@ drei Regeln:
 Enthält ein Feld einen Text statt einer Nummer, bleibt er ohnehin unberührt.
 
 Die Tabelle `tl_translation_fields` wird **nicht** verändert und **nicht**
-gelöscht. Wenn keine andere Erweiterung mehr darauf zugreift, kann sie nach dem
-Umzug von Hand entfernt werden.
+gelöscht.
+
+> **Achtung:** Kein Bundle beansprucht diese Tabelle mehr, deshalb schlägt
+> Contao beim Datenbankabgleich vor, sie zu **löschen**
+> (`DROP TABLE tl_translation_fields`). Diesen Vorschlag erst annehmen, wenn die
+> Migration durchgelaufen ist und in den Feldern keine Zahlen mehr stehen —
+> danach sind die Texte sonst unwiederbringlich weg. Im Contao Manager ist das
+> der Haken bei den Löschabfragen, auf der Kommandozeile die Option
+> `--with-deletes`. Ohne diese Option löscht `contao:migrate` nichts.
 
 ### Das Feld `tl_content.pa2Teaser` wechselt den Typ
 

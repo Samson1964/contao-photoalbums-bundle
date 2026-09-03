@@ -33,8 +33,13 @@ vendor/bin/contao-console contao:migrate
 ```
 
 Dabei laufen zwei Dinge: Das Datenbankschema wird angepasst, und die Migration
-„Fotoalben: Texte aus tl_translation_fields in die Felder zurücknehmen“ holt
+„Fotoalben: Texte aus tl_translation_fields in die Felder zurücknehmen” holt
 die Texte aus der Übersetzungstabelle zurück in die Felder.
+
+Beim Umstieg von photoalbums2: Die Tabelle `tl_translation_fields` erst
+löschen, wenn die Migration durchgelaufen ist — Contao bietet das Löschen beim
+Datenbankabgleich an, und vorher wären die Texte weg. Einzelheiten in
+[docs/umstieg.md](docs/umstieg.md).
 
 ## Umstieg von photoalbums2
 
