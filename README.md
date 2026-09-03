@@ -43,14 +43,22 @@ Tabellen und Felder heißen unverändert `tl_photoalbums2_archive` und
 `tl_layout`, `tl_user` und `tl_user_group` bleiben ebenfalls gleich. Ein
 Datenumzug ist deshalb nicht nötig.
 
-Vorgehen:
+Vorgehen — die Reihenfolge ist wichtig:
 
-1. `schachbulle/contao-photoalbums2` entfernen (das neue Bundle schließt es über
-   `conflict` ohnehin aus).
-2. `schachbulle/contao-photoalbums-bundle` installieren.
-3. `contao:migrate` ausführen.
-4. Die Datei `system/modules/photoalbums2` aus dem Projekt entfernen, falls sie
-   von einer Alt-Installation liegengeblieben ist.
+```bash
+composer remove schachbulle/contao-photoalbums2 --no-update
+composer require schachbulle/contao-photoalbums-bundle
+vendor/bin/contao-console contao:migrate
+```
+
+Beide Pakete können nicht nebeneinander liegen; sie bringen dieselben Tabellen,
+Felder und Modulnamen mit. Wer das alte Paket stehen lässt, bekommt von Composer
+ein `conflicts with schachbulle/contao-photoalbums2`. Im Contao Manager beides
+in **einem** Durchgang übernehmen: altes Paket zum Entfernen markieren, neues
+hinzufügen, dann erst „Änderungen übernehmen".
+
+Zum Schluss ein eventuell liegengebliebenes Verzeichnis
+`system/modules/photoalbums2` aus dem Projekt entfernen.
 
 Die Tabelle `tl_translation_fields` bleibt unangetastet — andere Erweiterungen
 können sie noch brauchen. Nach dem Umzug lässt sie sich gefahrlos löschen, wenn

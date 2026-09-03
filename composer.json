@@ -31,9 +31,6 @@
         "craffft/contao-photoalbums2": "*",
         "schachbulle/contao-photoalbums2": "*"
     },
-    "replace": {
-        "contao-legacy/photoalbums2": "*"
-    },
     "require-dev": {
         "contao/manager-plugin": "^2.0"
     },

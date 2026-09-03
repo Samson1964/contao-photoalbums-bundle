@@ -39,7 +39,13 @@ und auf die heutigen Contao-Schnittstellen umgestellt.
   DCA-Dateien, sondern in eigenen Klassen unter `src/EventListener/DataContainer`.
   Das umgeht die Falle, dass Contao 5 zusammengeführte DCA-Dateien samt
   Rückrufklasse zwischenspeichert.
-* Fix: Im Modus „Nur Album-Ansicht mit Lightbox“ stand das erste Foto zweimal
+* Change: Der `replace`-Eintrag auf `contao-legacy/photoalbums2` ist entfallen.
+  Er stammte aus der Urfassung und führte dazu, dass Composer beim Umstieg
+  „They all replace contao-legacy/photoalbums2” meldete — also ein Paket aus
+  Contao-3-Zeiten nannte statt des tatsächlich installierten
+  `schachbulle/contao-photoalbums2`. Die Sperre selbst bleibt über `conflict`
+  bestehen, die Meldung nennt jetzt das richtige Paket.
+* Fix: Im Modus „Nur Album-Ansicht mit Lightbox” stand das erste Foto zweimal
   in der Bildergalerie. Sowohl der Titel als auch das Vorschaubild trugen den
   Lightbox-Verweis, und beide zeigten auf dasselbe Foto. Jetzt trägt nur ein
   sichtbares Element den Verweis: das Vorschaubild, und nur wenn es keines gibt,

@@ -73,20 +73,42 @@ Hand gelöscht werden.
 1. **Sicherung.** Datenbank und Dateien sichern — die Migration schreibt in
    sechs Feldern über alle Datensätze hinweg.
 
-2. **Altes Paket entfernen.**
+2. **Altes Paket aus der `composer.json` nehmen — vor dem Einbau des neuen.**
 
    ```bash
-   composer remove schachbulle/contao-photoalbums2
+   composer remove schachbulle/contao-photoalbums2 --no-update
    ```
 
-   Das neue Bundle schließt beide Altfassungen über `conflict` aus; Composer
-   verweigert also ohnehin ein Nebeneinander.
+   Das `--no-update` sorgt dafür, dass nur die `composer.json` geändert wird;
+   aufgelöst wird erst im nächsten Schritt, dann in einem Rutsch.
+
+   Wer den Contao Manager benutzt, markiert das alte Paket zum Entfernen und
+   fügt das neue hinzu, **bevor** er „Änderungen übernehmen" drückt — der
+   Manager wendet beides gemeinsam an.
 
 3. **Neues Bundle installieren.**
 
    ```bash
    composer require schachbulle/contao-photoalbums-bundle
    ```
+
+### Wenn Composer sich weigert
+
+Bleibt das alte Paket in der `composer.json` stehen, bricht Composer ab:
+
+```text
+- schachbulle/contao-photoalbums-bundle dev-master conflicts with
+  schachbulle/contao-photoalbums2 1.2.0.
+```
+
+Das ist Absicht: Beide Pakete bringen dieselben Tabellen, Felder, Templates und
+Frontend-Modul-Namen mit und würden sich gegenseitig überschreiben. Die Abhilfe
+ist immer Schritt 2 — das alte Paket zuerst herausnehmen.
+
+Ältere Fassungen des neuen Bundles meldeten an dieser Stelle
+`They all replace contao-legacy/photoalbums2`. Das zeigte auf ein Paket aus
+Contao-3-Zeiten und nicht auf das, was wirklich im Weg stand; seit 1.0.0 nennt
+die Meldung das richtige Paket.
 
 4. **Datenbank aktualisieren.**
 
