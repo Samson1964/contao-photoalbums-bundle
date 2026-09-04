@@ -1,5 +1,26 @@
 # Fotoalben Changelog
 
+## Version 1.0.1 (2026-09-03)
+
+* Fix: Das mitgelieferte Stylesheet hat in Installationen mit **eigenen
+  Templates** das Layout zerstört. Drei Regeln — `.albumInside`/`.imageInside`,
+  `.album.first`/`.image.first` und `.album.last`/`.image.last` — griffen
+  überall im Modul statt nur innerhalb der Umhüllungen `.albumswrap` und
+  `.imagewrap`. In einem Theme mit eigenem Raster nahm `padding-left: 0`
+  beziehungsweise `padding-right: 0` jeder ersten und letzten Kachel einer
+  Zeile den Spaltenabstand.
+
+  Die Regeln stammen aus der SCSS-Vorlage von photoalbums2, wo sie
+  verschachtelt und damit eingegrenzt waren; beim Umschreiben in reines CSS
+  hatte ich die Verschachtelung verloren. Aufgefallen ist es erst im
+  Livebetrieb, weil die Urfassung ihr Stylesheet unter
+  `system/modules/photoalbums2/assets/` einband — ein Pfad, den Contao 4 und 5
+  gar nicht ausliefern. Die Regeln lagen dort also jahrelang brach, und dieses
+  Bundle legt die Datei erstmals an eine Stelle, die wirklich geladen wird.
+
+  Das Stylesheet ist jetzt selektorgleich mit der Urfassung: dieselben sieben
+  Regeln mit denselben Selektoren (8, 8, 16, 32, 16, 16, 4).
+
 ## Version 1.0.0 (2026-09-03)
 
 Erste Fassung des Bundles. Es tritt die Nachfolge von

@@ -120,7 +120,13 @@ der Wert des Attributs ist je Album eindeutig und gruppiert die Fotos.
 | `pa2_empty` | Meldung, wenn nichts auszugeben ist |
 
 Das mitgelieferte Stylesheet lässt sich im Seitenlayout unter „Fotoalben
-Stylesheet ignorieren“ abschalten.
+Stylesheet ignorieren” abschalten.
+
+Es hält sich streng an das eigene Markup: Jede Regel steht innerhalb der
+Umhüllungen `.albumswrap` beziehungsweise `.imagewrap`, die nur die
+mitgelieferten Templates setzen. Wer eigene Templates benutzt — etwa mit einem
+Bootstrap-Raster —, bekommt von dort nichts ab und braucht den Schalter im
+Seitenlayout gar nicht erst.
 
 ## Sortier-Assistenten
 
