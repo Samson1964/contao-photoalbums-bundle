@@ -19,6 +19,7 @@ use Contao\Validator;
 use Contao\Widget;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Thumbnail;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
 use Schachbulle\ContaoPhotoalbumsBundle\Sorter\FileSorter;
 
 /**
@@ -158,7 +159,7 @@ class ImageSortWizard extends Widget
 			$objFile = $arrFiles[$strUuid];
 
 			$strReturn .= '<li draggable="true" class="pa2-sortitem" title="'.StringUtil::specialchars((string) $objFile->name).'">';
-			$strReturn .= $this->generateThumbnail((string) $objFile->path, (string) $objFile->name);
+			$strReturn .= $this->generateThumbnail((string) $objFile->path, (string) $objFile->name, (string) $objFile->extension);
 			$strReturn .= '<input type="hidden" name="'.$this->strName.'[]" value="'.StringUtil::specialchars($strUuid).'">';
 			$strReturn .= '</li>';
 		}
@@ -275,17 +276,35 @@ class ImageSortWizard extends Widget
 	}
 
 	/**
-	 * Erzeugt den Daumennagel eines Fotos.
+	 * Erzeugt den Daumennagel eines Albumeintrags.
 	 *
-	 * @param string $strPath Projektrelativer Pfad der Bilddatei
-	 * @param string $strName Dateiname, dient als Alternativtext
+	 * Ein Video geht nicht durch die Bildbearbeitung — das Bundle greift kein
+	 * Einzelbild aus der Datei. Es bekommt deshalb dieselbe Platzhaltergrafik
+	 * wie im Frontend, damit die Kachel im Assistenten so aussieht wie spaeter
+	 * auf der Seite.
+	 *
+	 * Der Pfad bleibt relativ, genau wie der von Contao erzeugte Daumennagel
+	 * eine Zeile weiter (`assets/images/…`): Das Backend liegt unter `/contao`
+	 * ohne Schraegstrich am Ende, ein relativer Pfad richtet sich also am
+	 * Wurzelverzeichnis der Installation aus — und traegt ein etwaiges
+	 * Unterverzeichnis von selbst mit.
+	 *
+	 * @param string $strPath      Projektrelativer Pfad der Datei
+	 * @param string $strName      Dateiname, dient als Alternativtext
+	 * @param string $strExtension Dateiendung ohne Punkt; entscheidet, ob es
+	 *                             sich um ein Video handelt
 	 *
 	 * @return string Das img-Element oder — wenn sich kein Bild erzeugen laesst
 	 *                — der Dateiname als Text, damit sich der Eintrag trotzdem
 	 *                anfassen und verschieben laesst
 	 */
-	private function generateThumbnail(string $strPath, string $strName): string
+	private function generateThumbnail(string $strPath, string $strName, string $strExtension = ''): string
 	{
+		if (Video::isVideoExtension($strExtension))
+		{
+			return '<img src="'.StringUtil::specialchars(Video::PLACEHOLDER).'" alt="'.StringUtil::specialchars($strName).'" width="80" height="60">';
+		}
+
 		$strImage = Thumbnail::generate($strPath, $strName);
 
 		if ('' !== $strImage)

@@ -15,7 +15,9 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
 
 /**
  * Ein einzelnes Foto und sein Weg ins Template.
@@ -86,6 +88,90 @@ class Image
 		$objFile->meta = StringUtil::deserialize($objFile->meta, true);
 
 		return $objFile;
+	}
+
+	/**
+	 * Prueft, ob diese Datei ein Video ist.
+	 *
+	 * @return bool true, wenn die Dateiendung in der Videoliste steht
+	 */
+	public function isVideo(): bool
+	{
+		$objFile = $this->getFile();
+
+		if (null === $objFile)
+		{
+			return false;
+		}
+
+		return Video::isVideoExtension((string) $objFile->extension);
+	}
+
+	/**
+	 * Legt ein Video in ein Template.
+	 *
+	 * Ein Video hat kein Bild, das sich skalieren liesse. Die Kachel bekommt
+	 * deshalb eine einheitliche Platzhaltergrafik mit Abspielsymbol, und der
+	 * Verweis traegt `data-pa2-video` statt `data-lightbox` — die Lightbox des
+	 * Themes kann mit einem Video nichts anfangen, der mitgelieferte
+	 * Ueberlagerer schon.
+	 *
+	 * Gesetzt werden dieselben Variablen wie bei einem Foto (`addImage`, `src`,
+	 * `imgSize`, `margin`, `alt`), damit ein bestehendes Template nichts
+	 * Zusaetzliches wissen muss. Zusaetzlich kommen `isVideo`, `videoSrc` und
+	 * `videoType` hinzu.
+	 *
+	 * @param object               $objTemplate  Das Ziel-Template
+	 * @param array<string, mixed> $arrMergeData Werte, die die Daten des
+	 *                                           Templates ueberschreiben; hier
+	 *                                           wird `size` fuer die Abmessung
+	 *                                           der Platzhalterkachel gelesen
+	 * @param bool                 $blnPlayable  false laesst `videoSrc` weg —
+	 *                                           gebraucht fuer die Kachel eines
+	 *                                           Albums, die auf die Detailseite
+	 *                                           fuehrt und nichts abspielen soll
+	 *
+	 * @return object Dasselbe Template
+	 */
+	public function addVideoToTemplate($objTemplate, array $arrMergeData = array(), bool $blnPlayable = true)
+	{
+		$objFile = $this->getFile();
+
+		if (null === $objFile)
+		{
+			return $objTemplate;
+		}
+
+		if ($blnPlayable)
+		{
+			Assets::addVideoAssets();
+		}
+
+		$arrData = array_merge($objTemplate->getData(), $arrMergeData);
+		$arrSize = StringUtil::deserialize($arrData['size'] ?? null, true);
+
+		$intWidth = (int) ($arrSize[0] ?? 0);
+		$intHeight = (int) ($arrSize[1] ?? 0);
+
+		$objTemplate->isVideo = true;
+		$objTemplate->addImage = true;
+		$objTemplate->src = Video::PLACEHOLDER;
+		$objTemplate->imgSize = ($intWidth > 0 && $intHeight > 0) ? ' width="'.$intWidth.'" height="'.$intHeight.'"' : '';
+		$objTemplate->margin = '';
+		$objTemplate->picture = null;
+
+		$objTemplate->videoSrc = $blnPlayable ? str_replace(' ', '%20', (string) $objFile->path) : '';
+		$objTemplate->videoType = $blnPlayable ? Video::getMimeType((string) $objFile->extension) : '';
+
+		$this->addFileMetaDataToTemplate($objTemplate, $objFile);
+
+		// Ohne Meta-Titel bleibt der Dateiname als Beschriftung
+		if ('' === (string) ($objTemplate->alt ?? ''))
+		{
+			$objTemplate->alt = (string) $objFile->name;
+		}
+
+		return $objTemplate;
 	}
 
 	/**

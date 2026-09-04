@@ -61,6 +61,30 @@ class Assets
 	}
 
 	/**
+	 * Bindet Stilvorlage und Skript des Video-Ueberlagerers ein.
+	 *
+	 * Der Aufruf erfolgt erst, wenn tatsaechlich ein Video in der Ausgabe
+	 * steht. Auf Seiten ohne Video wird also nichts geladen.
+	 *
+	 * @return void
+	 */
+	public static function addVideoAssets(): void
+	{
+		$strCss = self::PATH.'photoalbums-video.css';
+		$strJs = self::PATH.'photoalbums-video.js';
+
+		if (!\in_array($strCss, $GLOBALS['TL_CSS'] ?? array(), true))
+		{
+			$GLOBALS['TL_CSS'][] = $strCss;
+		}
+
+		if (!\in_array($strJs, $GLOBALS['TL_JAVASCRIPT'] ?? array(), true))
+		{
+			$GLOBALS['TL_JAVASCRIPT'][] = $strJs;
+		}
+	}
+
+	/**
 	 * Bindet Stilvorlage und Skript des Sortier-Assistenten im Backend ein.
 	 *
 	 * Beide Assistenten (Fotos und Alben) teilen sich dieselben Dateien. Die

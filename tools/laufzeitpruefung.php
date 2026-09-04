@@ -221,6 +221,96 @@ try
 	$strOutput = $objWidget->generate();
 	pruefe('Assistent erzeugt Markup', \is_string($strOutput) && '' !== $strOutput);
 	pruefe('Skript eingebunden', \in_array('bundles/contaophotoalbums/sortwizard.js', $GLOBALS['TL_JAVASCRIPT'] ?? array(), true));
+
+	/*
+	 * Ohne Datensatz kennt der Assistent keine Dateien. Fuer die Kacheln
+	 * braucht es deshalb ein Album mit echtem Inhalt — gesucht wird eines,
+	 * das sowohl ein Foto als auch ein Video enthaelt.
+	 */
+	$objMitVideo = null;
+	$objAlle = $objDb->execute('SELECT id, images FROM tl_photoalbums2_album');
+
+	while ($objAlle->next())
+	{
+		$arrUuids = Contao\StringUtil::deserialize($objAlle->images, true);
+		$blnFoto = false;
+		$blnVideo = false;
+
+		foreach ($arrUuids as $uuid)
+		{
+			$objDatei = Contao\FilesModel::findByUuid($uuid);
+
+			if (null === $objDatei)
+			{
+				continue;
+			}
+
+			if (Schachbulle\ContaoPhotoalbumsBundle\Helper\Video::isVideoExtension((string) $objDatei->extension))
+			{
+				$blnVideo = true;
+			}
+			else
+			{
+				$blnFoto = true;
+			}
+		}
+
+		if ($blnFoto && $blnVideo)
+		{
+			$objMitVideo = $objAlle->row();
+			break;
+		}
+	}
+
+	if (null === $objMitVideo)
+	{
+		pruefe('Testalbum mit Foto und Video vorhanden', false, 'kein Album gefunden, das beides enthaelt');
+	}
+	else
+	{
+		$objDcWizard = (new ReflectionClass(Contao\DC_Table::class))->newInstanceWithoutConstructor();
+		$objReflWizard = new ReflectionObject($objDcWizard);
+
+		while ($objReflWizard && !$objReflWizard->hasProperty('intId'))
+		{
+			$objReflWizard = $objReflWizard->getParentClass();
+		}
+
+		$objPropWizard = $objReflWizard->getProperty('intId');
+		$objPropWizard->setAccessible(true);
+		$objPropWizard->setValue($objDcWizard, (int) $objMitVideo['id']);
+
+		$objWidget2 = new $strClass($strClass::getAttributesFromDca(
+			$GLOBALS['TL_DCA']['tl_photoalbums2_album']['fields']['imageSort'],
+			'imageSort',
+			null,
+			'imageSort',
+			'tl_photoalbums2_album',
+			$objDcWizard
+		));
+
+		$strMarkup = $objWidget2->generate();
+		$intItems = substr_count($strMarkup, 'class="pa2-sortitem"');
+
+		pruefe('Assistent zeigt beide Kacheln', $intItems >= 2, $intItems.' Kacheln');
+		pruefe('Video bekommt die Platzhaltergrafik', str_contains($strMarkup, 'images/video.svg'));
+
+		/*
+		 * Der Pfad muss relativ bleiben — genau wie der von Contao erzeugte
+		 * Daumennagel daneben. Eine vollstaendige Adresse waere hier nicht
+		 * sicherer, sondern unsicherer: Auf der Kommandozeile hat die Anfrage
+		 * gar keinen Rechnernamen, und `Environment::get('base')` lieferte
+		 * dann `http:///`.
+		 */
+		pruefe(
+			'Platzhalter mit relativem Pfad',
+			str_contains($strMarkup, 'src="bundles/contaophotoalbums/images/video.svg"'),
+			$strMarkup
+		);
+
+		// Das Foto geht weiterhin durch die Bildbearbeitung
+		pruefe('Foto bekommt ein erzeugtes Bild', str_contains($strMarkup, 'assets/images/'));
+	}
 }
 catch (\Throwable $e)
 {

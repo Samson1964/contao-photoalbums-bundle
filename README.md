@@ -18,6 +18,9 @@ unter **Contao 4.13 und Contao 5** mit PHP 7.4 bis 8.4.
 * **Contao 5 und PHP 8.4.** Der ganze Altbestand ist auf Namensräume,
   Dienste und die heutigen Contao-Schnittstellen umgestellt.
 * **Aufnahmedaten vor 1970** lassen sich eintragen und erscheinen im Frontend.
+* **Videos im Album.** Neben Fotos dürfen auch Videodateien in einem Album
+  liegen; sie bekommen eine Platzhalterkachel und werden beim Anklicken in
+  einem mitgelieferten Überlagerer abgespielt.
 
 ## Installation
 
@@ -106,6 +109,55 @@ Fenster. Wer Contaos eigene benutzen möchte, stellt sie im Seitenlayout ein:
 Beide Wege gibt es unverändert in Contao 4.13 und Contao 5. Bringt das Theme
 eine eigene Lightbox mit, muss diese lediglich auf `a[data-lightbox]` hören;
 der Wert des Attributs ist je Album eindeutig und gruppiert die Fotos.
+
+## Videos
+
+Ein Album darf neben Fotos auch Videos enthalten. Ausgewählt werden sie im
+selben Feld „Fotos und Videos“, sortiert werden sie im selben Assistenten.
+
+Zugelassen sind ab Werk `mp4`, `m4v`, `webm` und `ogv` — alle vier dürfen mit
+Contaos Voreinstellung für erlaubte Dateitypen ohne weitere Einrichtung
+hochgeladen werden. Wer die Liste ändern möchte, überschreibt sie in der
+eigenen `config.php`:
+
+```php
+$GLOBALS['pa2']['videoExtensions'] = 'mp4,webm';
+$GLOBALS['pa2']['mediaExtensions'] = $GLOBALS['pa2']['imageExtensions'].','.$GLOBALS['pa2']['videoExtensions'];
+```
+
+Ein Video geht **nicht** durch die Bildbearbeitung — das Bundle greift keine
+Einzelbilder aus der Datei. Stattdessen zeigt die Kachel eine einheitliche
+Platzhaltergrafik in der Größe, die für die Ansicht eingestellt ist.
+
+### Warum ein eigener Überlagerer und nicht die Lightbox
+
+Die Lightbox des Themes bekommt ihre Verweise über `data-lightbox` und ihre
+Einstellungen **einmal für alle**. colorbox etwa erkennt am Dateinamen nur
+Bilder und versuchte, ein Video als Bild zu laden. Ein Video trägt deshalb
+bewusst **kein** `data-lightbox`, sondern `data-pa2-video`; darum kümmert sich
+`photoalbums-video.js`.
+
+Das Skript kommt ohne Bibliothek aus und läuft damit unabhängig davon, ob das
+Theme jQuery, MooTools oder gar nichts einbindet. Geladen wird es — samt der
+zugehörigen Stilvorlage — nur auf Seiten, auf denen tatsächlich ein Video
+steht. Anklicken öffnet, **Escape** oder ein Klick auf den Hintergrund
+schließt; beim Schließen hält das Video an und springt an den Anfang.
+
+Wer den Überlagerer anders gestalten möchte, überschreibt die Regeln im
+eigenen Stylesheet — alle Klassen beginnen mit `pa2-videobox`. Ist JavaScript
+abgeschaltet, führt der Verweis auf die Videodatei selbst.
+
+### Was ein Video nicht sein kann
+
+* **Kein Vorschaubild von Hand.** Das Feld „Vorschau Foto auswählen“ zeigt nur
+  Fotos an. Automatisch gewählt (erstes oder zufälliges Foto) kommt ein Video
+  erst dann zum Zuge, wenn das Album **überhaupt kein** Foto enthält — dann
+  steht die Platzhalterkachel als Aufmacher.
+* **Kein Teil der Lightbox-Gruppe.** In der Foto-Ansicht bleibt die Gruppe des
+  Themes den Fotos vorbehalten; ein Video auf einer anderen Seite der
+  Blätterliste taucht dort gar nicht erst als versteckter Verweis auf.
+* **Nicht mitgezählt als Video.** Die Meta-Angabe „Fotoanzahl“ zählt alle
+  Einträge eines Albums, nennt sie aber weiterhin Fotos.
 
 ## Templates
 

@@ -21,6 +21,7 @@ declare(strict_types=1);
  */
 
 use Contao\System;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 $strInstall = $argv[1] ?? '';
@@ -405,7 +406,95 @@ foreach ($arrCases as $arrCase)
 	);
 }
 
-echo "\n9. Dienstdefinitionen\n";
+echo "\n9. Videos\n";
+
+/*
+ * Was als Video gilt, entscheidet allein die Dateiendung — der Sortierer holt
+ * die Dateien aus dem Dateisystem, ohne sie zu oeffnen. Die Liste steht in
+ * $GLOBALS['pa2']['videoExtensions'] und darf von einer Installation
+ * ueberschrieben werden; die Klasse muss beides vertragen.
+ */
+$arrVideoCases = array(
+	// Endung   ist Video   MIME-Typ
+	array('mp4', true, 'video/mp4'),
+	array('MP4', true, 'video/mp4'),
+	array('m4v', true, 'video/mp4'),
+	array('webm', true, 'video/webm'),
+	array('ogv', true, 'video/ogg'),
+	array('jpg', false, ''),
+	array('png', false, ''),
+	array('avif', false, ''),
+	array('pdf', false, ''),
+	array('mov', false, ''),
+	array('', false, ''),
+	array(null, false, ''),
+);
+
+foreach ($arrVideoCases as $arrCase)
+{
+	$strLabel = null === $arrCase[0] ? '(null)' : ('' === $arrCase[0] ? '(leer)' : $arrCase[0]);
+
+	pruefe(
+		sprintf('%-8s ist %-10s', $strLabel, $arrCase[1] ? 'Video' : 'kein Video'),
+		Video::isVideoExtension($arrCase[0]) === $arrCase[1]
+	);
+	pruefe(
+		sprintf('%-8s MIME %s', $strLabel, '' === $arrCase[2] ? '(keiner)' : $arrCase[2]),
+		Video::getMimeType($arrCase[0]) === $arrCase[2],
+		Video::getMimeType($arrCase[0])
+	);
+}
+
+pruefe('Voreingestellte Endungen', array('mp4', 'm4v', 'webm', 'ogv') === Video::getExtensions(), implode(',', Video::getExtensions()));
+
+// Eine eigene Liste muss durchschlagen, auch mit Leerzeichen und Grossschreibung
+$strMerker = $GLOBALS['pa2']['videoExtensions'];
+$GLOBALS['pa2']['videoExtensions'] = 'MP4, MOV ,mkv';
+pruefe('Eigene Liste wird genommen', Video::isVideoExtension('mov') && Video::isVideoExtension('mkv'));
+pruefe('Nicht Gelistetes faellt heraus', !Video::isVideoExtension('webm'));
+$GLOBALS['pa2']['videoExtensions'] = $strMerker;
+
+pruefe('mediaExtensions enthaelt Fotos und Videos', false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'jpg') && false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'mp4'));
+pruefe('imageExtensions bleibt ohne Videos', false === strpos($GLOBALS['pa2']['imageExtensions'], 'mp4'));
+
+// Die Platzhalterkachel muss ausgeliefert werden koennen
+pruefe('Platzhaltergrafik vorhanden', is_file($strBundleDir.'/src/Resources/public/images/video.svg'));
+pruefe('Ueberlagerer-Skript vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.js'));
+pruefe('Ueberlagerer-Stilvorlage vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.css'));
+pruefe('PLACEHOLDER zeigt auf die Grafik', 'bundles/contaophotoalbums/images/video.svg' === Video::PLACEHOLDER, Video::PLACEHOLDER);
+
+/*
+ * addVideoAssets() darf nichts doppelt eintragen: Ein Album mit zwanzig Videos
+ * ruft es zwanzigmal auf, im Kopf der Seite darf das Skript trotzdem nur
+ * einmal stehen.
+ */
+$GLOBALS['TL_CSS'] = array();
+$GLOBALS['TL_JAVASCRIPT'] = array();
+\Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets::addVideoAssets();
+\Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets::addVideoAssets();
+pruefe('Stilvorlage genau einmal eingebunden', 1 === \count($GLOBALS['TL_CSS']), implode(',', $GLOBALS['TL_CSS']));
+pruefe('Skript genau einmal eingebunden', 1 === \count($GLOBALS['TL_JAVASCRIPT']), implode(',', $GLOBALS['TL_JAVASCRIPT']));
+
+// Ein Video darf niemals in die Lightbox-Gruppe des Themes geraten
+foreach (array('pa2_image', 'pa2_image_fluid') as $strTemplate)
+{
+	$strMarkup = file_get_contents($strBundleDir.'/src/Resources/contao/templates/'.$strTemplate.'.html5');
+	$arrLines = preg_split('/\r\n|\n/', $strMarkup);
+	$blnMixed = false;
+
+	foreach ($arrLines as $strLine)
+	{
+		if (false !== strpos($strLine, 'data-pa2-video=') && false !== strpos($strLine, 'data-lightbox'))
+		{
+			$blnMixed = true;
+		}
+	}
+
+	pruefe($strTemplate.': Videoverweis ohne data-lightbox', !$blnMixed);
+	pruefe($strTemplate.': Videozweig vorhanden', false !== strpos($strMarkup, 'data-pa2-video='));
+}
+
+echo "\n10. Dienstdefinitionen\n";
 
 try
 {

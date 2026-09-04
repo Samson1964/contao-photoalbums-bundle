@@ -12,6 +12,7 @@ declare(strict_types=1);
 use Schachbulle\ContaoPhotoalbumsBundle\Elements\ContentPhotoalbums2;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Modules\ModulePhotoalbums2;
@@ -84,6 +85,21 @@ $GLOBALS['pa2'] = array();
 
 /* Zugelassene Dateiendungen fuer Fotos */
 $GLOBALS['pa2']['imageExtensions'] = 'png,jpg,jpeg,gif,webp,avif';
+
+/*
+ * Zugelassene Dateiendungen fuer Videos
+ *
+ * Alle vier duerfen mit Contaos Voreinstellung fuer `uploadTypes` ohne weitere
+ * Einrichtung hochgeladen werden.
+ */
+$GLOBALS['pa2']['videoExtensions'] = Video::DEFAULT_EXTENSIONS;
+
+/*
+ * Was insgesamt in einem Album liegen darf
+ *
+ * Diese Liste steht an der Dateiauswahl des Albums und am Sortier-Assistenten.
+ */
+$GLOBALS['pa2']['mediaExtensions'] = $GLOBALS['pa2']['imageExtensions'].','.$GLOBALS['pa2']['videoExtensions'];
 
 /* Sortierung der Fotos innerhalb eines Albums */
 $GLOBALS['pa2']['imageSortTypes'] = array

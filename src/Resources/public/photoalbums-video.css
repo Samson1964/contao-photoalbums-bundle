@@ -1,0 +1,80 @@
+/*
+ * Gestaltung des Video-Ueberlagerers.
+ *
+ * Bewusst knapp gehalten und ohne Farben aus einem Theme: Der Ueberlagerer
+ * soll ueberall benutzbar sein, ohne dass jemand etwas einstellen muss.
+ * Wer ihn anders haben moechte, ueberschreibt die Regeln im eigenen
+ * Stylesheet — alle Klassen beginnen mit `pa2-videobox`.
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+.pa2-videobox {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba(0, 0, 0, .85);
+}
+
+/* Aeltere Browser kennen inset noch nicht */
+.pa2-videobox {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.pa2-videobox[hidden] {
+	display: none;
+}
+
+.pa2-videobox-inner {
+	position: relative;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.pa2-videobox video {
+	display: block;
+	max-width: 95vw;
+	max-height: 85vh;
+	background: #000;
+	outline: none;
+}
+
+.pa2-videobox-close {
+	position: absolute;
+	top: -16px;
+	right: -16px;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: #fff;
+	color: #000;
+	font-size: 24px;
+	line-height: 36px;
+	cursor: pointer;
+}
+
+.pa2-videobox-close:focus {
+	outline: 2px solid #f47c00;
+	outline-offset: 2px;
+}
+
+/* Solange der Ueberlagerer offen ist, soll die Seite dahinter nicht scrollen */
+html.pa2-videobox-offen {
+	overflow: hidden;
+}
+
+/* Abspielsymbol auf der Kachel — die Platzhaltergrafik bringt es schon mit,
+   der Zeiger soll aber zeigen, dass sich hier etwas oeffnet */
+.pa2-video {
+	display: block;
+	cursor: pointer;
+}

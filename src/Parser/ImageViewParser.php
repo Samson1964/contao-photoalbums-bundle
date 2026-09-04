@@ -264,13 +264,31 @@ class ImageViewParser extends ViewParser
 			$objSubtemplate->albumID = $objAlbum->id.'_'.$strIndividualId;
 			$objSubtemplate->href = str_replace(' ', '%20', (string) $objFile->path);
 
+			$blnVideo = $objImage->isVideo();
+			$objSubtemplate->isVideo = $blnVideo;
+
 			if (\in_array($uuid, $this->arrItems))
 			{
-				$objSubtemplate = $objImage->addToTemplate($objSubtemplate, StringUtil::deserialize($objSubtemplate->arrImage, true));
+				if ($blnVideo)
+				{
+					$objImage->addVideoToTemplate($objSubtemplate);
+				}
+				else
+				{
+					$objSubtemplate = $objImage->addToTemplate($objSubtemplate, StringUtil::deserialize($objSubtemplate->arrImage, true));
+				}
+
 				$objSubtemplate = $this->addSpecificClassesToTemplate($objSubtemplate, $i);
 				$objSubtemplate->show = true;
 
 				++$i;
+			}
+			elseif ($blnVideo)
+			{
+				// Ein Video gehoert nicht in die Lightbox-Gruppe der Fotos: Die
+				// Lightbox des Themes wuerde die Datei als Bild zu laden
+				// versuchen. Videos anderer Seiten bleiben deshalb ganz weg.
+				continue;
 			}
 			else
 			{

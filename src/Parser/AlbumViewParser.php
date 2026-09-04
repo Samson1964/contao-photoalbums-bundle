@@ -159,7 +159,19 @@ class AlbumViewParser extends ViewParser
 
 			$objPreviewImage = new PreviewImage($objAlbums->current(), $objSubtemplate->pa2PreviewImage);
 			$objImage = new Image($objPreviewImage->getPreviewImageUuid());
-			$objImage->addToTemplate($objSubtemplate);
+
+			// Enthaelt ein Album nur Videos, ist auch die Kachel ein Video. Sie
+			// bekommt die Platzhaltergrafik, fuehrt aber wie jede andere Kachel
+			// auf die Detailseite und spielt hier nichts ab.
+			if ($objImage->isVideo())
+			{
+				$objSubtemplate->isVideo = true;
+				$objImage->addVideoToTemplate($objSubtemplate, array(), false);
+			}
+			else
+			{
+				$objImage->addToTemplate($objSubtemplate);
+			}
 
 			// Die im Album hinterlegte CSS-Klasse an die berechneten anhaengen
 			$strClass = (string) ($objSubtemplate->class ?? '');
@@ -219,6 +231,15 @@ class AlbumViewParser extends ViewParser
 			$objFile = $objImage->getFile();
 
 			if (null === $objFile)
+			{
+				continue;
+			}
+
+			// Videos bleiben aussen vor: Die Lightbox des Themes bekommt ihre
+			// Einstellungen einmal fuer alle Verweise und wuerde ein Video als
+			// Bild zu laden versuchen. In diesem Modus sind Videos also nur
+			// ueber die Foto-Ansicht zu erreichen.
+			if ($objImage->isVideo())
 			{
 				continue;
 			}

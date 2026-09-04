@@ -1,5 +1,42 @@
 # Fotoalben Changelog
 
+## Version 1.1.0 (2026-09-04)
+
+* Add: **Videos in Alben.** Neben Fotos dürfen jetzt auch Videodateien in einem
+  Album liegen — ab Werk `mp4`, `m4v`, `webm` und `ogv`, änderbar über
+  `$GLOBALS['pa2']['videoExtensions']`. Ausgewählt und sortiert werden sie im
+  selben Feld und im selben Assistenten wie die Fotos.
+
+  Ein Video bekommt eine einheitliche Platzhalterkachel in der Größe, die für
+  die Ansicht eingestellt ist; Einzelbilder aus der Datei greift das Bundle
+  nicht ab.
+
+* Add: Eigener Video-Überlagerer (`photoalbums-video.js`, `photoalbums-video.css`).
+  Die Lightbox des Themes kommt dafür nicht in Frage: Sie bekommt ihre
+  Einstellungen einmal für alle Verweise mit `data-lightbox`, und colorbox
+  erkennt am Dateinamen nur Bilder. Ein Video trägt deshalb `data-pa2-video`.
+  Der Überlagerer kommt ohne Bibliothek aus und wird samt Stilvorlage nur auf
+  Seiten geladen, auf denen tatsächlich ein Video steht. Escape oder ein Klick
+  auf den Hintergrund schließt; dabei hält das Video an und springt an den
+  Anfang.
+
+* Change: Die Dateiauswahl des Albums und der Sortier-Assistent lassen jetzt
+  `$GLOBALS['pa2']['mediaExtensions']` durch — Fotos **und** Videos. Der
+  Sortierer bekam damit erstmals überhaupt eine Endungsliste; bislang nahm er
+  aus einem mitausgewählten Ordner auch PDF- oder Textdateien auf, die als
+  Kachel nur eine Lücke ergaben.
+
+* Change: Das Feld „Vorschau Foto auswählen“ bleibt bei den Fotos. Automatisch
+  (erstes oder zufälliges Foto) kommt ein Video erst zum Zuge, wenn das Album
+  überhaupt kein Foto enthält.
+
+* Change: Der Sortier-Assistent im Backend zeigt für ein Video dieselbe
+  Platzhaltergrafik wie das Frontend. Zuvor blieb dort nur der Dateiname
+  stehen, weil sich aus einer Videodatei kein Daumennagel erzeugen lässt.
+
+* Change: Beschriftungen und Hilfetexte zu Auswahl, Sortierung und Vorschaubild
+  in beiden Sprachen auf Videos erweitert.
+
 ## Version 1.0.1 (2026-09-03)
 
 * Fix: Das mitgelieferte Stylesheet hat in Installationen mit **eigenen

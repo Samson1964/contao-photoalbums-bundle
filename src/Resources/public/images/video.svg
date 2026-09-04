@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240" role="img" aria-label="Video">
+	<title>Video</title>
+	<rect width="320" height="240" fill="#2b2f36"/>
+	<circle cx="160" cy="120" r="46" fill="#ffffff" fill-opacity="0.92"/>
+	<path d="M146 96 L192 120 L146 144 Z" fill="#2b2f36"/>
+</svg>

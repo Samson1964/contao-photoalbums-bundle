@@ -200,7 +200,12 @@ class PreviewImage
 	 * Im Feld `images` koennen auch Ordner stehen; der {@see FileSorter} steigt
 	 * in sie hinab und beruecksichtigt dabei die zugelassenen Dateiendungen.
 	 *
-	 * @return array<int, string> Die UUIDs aller Fotos des Albums
+	 * Gesucht wird zuerst unter den **Fotos**: Als Aufmacher eines Albums ist
+	 * ein echtes Bild allemal besser als die Platzhalterkachel eines Videos.
+	 * Erst wenn das Album ueberhaupt kein Foto enthaelt, kommen die Videos in
+	 * Betracht — dann bleibt nur der Platzhalter.
+	 *
+	 * @return array<int, string> Die UUIDs der in Frage kommenden Dateien
 	 */
 	private function getAlbumImageUuids(): array
 	{
@@ -212,6 +217,14 @@ class PreviewImage
 		}
 
 		$objFileSorter = new FileSorter($arrImages, $GLOBALS['pa2']['imageExtensions'] ?? null);
+		$arrFound = $objFileSorter->getImageUuids();
+
+		if (!empty($arrFound))
+		{
+			return $arrFound;
+		}
+
+		$objFileSorter = new FileSorter($arrImages, $GLOBALS['pa2']['mediaExtensions'] ?? null);
 
 		return $objFileSorter->getImageUuids();
 	}

@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_album'] = array
 			'label'     => &$GLOBALS['TL_LANG']['tl_photoalbums2_album']['images'],
 			'exclude'   => true,
 			'inputType' => 'fileTree',
-			'eval'      => array('mandatory' => true, 'multiple' => true, 'fieldType' => 'checkbox', 'files' => true, 'extensions' => $GLOBALS['pa2']['imageExtensions']),
+			'eval'      => array('mandatory' => true, 'multiple' => true, 'fieldType' => 'checkbox', 'files' => true, 'extensions' => $GLOBALS['pa2']['mediaExtensions']),
 			'sql'       => "blob NULL",
 		),
 		'imageSortType' => array
@@ -248,7 +248,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_album'] = array
 			'label'     => &$GLOBALS['TL_LANG']['tl_photoalbums2_album']['imageSort'],
 			'exclude'   => true,
 			'inputType' => 'pa2ImageSortWizard',
-			'eval'      => array('sortfiles' => 'images', 'extensions' => $GLOBALS['pa2']['imageExtensions'], 'tl_class' => 'clr'),
+			'eval'      => array('sortfiles' => 'images', 'extensions' => $GLOBALS['pa2']['mediaExtensions'], 'tl_class' => 'clr'),
 			'sql'       => "blob NULL",
 		),
 		'previewImageType' => array

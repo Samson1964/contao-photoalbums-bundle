@@ -83,7 +83,10 @@ class ImageSorter
 			$arrUuids = $this->arrCustomUuids;
 		}
 
-		$objFileSorter = new FileSorter($arrUuids);
+		// Die Endungsliste haelt Fremdes aus einem mitausgewaehlten Ordner
+		// heraus — dort koennen neben Fotos und Videos auch PDF-Dateien oder
+		// Textdateien liegen, die als Kachel nur eine Luecke ergaeben
+		$objFileSorter = new FileSorter($arrUuids, $GLOBALS['pa2']['mediaExtensions'] ?? null);
 		$objFileSorter->sortImagesBy($strSortKey, $strSortDirection);
 
 		return $objFileSorter->getImageUuids();
