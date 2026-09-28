@@ -14,7 +14,7 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['title'] = array('Title', 'Enter the title of the image album here.');
-$GLOBALS['TL_LANG']['tl_photoalbums2_album']['alias'] = array('Alias', 'The alias is generated automatically. It is a part of the URL.');
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['alias'] = array('Alias', 'The alias is generated automatically from the title and becomes part of the URL. It consists of lowercase letters, digits and hyphens only; umlauts are transliterated (ü becomes ue, ß becomes ss), also for a custom entry.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['author'] = array('Author', 'Here you can change the author of the album.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['startdate'] = array('Start date', 'Enter the start date here.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['enddate'] = array('End date', 'Enter an end date here when the shooting takes several days. Otherwise, leave this field empty.');
@@ -69,3 +69,4 @@ $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['reader'] = 'page of m
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['onePage'] = 'page of module "%s"';
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['contentElement'] = 'content element showing this album';
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['albumView'] = 'page of module "%s"';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['aliasEmpty'] = 'The alias contains no usable characters. Letters, digits and hyphens are allowed.';

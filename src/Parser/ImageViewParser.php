@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace Schachbulle\ContaoPhotoalbumsBundle\Parser;
 
+use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\Environment;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Schachbulle\ContaoPhotoalbumsBundle\Album\Album;
 use Schachbulle\ContaoPhotoalbumsBundle\Album\Image;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Pagination;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
@@ -120,6 +123,7 @@ class ImageViewParser extends ViewParser
 
 		if (null === $objAlbums || $objAlbums->count() < 1)
 		{
+			$this->redirectRenamedAlbum();
 			$this->setEmptyTemplate($GLOBALS['TL_LANG']['MSC']['albumNotFound'] ?? '');
 
 			return;
@@ -171,6 +175,61 @@ class ImageViewParser extends ViewParser
 		$this->Template->totalItems = $objPagination->getTotalItems();
 
 		$this->parseImages();
+	}
+
+	/**
+	 * Leitet eine alte Adresse mit Umlaut-Alias auf die neue um.
+	 *
+	 * Seit Version 1.4.0 enthalten Aliase keine Umlaute mehr; die Migration hat
+	 * etwa `dsam-düsseldorf-2023` in `dsam-duesseldorf-2023` umbenannt. Die
+	 * alte Adresse steht aber womöglich noch in Suchmaschinen, in
+	 * Lesezeichen oder als Verweis auf fremden Seiten. Statt „Album nicht
+	 * gefunden“ antwortet die Seite deshalb mit einer dauerhaften Weiterleitung
+	 * (301) — Suchmaschinen übernehmen damit die neue Adresse.
+	 *
+	 * Der Aufruf steht erst dort, wo das Album unter dem angefragten Alias
+	 * nicht gefunden wurde: Bei allen gewöhnlichen Aufrufen kostet er also
+	 * nichts. Eine gesetzte Seitenzahl oder andere Parameter hinter `?` gehen
+	 * mit.
+	 *
+	 * @throws RedirectResponseException Mit der Weiterleitung auf die neue Adresse
+	 *
+	 * @return void Kehrt zurück, wenn es nichts umzuleiten gibt
+	 */
+	private function redirectRenamedAlbum(): void
+	{
+		global $objPage;
+
+		// Das Inhaltselement zeigt ein fest gewähltes Album, da gibt es keinen Alias
+		if ($this->intAlbumId > 0 || !$objPage instanceof PageModel)
+		{
+			return;
+		}
+
+		$varRequested = $this->getAlbumIdOrAlias();
+
+		if (!\is_string($varRequested))
+		{
+			return;
+		}
+
+		$objRenamed = AlbumAlias::findRenamed($varRequested);
+
+		if (null === $objRenamed)
+		{
+			return;
+		}
+
+		$strParams = Runtime::useAutoItem() ? '/'.$objRenamed->alias : '/album/'.$objRenamed->alias;
+		$strUrl = $objPage->getAbsoluteUrl($strParams);
+		$strQuery = (string) Environment::get('queryString');
+
+		if ('' !== $strQuery)
+		{
+			$strUrl .= '?'.$strQuery;
+		}
+
+		throw new RedirectResponseException($strUrl, 301);
 	}
 
 	/**

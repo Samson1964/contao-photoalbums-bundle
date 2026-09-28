@@ -18,6 +18,7 @@ use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\StringUtil;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Palette;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Thumbnail;
@@ -302,7 +303,16 @@ class AlbumListener
 	}
 
 	/**
-	 * Erzeugt den Alias eines Albums, wenn keiner eingegeben wurde.
+	 * Erzeugt den Alias eines Albums oder bringt einen eingegebenen in Form.
+	 *
+	 * Beides läuft über {@see AlbumAlias::generate()}: Ein leeres Feld wird aus
+	 * dem Titel gefüllt, ein von Hand eingetippter Alias mit Umlauten wird
+	 * umgeschrieben (`Düsseldorf` → `duesseldorf`). Früher stand hier
+	 * `StringUtil::standardize()`, das unter Contao 4 und 5 Umlaute stehen lässt.
+	 *
+	 * Die Prüfung auf Doppelung weiter unten läuft am **umgeschriebenen** Wert:
+	 * Ein eingetipptes `Düsseldorf` neben einem vorhandenen `duesseldorf` wird
+	 * abgewiesen, statt still einen zweiten gleichen Alias anzulegen.
 	 *
 	 * @param mixed         $varValue Der eingegebene Alias
 	 * @param DataContainer $dc       Der Data Container
@@ -324,7 +334,22 @@ class AlbumListener
 				->limit(1)
 				->execute($dc->id);
 
-			$varValue = StringUtil::standardize((string) $objRecord->title);
+			$varValue = AlbumAlias::generate(strip_tags((string) $objRecord->title));
+
+			// Ein Titel nur aus Satzzeichen ergibt nichts Verwertbares
+			if ('' === $varValue)
+			{
+				$varValue = 'id-'.$dc->id;
+			}
+		}
+		else
+		{
+			$varValue = AlbumAlias::generate((string) $varValue);
+
+			if ('' === $varValue)
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['tl_photoalbums2_album']['aliasEmpty'] ?? 'Der Alias enthält keine verwertbaren Zeichen.');
+			}
 		}
 
 		$objAlias = AlbumModel::findBy(

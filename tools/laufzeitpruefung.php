@@ -441,6 +441,93 @@ pruefe('Picker: öffnet gleich das Archiv des Albums', false !== strpos($strPick
 $strLabel = (string) $objProvider->createMenuItem($objConfig)->getLabel();
 pruefe('Picker: Beschriftung des Reiters', \in_array($strLabel, array('Fotoalben', 'Photo albums'), true), $strLabel);
 
+echo "\n8. Umlaute im Alias: Migration, Weiterleitung, Backend\n";
+
+/*
+ * Drei Prüfalben mit den kritischen Fällen: ein gewöhnlicher Umlaut-Alias,
+ * und ein Paar, bei dem der umgeschriebene Alias mit einem vorhandenen
+ * zusammenstößt. Sie werden am Ende in jedem Fall wieder gelöscht.
+ */
+$objDb = Contao\Database::getInstance();
+$arrProbe = array();
+
+try
+{
+	foreach (array('koeln' => array('Prüfalbum Köln 2020', 'köln-2020'), 'koelnAscii' => array('Prüfalbum Koeln 2020', 'koeln-2020'), 'strasse' => array('Prüfalbum Straße', 'straße')) as $strKey => $arrData)
+	{
+		$objInsert = $objDb
+			->prepare("INSERT INTO tl_photoalbums2_album (pid, tstamp, sorting, title, alias, published) VALUES (1, ?, 99999, ?, ?, '1')")
+			->execute(time(), $arrData[0], $arrData[1]);
+
+		$arrProbe[$strKey] = (int) $objInsert->insertId;
+	}
+
+	$objMigration = new Schachbulle\ContaoPhotoalbumsBundle\Migration\AlbumAliasMigration($container->get('database_connection'));
+
+	pruefe('Migration erkennt Arbeit', $objMigration->shouldRun());
+
+	$objResult = $objMigration->run();
+	pruefe('Migration läuft durch', $objResult->isSuccessful(), $objResult->getMessage());
+
+	$fnAlias = static function (int $intId) use ($objDb): string
+	{
+		return (string) $objDb->prepare('SELECT alias FROM tl_photoalbums2_album WHERE id=?')->execute($intId)->alias;
+	};
+
+	pruefe('straße → strasse', 'strasse' === $fnAlias($arrProbe['strasse']), $fnAlias($arrProbe['strasse']));
+	pruefe('köln-2020 stößt auf koeln-2020 und bekommt die Nummer', 'koeln-2020-'.$arrProbe['koeln'] === $fnAlias($arrProbe['koeln']), $fnAlias($arrProbe['koeln']));
+	pruefe('Vorhandenes koeln-2020 bleibt unberührt', 'koeln-2020' === $fnAlias($arrProbe['koelnAscii']), $fnAlias($arrProbe['koelnAscii']));
+
+	// Die Lehre aus der Endlosschleife: Nach dem Lauf darf nichts mehr offen sein
+	pruefe('Zweiter Lauf findet nichts mehr', !$objMigration->shouldRun());
+
+	$objFound = Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::findRenamed('straße');
+	pruefe('Alter Alias straße findet das Album', null !== $objFound && (int) $objFound->id === $arrProbe['strasse']);
+
+	/*
+	 * Der heikle Fall: Die alte Adresse …/köln-2020 muss zum umbenannten Album
+	 * führen, nicht zu dem, das schon immer koeln-2020 hieß.
+	 */
+	$objFound = Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::findRenamed('köln-2020');
+	pruefe('Alter Alias köln-2020 findet das richtige Album', null !== $objFound && (int) $objFound->id === $arrProbe['koeln'], null !== $objFound ? 'gefunden: '.$objFound->id : 'nichts');
+
+	pruefe('Ein ASCII-Alias löst keine Suche aus', null === Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::findRenamed('koeln-2020'));
+
+	Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver::reset();
+	pruefe('Insert-Tag mit altem Alias', false !== strpos($fnReplace('{{photoalbum_url::straße}}'), 'strasse'), $fnReplace('{{photoalbum_url::straße}}'));
+
+	// Speichern im Backend: eingetippt und leer gelassen
+	$objDcAlias = (new ReflectionClass(Contao\DC_Table::class))->newInstanceWithoutConstructor();
+	$objReflAlias = new ReflectionObject($objDcAlias);
+
+	while ($objReflAlias && !$objReflAlias->hasProperty('intId'))
+	{
+		$objReflAlias = $objReflAlias->getParentClass();
+	}
+
+	$objPropAlias = $objReflAlias->getProperty('intId');
+	$objPropAlias->setAccessible(true);
+	$objPropAlias->setValue($objDcAlias, $arrProbe['strasse']);
+
+	$objListener = new Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\AlbumListener();
+
+	pruefe('Eingetippter Alias mit Umlaut wird umgeschrieben', 'duesseldorf-oeffnung' === $objListener->generateAlias('Düsseldorf Öffnung', $objDcAlias), $objListener->generateAlias('Düsseldorf Öffnung', $objDcAlias));
+	pruefe('Leeres Feld wird aus dem Titel gebildet', 'pruefalbum-strasse' === $objListener->generateAlias('', $objDcAlias), $objListener->generateAlias('', $objDcAlias));
+}
+catch (\Throwable $e)
+{
+	pruefe('Alias-Prüfung', false, $e->getMessage());
+}
+finally
+{
+	foreach ($arrProbe as $intId)
+	{
+		$objDb->prepare('DELETE FROM tl_photoalbums2_album WHERE id=?')->execute($intId);
+	}
+
+	pruefe('Prüfalben wieder entfernt', 0 === (int) $objDb->execute("SELECT COUNT(*) AS n FROM tl_photoalbums2_album WHERE title LIKE 'Prüfalbum %'")->n);
+}
+
 echo "\n";
 echo $intErrors > 0
 	? "ERGEBNIS: $intErrors von $intChecks Prüfungen fehlgeschlagen.\n"

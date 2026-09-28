@@ -13,6 +13,7 @@ namespace Schachbulle\ContaoPhotoalbumsBundle\EventListener;
 
 use Contao\PageModel;
 use Contao\StringUtil;
+use Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver;
 
@@ -82,12 +83,22 @@ class InsertTagsListener
 
 		$objAlbums = AlbumModel::findPublishedByIdOrAlias($strValue);
 
-		if (null === $objAlbums || $objAlbums->count() < 1)
+		if (null !== $objAlbums && $objAlbums->count() > 0)
 		{
-			return '';
+			$objAlbum = $objAlbums->current();
 		}
+		else
+		{
+			// Ein von Hand geschriebener Tag mit einem alten Umlaut-Alias
+			// (`{{photoalbum_url::dsam-düsseldorf-2023}}`) findet das Album
+			// über dessen umgeschriebenen Alias
+			$objAlbum = AlbumAlias::findRenamed($strValue);
 
-		$objAlbum = $objAlbums->current();
+			if (null === $objAlbum)
+			{
+				return '';
+			}
+		}
 		$strTitle = StringUtil::specialchars(strip_tags((string) $objAlbum->title));
 
 		if ('photoalbum_title' === $strName)

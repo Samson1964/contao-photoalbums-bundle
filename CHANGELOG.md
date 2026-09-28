@@ -1,5 +1,30 @@
 # Fotoalben Changelog
 
+## Version 1.4.0 (2026-09-28)
+
+* Fix: **Keine Umlaute mehr im Album-Alias.** `StringUtil::standardize()` hat
+  unter Contao 3 umgeschrieben, unter Contao 4 und 5 lässt es Umlaute stehen —
+  so entstanden Aliase wie `dsam-düsseldorf-2023` (im Abzug vom 03.09.2026: 4
+  von 618). Der neue `Helper\AlbumAlias` bildet den Alias mit dem Slug-Generator
+  des Kerns und deutschem Gebietsschema; das trifft die alte Konvention genau
+  (`ä` → `ae`, `ß` → `ss`, führende Ziffer → `id-`), auch für Akzente und
+  osteuropäische Zeichen. Gilt für automatisch gebildete und für eingetippte
+  Aliase; die Prüfung auf Doppelung läuft am umgeschriebenen Wert.
+
+* Add: Migration „Umlaute in Album-Aliassen umschreiben“. Sie fasst nur Aliase
+  mit Sonderzeichen an, hängt bei einem Zusammenstoß die Albumnummer an und
+  nennt im Protokoll jede Änderung. `shouldRun()` und `run()` stützen sich auf
+  dieselbe Auswertung; der zweite Lauf findet nachweislich nichts mehr.
+
+* Add: **301-Weiterleitung alter Adressen.** `…/dsam-düsseldorf-2023` leitet
+  dauerhaft auf `…/dsam-duesseldorf-2023` weiter, Parameter hinter `?` gehen
+  mit. Bei einem Zusammenstoß führt die alte Adresse zum umbenannten Album und
+  nicht zu dem, das schon immer so hieß. Auch Insert-Tags mit altem Alias
+  finden das Album.
+
+* Change: `ausi/slug-generator` steht jetzt ausdrücklich in `composer.json`.
+  Es kam schon bisher mit dem Contao-Kern, wird aber nun unmittelbar benutzt.
+
 ## Version 1.3.0 (2026-09-28)
 
 * Add: **Reiter „Fotoalben“ im Link-Picker**, neben Seiten, Dateien,

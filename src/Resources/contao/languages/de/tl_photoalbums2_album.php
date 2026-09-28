@@ -14,7 +14,7 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['title'] = array('Titel', 'Geben Sie dem Fotoalbum einen Titel.');
-$GLOBALS['TL_LANG']['tl_photoalbums2_album']['alias'] = array('Alias', 'Der Alias wird automatisch generiert und ist später in der URL zu finden.');
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['alias'] = array('Alias', 'Der Alias wird automatisch aus dem Titel gebildet und ist später Teil der Adresse. Er besteht nur aus Kleinbuchstaben, Ziffern und Bindestrichen; Umlaute werden umgeschrieben (ü wird zu ue, ß zu ss), auch bei einer eigenen Eingabe.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['author'] = array('Autor', 'Hier können Sie den Autor des Albums ändern.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['startdate'] = array('Startdatum', 'Tragen Sie hier das Startdatum ein.');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['enddate'] = array('Enddatum', 'Tragen Sie hier ein Enddatum ein, wenn die Aufnahmen über mehrere Tage dauerten. Ansonsten lassen Sie dieses Feld einfach leer.');
@@ -69,3 +69,4 @@ $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['reader'] = 'Seite des
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['onePage'] = 'Seite des Moduls „%s“';
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['contentElement'] = 'Inhaltselement mit diesem Album';
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['albumView'] = 'Seite des Moduls „%s“';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['aliasEmpty'] = 'Der Alias enthält keine verwertbaren Zeichen. Erlaubt sind Buchstaben, Ziffern und Bindestriche.';

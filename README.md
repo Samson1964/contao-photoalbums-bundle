@@ -110,6 +110,32 @@ Beide Wege gibt es unverändert in Contao 4.13 und Contao 5. Bringt das Theme
 eine eigene Lightbox mit, muss diese lediglich auf `a[data-lightbox]` hören;
 der Wert des Attributs ist je Album eindeutig und gruppiert die Fotos.
 
+## Alias eines Albums
+
+Der Alias ist Teil der Adresse und besteht nur aus Kleinbuchstaben, Ziffern
+und Bindestrichen. Umlaute werden umgeschrieben — `ä` zu `ae`, `ß` zu `ss`,
+Akzente fallen weg (`Café` → `cafe`, `Čačak` → `cacak`). Das gilt für den
+automatisch aus dem Titel gebildeten Alias ebenso wie für eine eigene
+Eingabe. Beginnt er mit einer Ziffer, wird `id-` vorangestellt. So hießen die
+Alben schon unter photoalbums2 und Contao 3:
+`laenderkampf-oesterreich-bayern-2005`.
+
+Unter Contao 4 und 5 ließ `StringUtil::standardize()` Umlaute stehen, und es
+entstanden Aliase wie `dsam-düsseldorf-2023`. Beim Aktualisieren bietet der
+Installationsassistent deshalb die Migration **„Fotoalben: Umlaute in
+Album-Aliassen umschreiben“** an. Sie fasst ausschließlich Aliase mit
+Sonderzeichen an; alle anderen bleiben unverändert, auch wenn die Regel sie
+heute etwas anders bilden würde. Stößt ein umgeschriebener Alias auf einen
+vorhandenen, bekommt er die Albumnummer angehängt. Das Protokoll der Migration
+nennt jede Änderung als „alt → neu“.
+
+**Alte Adressen funktionieren weiter.** Wer `…/dsam-düsseldorf-2023` aufruft
+— über ein Lesezeichen, eine Suchmaschine oder einen Verweis von außen —,
+wird mit **301** auf `…/dsam-duesseldorf-2023` weitergeleitet; angehängte
+Parameter wie `?page=2` gehen mit. Suchmaschinen übernehmen damit die neue
+Adresse. Auch handgeschriebene Insert-Tags mit altem Alias finden das Album.
+Picker-Verweise sind ohnehin nicht betroffen: Sie tragen die Nummer.
+
 ## Auf ein Album verlinken
 
 Im Link-Picker des Backends — dort, wo auch Seiten, Dateien, Nachrichten,

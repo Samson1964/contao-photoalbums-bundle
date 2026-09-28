@@ -141,6 +141,8 @@ $arrClasses = array(
 	'Schachbulle\ContaoPhotoalbumsBundle\Download\ZipStream',
 	'Schachbulle\ContaoPhotoalbumsBundle\Download\AlbumArchive',
 	'Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver',
+	'Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias',
+	'Schachbulle\ContaoPhotoalbumsBundle\Migration\AlbumAliasMigration',
 	'Schachbulle\ContaoPhotoalbumsBundle\EventListener\InsertTagsListener',
 	// Scheitert als fataler Fehler, wenn eine Signatur nicht zur Elternklasse
 	// dieser Contao-Fassung passt — der eigentliche Verträglichkeitstest
@@ -725,7 +727,49 @@ foreach ($arrRankCases as $strLabel => list($arrCandidates, $intExpected))
 	pruefe($strLabel, $intExpected === $intActual, 'gewählt: Seite '.$intActual);
 }
 
-echo "\n12. Dienstdefinitionen\n";
+echo "\n12. Album-Alias ohne Umlaute\n";
+
+/*
+ * Die ersten Fälle sind echte Titel aus dem Bestand samt dem Alias, den
+ * photoalbums2 unter Contao 3 dafür gebildet hat — die neue Regel muss ihn
+ * genau treffen. Danach die vier Umlaut-Aliase, die im Abzug vom 03.09.2026
+ * standen, und Zeichen aus anderen Sprachen.
+ */
+$arrAliasCases = array(
+	'Länderkampf Österreich - Bayern 2005' => 'laenderkampf-oesterreich-bayern-2005',
+	'Frauen-Großmeisterturnier Erfurt 2010' => 'frauen-grossmeisterturnier-erfurt-2010',
+	'33. Deutsche Lösemeisterschaft 2009' => 'id-33-deutsche-loesemeisterschaft-2009',
+	'Verdienstmedaille für Roland Töpfer 2009' => 'verdienstmedaille-fuer-roland-toepfer-2009',
+	'tag-0-eröffnungsfeier' => 'tag-0-eroeffnungsfeier',
+	'dsam-düsseldorf-2023' => 'dsam-duesseldorf-2023',
+	'frauenbundesliga-bad-königshofen-2023' => 'frauenbundesliga-bad-koenigshofen-2023',
+	'außerordentlicher-bundeskongress-2023' => 'ausserordentlicher-bundeskongress-2023',
+	'ÄÖÜ äöü ß' => 'aeoeue-aeoeue-ss',
+	'Café Crème à Paris' => 'cafe-creme-a-paris',
+	'Šahovski klub Čačak' => 'sahovski-klub-cacak',
+	'2005' => 'id-2005',
+	'„“ – …' => '',
+	'olympiade-1968' => 'olympiade-1968',
+);
+
+foreach ($arrAliasCases as $strIn => $strExpected)
+{
+	// PHP macht aus dem Schlüssel '2005' eine Ganzzahl
+	$strIn = (string) $strIn;
+	$strOut =\Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::generate($strIn);
+	pruefe(sprintf('%-40s → %s', $strIn, '' === $strExpected ? '(leer)' : $strExpected), $strExpected === $strOut, $strOut);
+}
+
+pruefe('Umlaut-Alias wird umgeschrieben', \Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::needsRewrite('dsam-düsseldorf-2023'));
+
+/*
+ * Ein reiner ASCII-Alias bleibt stehen, auch wenn die Regel ihn heute anders
+ * bilden würde: `muelheimruhr` statt `muelheim-ruhr`. Jede Änderung bräche
+ * Verweise von außen.
+ */
+pruefe('ASCII-Alias bleibt, auch wenn heute anders gebildet', !\Schachbulle\ContaoPhotoalbumsBundle\Helper\AlbumAlias::needsRewrite('bundesliga-in-muelheimruhr-2011'));
+
+echo "\n13. Dienstdefinitionen\n";
 
 try
 {
@@ -751,6 +795,7 @@ try
 	pruefe('services.yml geladen', true);
 	pruefe('Cron-Auftrag registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Feed\FeedGenerator::class));
 	pruefe('Migration registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Migration\TranslationFieldsMigration::class));
+	pruefe('Alias-Migration registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Migration\AlbumAliasMigration::class));
 
 	$strPicker = \Schachbulle\ContaoPhotoalbumsBundle\Picker\PhotoalbumPickerProvider::class;
 	$arrPickerTags = $objDiContainer->hasDefinition($strPicker) ? $objDiContainer->getDefinition($strPicker)->getTag('contao.picker_provider') : array();
