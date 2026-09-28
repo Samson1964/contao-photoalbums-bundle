@@ -83,6 +83,52 @@ foreach (glob($strDir.'/de/*.php') as $strDe)
 		}
 	}
 
+	/*
+	 * Woertlich gleiche Werte: Ein englischer Text, der Zeichen fuer Zeichen
+	 * dem deutschen gleicht, ist fast immer ein beim Nachtragen vergessener
+	 * Schluessel. Genau so war `tl_content.pa2ImagesShowTeaser` monatelang
+	 * deutsch geblieben, ohne dass die Pruefung auf fehlende und leere
+	 * Schluessel etwas gemerkt haette.
+	 *
+	 * Manches ist zu Recht gleich — Eigennamen, reine Platzhalter, Abkuerzungen
+	 * wie „PGN“. Deshalb ist das ein Hinweis und kein Fehler; ausgenommen sind
+	 * Werte ohne einen einzigen Kleinbuchstaben-Wortteil und solche unter vier
+	 * Zeichen.
+	 */
+	$arrGleich = array();
+
+	foreach ($arrEn as $strKey => $varValue)
+	{
+		if (!isset($arrDe[$strKey]))
+		{
+			continue;
+		}
+
+		$arrEnWerte = \is_array($varValue) ? $varValue : array($varValue);
+		$arrDeWerte = \is_array($arrDe[$strKey]) ? $arrDe[$strKey] : array($arrDe[$strKey]);
+
+		foreach ($arrEnWerte as $intIndex => $varEinzel)
+		{
+			if (!\is_string($varEinzel) || !isset($arrDeWerte[$intIndex]) || !\is_string($arrDeWerte[$intIndex]))
+			{
+				continue;
+			}
+
+			if ($varEinzel !== $arrDeWerte[$intIndex] || mb_strlen(trim($varEinzel)) < 4)
+			{
+				continue;
+			}
+
+			// Mindestens zwei Woerter mit Kleinbuchstaben: dann ist es ein Satz
+			if (preg_match_all('/\b\p{Ll}{2,}/u', $varEinzel) < 2)
+			{
+				continue;
+			}
+
+			$arrGleich[] = $strKey.'['.$intIndex.']';
+		}
+	}
+
 	printf(
 		"%-30s de=%-4d en=%-4d nur_de=%-3d nur_en=%-3d leer_en=%d\n",
 		basename($strDe),
@@ -108,6 +154,12 @@ foreach (glob($strDir.'/de/*.php') as $strDe)
 	foreach ($arrLeer as $strKey)
 	{
 		echo '    englisch leer: '.$strKey."\n";
+		++$intProbleme;
+	}
+
+	foreach ($arrGleich as $strKey)
+	{
+		echo '    wortgleich mit dem Deutschen (bitte ansehen): '.$strKey."\n";
 		++$intProbleme;
 	}
 }

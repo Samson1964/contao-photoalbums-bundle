@@ -110,6 +110,92 @@ Beide Wege gibt es unverändert in Contao 4.13 und Contao 5. Bringt das Theme
 eine eigene Lightbox mit, muss diese lediglich auf `a[data-lightbox]` hören;
 der Wert des Attributs ist je Album eindeutig und gruppiert die Fotos.
 
+## Album herunterladen
+
+Ein Album lässt sich als ZIP-Archiv herunterladen — mit allen Fotos und Videos
+in Originalgröße und einer Textdatei `album.txt`, die Titel, Aufnahmedatum,
+Ereignis, Ort, Fotograf und Beschreibung festhält. Alles liegt im Archiv in
+einem Ordner, der nach dem Alias des Albums heißt, damit beim Entpacken kein
+Dateisalat entsteht.
+
+Angeboten wird der Download über zwei Schalter in den Moduleinstellungen:
+
+| Schalter | Wirkung |
+| --- | --- |
+| Download in Alben-Übersicht anbieten | Ein Knopf auf jeder Album-Kachel |
+| Download in Foto-Ansicht anbieten | Ein Knopf über den Fotos des geöffneten Albums |
+
+Beide sind ab Werk **aus**. Steht ein Schalter aus, liefert auch die Adresse
+mit `pa2_download` nichts — ein abgeschalteter Knopf ist also wirklich aus und
+nicht bloß unsichtbar.
+
+**Wer ein Album sehen darf, darf es herunterladen.** Geprüft wird mit derselben
+Klasse wie bei der Anzeige: veröffentlicht, Archiv nicht gesperrt, Schutz des
+Albums beachtet, Zeitfilter des Moduls eingehalten. Es gibt bewusst keine
+zweite Zugriffsregel, die von der Anzeige abweichen könnte. Ein Album, das der
+Besucher nicht sehen darf, liefert nicht etwa einen Fehler, sondern die gewohnte
+Seite — das verrät nicht einmal, ob es das Album überhaupt gibt.
+
+Der Knopf trägt `rel="nofollow"` und steht zwischen `indexer::stop` und
+`indexer::continue`; weder Suchmaschinen noch Contaos eigener Indexer fordern
+das Archiv also an. Die Antwort trägt zusätzlich `X-Robots-Tag: noindex,
+nofollow`.
+
+### Große Alben
+
+Alben mit weit über tausend Fotos sind ausdrücklich vorgesehen. Der übliche Weg
+— `ZipArchive` eine Datei bauen lassen und sie danach ausliefern — scheitert
+daran gleich dreifach: Er braucht den Platz noch einmal auf der Platte, der
+Besucher wartet ohne jedes Lebenszeichen, bis das Archiv fertig ist, und
+vorher läuft die Laufzeitbegrenzung ab.
+
+Das Bundle schreibt das Archiv deshalb **unmittelbar in die Ausgabe**. Der
+Download beginnt sofort, es wird nichts zwischengespeichert, und der
+Speicherbedarf bleibt bei 256 KiB — gleichgültig, ob das Album zehn Fotos
+enthält oder zehntausend. Möglich machen das drei Entscheidungen im Format:
+
+* **Keine Komprimierung.** Fotos und Videos sind bereits komprimiert; sie noch
+  einmal durch Deflate zu schicken kostet viel Rechenzeit und spart nichts.
+* **Nachgestellte Prüfsumme** (Data Descriptor). Die CRC-32 einer Datei steht
+  erst fest, wenn sie ganz gelesen ist — ohne diesen Kunstgriff müsste jede
+  Datei zweimal gelesen werden.
+* **ZIP64 durchgehend.** Ein klassisches ZIP endet bei 4 GB und 65535
+  Einträgen. Die Grenze nur manchmal zu überschreiten wäre die schlechtere
+  Wahl: Dann führe der Weg für große Archive durch Code, den nie jemand
+  ausprobiert hat.
+
+Weil ohne Komprimierung jede Länge von vornherein feststeht, kann das Bundle
+die Größe des fertigen Archivs **vorab ausrechnen** und als `Content-Length`
+mitgeben. Der Browser zeigt damit Fortschritt und Restdauer an — bei einem
+Album von mehreren Gigabyte der Unterschied zwischen „lädt“ und „hängt“.
+
+Zwei Dinge, die ein Server dafür mitbringen muss:
+
+* Ein **Zeitlimit für die Übertragung** darf es nicht geben. Das Bundle setzt
+  `set_time_limit(0)`; wo ein Hoster die Laufzeit hart begrenzt, bricht ein
+  sehr großes Archiv trotzdem ab.
+* `display_errors` muss **aus** sein. Eine einzige PHP-Warnung stünde mitten
+  im Archiv und machte es unlesbar. Im `prod`-Modus stellt Contao das von
+  selbst sicher.
+
+Die Sitzung wird vor dem Streamen geschlossen; der Besucher kann also
+weitersurfen, während sein Album lädt.
+
+### Nachweis
+
+`tools/zipprobe.php` prüft den ZIP-Schreiber ohne Contao und ohne Datenbank:
+
+```bash
+php tools/zipprobe.php
+```
+
+Jeder Prüffall wird in einem Unterprozess erzeugt — also über denselben Weg wie
+im Webserver — und danach mit PHPs `ZipArchive` gegengelesen. Geprüft werden
+die byte-genaue Vorausberechnung, Dateien über mehrere Blöcke, gleiche
+Dateinamen aus verschiedenen Ordnern, Umlaute im Dateinamen, Änderungszeiten
+vor 1980, **1200 Dateien in einem Archiv** und der Fall, dass eine Datei
+zwischen Anmeldung und Ausgabe schrumpft.
+
 ## Videos
 
 Ein Album darf neben Fotos auch Videos enthalten. Ausgewählt werden sie im

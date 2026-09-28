@@ -45,3 +45,5 @@ $GLOBALS['TL_LANG']['tl_content']['pa2Image_legend']              = 'Foto Einste
 $GLOBALS['TL_LANG']['tl_content']['pa2Meta_legend']               = 'Meta Einstellungen';
 $GLOBALS['TL_LANG']['tl_content']['pa2TimeFilter_legend']         = 'Zeitfilter';
 $GLOBALS['TL_LANG']['tl_content']['pa2Other_legend']              = 'Sonstiges';
+
+$GLOBALS['TL_LANG']['tl_content']['pa2ImagesDownload']            = array('Download in Foto-Ansicht anbieten', 'Setzen Sie dieses Häkchen, um einen Knopf zum Herunterladen des ganzen Albums anzuzeigen. Das Archiv enthält alle Fotos und Videos in Originalgröße sowie eine Infodatei mit den Angaben zum Album.');

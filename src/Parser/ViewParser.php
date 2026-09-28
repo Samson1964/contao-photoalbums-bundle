@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Schachbulle\ContaoPhotoalbumsBundle\Parser;
 
 use Contao\Config;
+use Contao\Controller;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Date;
 use Contao\FilesModel;
 use Contao\Input;
@@ -20,6 +22,7 @@ use Contao\StringUtil;
 use Contao\Template;
 use Contao\UserModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Album\Album;
+use Schachbulle\ContaoPhotoalbumsBundle\Download\AlbumArchive;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\EmptyTemplate;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
@@ -60,7 +63,122 @@ abstract class ViewParser
 		$this->Template = $objTemplate;
 
 		$this->generate();
+		$this->handleDownloadRequest();
 		$this->compile();
+	}
+
+	/**
+	 * Liefert das Archiv aus, wenn die Adresse eines anfordert.
+	 *
+	 * Der Aufruf steht zwischen `generate()` und `compile()`: Die
+	 * Moduleinstellungen sind dann übernommen, aber noch kein einziges
+	 * Vorschaubild erzeugt. Bei einem Album mit tausend Fotos spart das den
+	 * gesamten Aufbau der Seite, den ohnehin niemand zu sehen bekäme.
+	 *
+	 * Wer herunterladen darf, entscheidet dieselbe Klasse wie bei der Anzeige:
+	 * {@see Album} wirft alles heraus, was nicht veröffentlicht, nicht
+	 * freigegeben, aus einem gesperrten Archiv oder außerhalb des Zeitfilters
+	 * ist. Es gibt für den Download also keine zweite Regel, die von der
+	 * Anzeige abweichen könnte. Fällt das angeforderte Album durch, wird nicht
+	 * etwa ein Fehler gemeldet, sondern schlicht die gewohnte Seite
+	 * ausgegeben — dem Anfragenden verrät das nichts darüber, ob es das Album
+	 * überhaupt gibt.
+	 *
+	 * @throws ResponseException Mit der Antwort, die das Archiv ausliefert
+	 *
+	 * @return void Kehrt zurück, wenn kein Archiv auszuliefern ist
+	 */
+	protected function handleDownloadRequest(): void
+	{
+		if (!$this->isDownloadEnabled())
+		{
+			return;
+		}
+
+		$intAlbumId = (int) Input::get('pa2_download');
+
+		if ($intAlbumId < 1 || !$this->isDownloadableAlbum($intAlbumId))
+		{
+			return;
+		}
+
+		$objAlbumList = new Album($intAlbumId, $this->Template->getData());
+		$objAlbums = $objAlbumList->getAlbums();
+
+		if (null === $objAlbums || $objAlbums->count() < 1)
+		{
+			return;
+		}
+
+		$objArchive = new AlbumArchive($objAlbums->current());
+		$objResponse = $objArchive->getResponse();
+
+		// Ein Album ohne eine einzige lesbare Datei ergäbe ein leeres Archiv
+		if (null === $objResponse)
+		{
+			return;
+		}
+
+		throw new ResponseException($objResponse);
+	}
+
+	/**
+	 * Sagt, ob diese Ansicht den Download anbietet.
+	 *
+	 * Die Ableitungen beantworten das aus der Einstellung ihrer jeweiligen
+	 * Ansicht — die Übersicht aus `pa2AlbumsDownload`, die Foto-Ansicht aus
+	 * `pa2ImagesDownload`. Die Basisfassung verneint, damit eine eigene
+	 * Ableitung nicht versehentlich einen Download öffnet.
+	 *
+	 * @return bool true, wenn der Download angeboten wird
+	 */
+	protected function isDownloadEnabled(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Sagt, ob diese Ansicht gerade für dieses Album zuständig ist.
+	 *
+	 * Die Alben-Übersicht bejaht das für jedes Album ihrer Auswahl — sie zeigt
+	 * ja viele auf einmal. Die Foto-Ansicht dagegen zeigt genau ein Album und
+	 * liefert auch nur dieses aus.
+	 *
+	 * Das ist keine Zugriffsgrenze — die zieht {@see Album} unabhängig davon —,
+	 * sondern hält das Verhalten vorhersagbar: Wer im Modul „Leser“ den
+	 * Download einschaltet, meint das angezeigte Album und nicht jedes andere,
+	 * das zufällig im selben Archiv liegt.
+	 *
+	 * @param int $intAlbumId Die angeforderte Albumnummer
+	 *
+	 * @return bool true, wenn diese Ansicht das Album ausliefern darf
+	 */
+	protected function isDownloadableAlbum(int $intAlbumId): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Baut den Verweis, der das Archiv eines Albums anfordert.
+	 *
+	 * Der Verweis bleibt auf der aktuellen Seite: Nur das Modul, das die
+	 * Ansicht erzeugt, kennt die Archiv-Auswahl und den Zeitfilter, unter denen
+	 * geprüft werden muss. Eine eigene Route hätte diesen Zusammenhang nicht.
+	 *
+	 * @param int $intAlbumId Die Nummer des Albums
+	 *
+	 * @return string Die Adresse, oder eine leere Zeichenkette ohne gültige Nummer
+	 */
+	protected function getDownloadLink(int $intAlbumId): string
+	{
+		if ($intAlbumId < 1)
+		{
+			return '';
+		}
+
+		// Ohne Referer-Kennung: Die gehört ins Backend, im Frontend verlängert
+		// sie die Adresse nur und wechselt bei jedem Aufruf
+		return StringUtil::ampersand(Controller::addToUrl('pa2_download='.$intAlbumId, false));
 	}
 
 	/**

@@ -32,15 +32,15 @@ $strExpertLegend = '{expert_legend:hide},'.(isset($GLOBALS['TL_DCA']['tl_module'
 
 $GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2'] = '{title_legend},name,headline,type;{config_legend},pa2Mode';
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_on_one_page'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2ImageViewTemplate,pa2AlbumsTemplate,pa2ImagesTemplate,pa2AlbumsShowHeadline,pa2ImagesShowHeadline,pa2AlbumsShowTitle,pa2ImagesShowTitle,pa2AlbumsShowTeaser,pa2ImagesShowTeaser;{pa2Image_legend},pa2AlbumsImageSize,pa2ImagesImageSize,pa2AlbumsImageMargin,pa2ImagesImageMargin,pa2AlbumsPerRow,pa2ImagesPerRow,pa2AlbumsPerPage,pa2ImagesPerPage,pa2NumberOfAlbums,pa2NumberOfImages;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2ImagesShowMetaDescriptions,pa2AlbumsMetaFields,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_on_one_page'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2ImageViewTemplate,pa2AlbumsTemplate,pa2ImagesTemplate,pa2AlbumsShowHeadline,pa2ImagesShowHeadline,pa2AlbumsShowTitle,pa2ImagesShowTitle,pa2AlbumsShowTeaser,pa2ImagesShowTeaser,pa2AlbumsDownload,pa2ImagesDownload;{pa2Image_legend},pa2AlbumsImageSize,pa2ImagesImageSize,pa2AlbumsImageMargin,pa2ImagesImageMargin,pa2AlbumsPerRow,pa2ImagesPerRow,pa2AlbumsPerPage,pa2ImagesPerPage,pa2NumberOfAlbums,pa2NumberOfImages;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2ImagesShowMetaDescriptions,pa2AlbumsMetaFields,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_only_album_view'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2AlbumsTemplate,pa2AlbumsShowHeadline,pa2AlbumsShowTitle,pa2AlbumsShowTeaser;{pa2Image_legend},pa2AlbumsImageSize,pa2AlbumsImageMargin,pa2AlbumsPerRow,pa2AlbumsPerPage,pa2NumberOfAlbums;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2AlbumsMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_only_album_view'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2AlbumsTemplate,pa2AlbumsShowHeadline,pa2AlbumsShowTitle,pa2AlbumsShowTeaser,pa2AlbumsDownload;{pa2Image_legend},pa2AlbumsImageSize,pa2AlbumsImageMargin,pa2AlbumsPerRow,pa2AlbumsPerPage,pa2NumberOfAlbums;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2AlbumsMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_with_detail_page'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage,pa2OverviewPage,pa2DetailPage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2ImageViewTemplate,pa2AlbumsTemplate,pa2ImagesTemplate,pa2AlbumsShowHeadline,pa2ImagesShowHeadline,pa2AlbumsShowTitle,pa2ImagesShowTitle,pa2AlbumsShowTeaser,pa2ImagesShowTeaser;{pa2Image_legend},pa2AlbumsImageSize,pa2ImagesImageSize,pa2AlbumsImageMargin,pa2ImagesImageMargin,pa2AlbumsPerRow,pa2ImagesPerRow,pa2AlbumsPerPage,pa2ImagesPerPage,pa2NumberOfAlbums,pa2NumberOfImages;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2ImagesShowMetaDescriptions,pa2AlbumsMetaFields,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_with_detail_page'] = '{title_legend},name,headline,type;{config_legend},pa2Mode,pa2PreviewImage,pa2OverviewPage,pa2DetailPage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2ImageViewTemplate,pa2AlbumsTemplate,pa2ImagesTemplate,pa2AlbumsShowHeadline,pa2ImagesShowHeadline,pa2AlbumsShowTitle,pa2ImagesShowTitle,pa2AlbumsShowTeaser,pa2ImagesShowTeaser,pa2AlbumsDownload,pa2ImagesDownload;{pa2Image_legend},pa2AlbumsImageSize,pa2ImagesImageSize,pa2AlbumsImageMargin,pa2ImagesImageMargin,pa2AlbumsPerRow,pa2ImagesPerRow,pa2AlbumsPerPage,pa2ImagesPerPage,pa2NumberOfAlbums,pa2NumberOfImages;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2ImagesShowMetaDescriptions,pa2AlbumsMetaFields,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2list'] = '{title_legend},name,headline,type;{config_legend},pa2PreviewImage,pa2DetailPage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2AlbumsTemplate,pa2AlbumsShowHeadline,pa2AlbumsShowTitle,pa2AlbumsShowTeaser;{pa2Image_legend},pa2AlbumsImageSize,pa2AlbumsImageMargin,pa2AlbumsPerRow,pa2AlbumsPerPage,pa2NumberOfAlbums;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2AlbumsMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2list'] = '{title_legend},name,headline,type;{config_legend},pa2PreviewImage,pa2DetailPage;{pa2Album_legend},pa2Archives,pa2AlbumSortType,pa2AlbumSort;{pa2Template_legend},pa2AlbumViewTemplate,pa2AlbumsTemplate,pa2AlbumsShowHeadline,pa2AlbumsShowTitle,pa2AlbumsShowTeaser,pa2AlbumsDownload;{pa2Image_legend},pa2AlbumsImageSize,pa2AlbumsImageMargin,pa2AlbumsPerRow,pa2AlbumsPerPage,pa2NumberOfAlbums;{pa2Meta_legend:hide},pa2AlbumsShowMetaDescriptions,pa2AlbumsMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2view'] = '{title_legend},name,headline,type;{config_legend},pa2OverviewPage;{pa2Album_legend},pa2Archives;{pa2Template_legend},pa2ImageViewTemplate,pa2ImagesTemplate,pa2ImagesShowHeadline,pa2ImagesShowTitle,pa2ImagesShowTeaser;{pa2Image_legend},pa2ImagesImageSize,pa2ImagesImageMargin,pa2ImagesPerRow,pa2ImagesPerPage,pa2NumberOfImages;{pa2Meta_legend:hide},pa2ImagesShowMetaDescriptions,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2view'] = '{title_legend},name,headline,type;{config_legend},pa2OverviewPage;{pa2Album_legend},pa2Archives;{pa2Template_legend},pa2ImageViewTemplate,pa2ImagesTemplate,pa2ImagesShowHeadline,pa2ImagesShowTitle,pa2ImagesShowTeaser,pa2ImagesDownload;{pa2Image_legend},pa2ImagesImageSize,pa2ImagesImageMargin,pa2ImagesPerRow,pa2ImagesPerPage,pa2NumberOfImages;{pa2Meta_legend:hide},pa2ImagesShowMetaDescriptions,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
 $GLOBALS['TL_DCA']['tl_module']['subpalettes']['pa2TimeFilter'] = 'pa2TimeFilterStart,pa2TimeFilterEnd';
 
@@ -220,6 +220,31 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pa2ImagesShowTeaser'] = array
 	'exclude'   => true,
 	'inputType' => 'checkbox',
 	'default'   => 1,
+	'eval'      => array('tl_class' => 'w50'),
+	'sql'       => "char(1) NOT NULL default ''",
+);
+
+/*
+ * Die beiden Download-Schalter sind ausdruecklich keine Zugriffsgrenze: Wer
+ * ein Album sehen darf, darf es auch herunterladen. Sie entscheiden nur,
+ * **wo** der Knopf erscheint — und dass ohne Knopf auch die Adresse mit
+ * `pa2_download` nichts liefert, damit ein abgeschalteter Knopf nicht bloss
+ * unsichtbar, sondern wirklich aus ist.
+ */
+$GLOBALS['TL_DCA']['tl_module']['fields']['pa2AlbumsDownload'] = array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['pa2AlbumsDownload'],
+	'exclude'   => true,
+	'inputType' => 'checkbox',
+	'eval'      => array('tl_class' => 'w50'),
+	'sql'       => "char(1) NOT NULL default ''",
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['pa2ImagesDownload'] = array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['pa2ImagesDownload'],
+	'exclude'   => true,
+	'inputType' => 'checkbox',
 	'eval'      => array('tl_class' => 'w50'),
 	'sql'       => "char(1) NOT NULL default ''",
 );

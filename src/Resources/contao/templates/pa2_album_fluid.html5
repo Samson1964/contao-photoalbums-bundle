@@ -40,6 +40,15 @@
       </div>
     <?php endif; ?>
 
+    <?php if ($this->downloadLink): ?>
+      <?php /* nofollow und indexer::stop halten Suchmaschinen und Contaos
+             eigenen Indexer davon ab, das Archiv anzufordern — bei einem
+             Album von mehreren Gigabyte wäre ein Crawler-Besuch teuer. */ ?>
+      <!-- indexer::stop -->
+      <p class="pa2-download"><a href="<?= $this->downloadLink ?>" title="<?= $this->downloadTitle ?>" rel="nofollow"><?= $this->downloadLabel ?></a></p>
+      <!-- indexer::continue -->
+    <?php endif; ?>
+
   </div>
 
   <?php if ($this->albumLightbox && $this->albumLightboxImages): ?>

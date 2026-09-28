@@ -20,8 +20,8 @@ $GLOBALS['TL_LANG']['tl_content']['pa2ImagesTemplate']            = array('Image
 $GLOBALS['TL_LANG']['tl_content']['pa2NumberOfImages']            = array('Total number of images', 'Here you can specify the total number of images. Enter 0 to display all.');
 $GLOBALS['TL_LANG']['tl_content']['pa2ImagesPerPage']             = array('Images per Page', 'The number of images per page. Enter 0 to disable the automatic page break.');
 $GLOBALS['TL_LANG']['tl_content']['pa2ImagesShowHeadline']        = array('Show the module title in the image view', 'Set this checkbox to display the module title in the image view.');
-$GLOBALS['TL_LANG']['tl_content']['pa2ImagesShowTitle']           = array('Show the album title in the image view', 'Set this checkbox to display the module title in the image view.');
-$GLOBALS['TL_LANG']['tl_content']['pa2ImagesShowTeaser']          = array('Teaser in Foto-Ansicht anzeigen', 'Setzen Sie dieses Häkchen, um den Teaser in der Foto-Ansicht anzuzeigen.');
+$GLOBALS['TL_LANG']['tl_content']['pa2ImagesShowTitle']           = array('Show the album title in the image view', 'Set this checkbox to display the album title in the image view.');
+$GLOBALS['TL_LANG']['tl_content']['pa2ImagesShowTeaser']          = array('Show the teaser in the image view', 'Set this checkbox to display the teaser in the image view.');
 
 $GLOBALS['TL_LANG']['tl_content']['pa2ImagesImageSize']           = array('Image view image dimensions', 'Here you can set the image dimensions and the resize mode.');
 $GLOBALS['TL_LANG']['tl_content']['pa2ImagesImageMargin']         = array('Image view image margin', 'Here you can enter the top, right, bottom and left margin and the unit.');
@@ -45,3 +45,5 @@ $GLOBALS['TL_LANG']['tl_content']['pa2Image_legend']              = 'Image setti
 $GLOBALS['TL_LANG']['tl_content']['pa2Meta_legend']               = 'Meta settings';
 $GLOBALS['TL_LANG']['tl_content']['pa2TimeFilter_legend']         = 'Time filter settings';
 $GLOBALS['TL_LANG']['tl_content']['pa2Other_legend']              = 'Other';
+
+$GLOBALS['TL_LANG']['tl_content']['pa2ImagesDownload']            = array('Offer a download in the image view', 'Set this checkbox to display a button that downloads the whole album. The archive contains all images and videos at their original size plus an info file with the album details.');

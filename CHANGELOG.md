@@ -1,5 +1,46 @@
 # Fotoalben Changelog
 
+## Version 1.2.0 (2026-09-28)
+
+* Add: **Album als ZIP-Archiv herunterladen.** Zwei neue Schalter in den
+  Moduleinstellungen — „Download in Alben-Übersicht anbieten“ und „Download in
+  Foto-Ansicht anbieten“ — blenden einen Knopf ein. Das Archiv enthält alle
+  Fotos und Videos in Originalgröße sowie eine Textdatei `album.txt` mit Titel,
+  Aufnahmedatum, Ereignis, Ort, Fotograf und Beschreibung.
+
+  Wer ein Album sehen darf, darf es herunterladen: Geprüft wird mit derselben
+  Klasse wie bei der Anzeige, es gibt also keine zweite Zugriffsregel, die
+  davon abweichen könnte. Steht der Schalter aus, liefert auch die Adresse mit
+  `pa2_download` nichts.
+
+* Add: **Alben mit weit über tausend Fotos sind ausdrücklich vorgesehen.** Der
+  neue `Download\ZipStream` schreibt das Archiv unmittelbar in die Ausgabe,
+  statt es erst auf der Platte zu bauen. Der Download beginnt sofort, es wird
+  nichts zwischengespeichert, und der Speicherbedarf bleibt bei 256 KiB —
+  gleichgültig, wie groß das Album ist.
+
+  Ohne Komprimierung (Fotos sind bereits komprimiert), mit nachgestellter
+  Prüfsumme (sonst müsste jede Datei zweimal gelesen werden) und durchgehend im
+  ZIP64-Format (ein klassisches ZIP endet bei 4 GB und 65535 Einträgen). Weil
+  damit jede Länge von vornherein feststeht, geht ein genaues `Content-Length`
+  an den Browser: Er zeigt Fortschritt und Restdauer an. Die Sitzung wird vor
+  dem Streamen geschlossen, damit der Besucher weitersurfen kann, während sein
+  Album lädt.
+
+* Add: `tools/zipprobe.php` prüft den ZIP-Schreiber ohne Contao. Jeder Prüffall
+  wird in einem Unterprozess erzeugt — also über denselben Weg wie im
+  Webserver — und danach mit PHPs `ZipArchive` gegengelesen, das dabei jede
+  CRC-32 selbst nachrechnet. 48 Prüfungen, darunter 1200 Dateien in einem
+  Archiv und die byte-genaue Vorausberechnung.
+
+* Fix: Im englischen `tl_content.php` war die Beschriftung `pa2ImagesShowTeaser`
+  deutsch geblieben, und der Hilfetext zu `pa2ImagesShowTitle` sprach vom
+  Modultitel statt vom Albumtitel. `tools/sprachvergleich.php` meldet jetzt auch
+  englische Werte, die wortgleich mit dem deutschen sind — das ist die Prüfung,
+  die den Fehler gefunden hätte. Kurze Werte und solche ohne zwei
+  kleingeschriebene Wörter bleiben ausgenommen, damit Eigennamen und
+  Abkürzungen nicht ständig anschlagen.
+
 ## Version 1.1.0 (2026-09-04)
 
 * Add: **Videos in Alben.** Neben Fotos dürfen jetzt auch Videodateien in einem

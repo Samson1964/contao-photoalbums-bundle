@@ -69,6 +69,16 @@ class AlbumViewParser extends ViewParser
 	}
 
 	/**
+	 * Sagt, ob die Alben-Übersicht den Download anbietet.
+	 *
+	 * @return bool true, wenn die Einstellung `pa2AlbumsDownload` gesetzt ist
+	 */
+	protected function isDownloadEnabled(): bool
+	{
+		return (bool) $this->Template->pa2AlbumsDownload;
+	}
+
+	/**
 	 * Holt die Alben und baut die Kacheln.
 	 *
 	 * @return void
@@ -151,6 +161,16 @@ class AlbumViewParser extends ViewParser
 			$objSubtemplate->photographer = $objAlbums->photographer;
 			$objSubtemplate->description = $objAlbums->description;
 			$objSubtemplate->numberOfAllImages = \count($objAlbums->arrSortedImageUuids ?? array());
+
+			if ($this->isDownloadEnabled())
+			{
+				$objSubtemplate->downloadLink = $this->getDownloadLink((int) $objAlbums->id);
+				$objSubtemplate->downloadLabel = $GLOBALS['TL_LANG']['PA2']['downloadAlbum'][0] ?? '';
+				$objSubtemplate->downloadTitle = sprintf(
+					$GLOBALS['TL_LANG']['PA2']['downloadAlbum'][1] ?? '%s',
+					$objSubtemplate->title
+				);
+			}
 
 			$objSubtemplate = $this->addDateToTemplate($objSubtemplate, $objAlbums->startdate, $objAlbums->enddate);
 			$objSubtemplate = $this->addSpecificClassesToTemplate($objSubtemplate, $i);

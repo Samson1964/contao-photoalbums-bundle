@@ -156,3 +156,25 @@
 	height: 0 !important;
 	overflow: hidden !important;
 }
+
+/*
+ * Knopf zum Herunterladen eines Albums.
+ *
+ * Diese Regel ist die einzige, die nicht aus der Urfassung stammt. Sie haengt
+ * ausschliesslich an der Klasse `pa2-download`, die es nur in den
+ * mitgelieferten Templates gibt — in fremdem Markup kann sie deshalb nichts
+ * treffen. Gestaltet wird bewusst nur das Noetigste; Farben und Form gehoeren
+ * ins Theme.
+ */
+.pa2-download {
+	margin: 0 0 12px;
+}
+
+.pa2-download a {
+	display: inline-block;
+	text-decoration: none;
+}
+
+.pa2-download a::before {
+	content: "\2193\00a0";
+}

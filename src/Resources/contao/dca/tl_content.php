@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'pa2TimeFilter'
  */
 $strExpertLegend = '{expert_legend:hide},'.(isset($GLOBALS['TL_DCA']['tl_content']['fields']['guests']) ? 'guests,' : '').'cssID';
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['photoalbums2'] = '{type_legend},type,headline;{config_legend},pa2Album;{pa2Template_legend},pa2ImageViewTemplate,pa2ImagesTemplate,pa2ImagesShowHeadline,pa2ImagesShowTitle,pa2ImagesShowTeaser;{pa2Image_legend},pa2ImagesImageSize,pa2ImagesImageMargin,pa2ImagesPerRow,pa2ImagesPerPage,pa2NumberOfImages;{pa2Meta_legend:hide},pa2ImagesShowMetaDescriptions,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
+$GLOBALS['TL_DCA']['tl_content']['palettes']['photoalbums2'] = '{type_legend},type,headline;{config_legend},pa2Album;{pa2Template_legend},pa2ImageViewTemplate,pa2ImagesTemplate,pa2ImagesShowHeadline,pa2ImagesShowTitle,pa2ImagesShowTeaser,pa2ImagesDownload;{pa2Image_legend},pa2ImagesImageSize,pa2ImagesImageMargin,pa2ImagesPerRow,pa2ImagesPerPage,pa2NumberOfImages;{pa2Meta_legend:hide},pa2ImagesShowMetaDescriptions,pa2ImagesMetaFields;{pa2TimeFilter_legend:hide},pa2TimeFilter;{pa2Other_legend:hide},pa2Teaser;{protected_legend:hide},protected;'.$strExpertLegend;
 
 $GLOBALS['TL_DCA']['tl_content']['subpalettes']['pa2TimeFilter'] = 'pa2TimeFilterStart,pa2TimeFilterEnd';
 
@@ -96,6 +96,19 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pa2ImagesShowTeaser'] = array
 	'exclude'   => true,
 	'inputType' => 'checkbox',
 	'default'   => 1,
+	'eval'      => array('tl_class' => 'clr'),
+	'sql'       => "char(1) NOT NULL default ''",
+);
+
+/*
+ * Kein Zugriffsschalter, sondern die Frage, ob der Knopf erscheint. Steht er
+ * aus, liefert auch die Adresse mit `pa2_download` nichts.
+ */
+$GLOBALS['TL_DCA']['tl_content']['fields']['pa2ImagesDownload'] = array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_content']['pa2ImagesDownload'],
+	'exclude'   => true,
+	'inputType' => 'checkbox',
 	'eval'      => array('tl_class' => 'clr'),
 	'sql'       => "char(1) NOT NULL default ''",
 );

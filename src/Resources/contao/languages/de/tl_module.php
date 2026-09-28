@@ -63,3 +63,6 @@ $GLOBALS['TL_LANG']['tl_module']['pa2Image_legend']              = 'Foto Einstel
 $GLOBALS['TL_LANG']['tl_module']['pa2Meta_legend']               = 'Meta Einstellungen';
 $GLOBALS['TL_LANG']['tl_module']['pa2TimeFilter_legend']         = 'Zeitfilter';
 $GLOBALS['TL_LANG']['tl_module']['pa2Other_legend']              = 'Sonstiges';
+
+$GLOBALS['TL_LANG']['tl_module']['pa2AlbumsDownload']           = array('Download in Alben-Übersicht anbieten', 'Setzen Sie dieses Häkchen, um auf jeder Album-Kachel einen Knopf zum Herunterladen anzuzeigen. Das Archiv enthält alle Fotos und Videos des Albums in Originalgröße sowie eine Infodatei mit den Angaben zum Album. Wer ein Album sehen darf, darf es damit auch herunterladen.');
+$GLOBALS['TL_LANG']['tl_module']['pa2ImagesDownload']           = array('Download in Foto-Ansicht anbieten', 'Setzen Sie dieses Häkchen, um in der Foto-Ansicht einen Knopf zum Herunterladen des ganzen Albums anzuzeigen.');

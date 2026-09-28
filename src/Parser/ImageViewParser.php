@@ -19,6 +19,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Album\Album;
 use Schachbulle\ContaoPhotoalbumsBundle\Album\Image;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Pagination;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
+use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 
 /**
  * Baut die Foto-Ansicht eines einzelnen Albums.
@@ -153,6 +154,16 @@ class ImageViewParser extends ViewParser
 		$this->objAlbum = $objAlbum;
 		$this->arrAllItems = $objAlbum->arrSortedImageUuids;
 
+		if ($this->isDownloadEnabled())
+		{
+			$this->Template->downloadLink = $this->getDownloadLink((int) $objAlbum->id);
+			$this->Template->downloadLabel = $GLOBALS['TL_LANG']['PA2']['downloadAlbum'][0] ?? '';
+			$this->Template->downloadTitle = sprintf(
+				$GLOBALS['TL_LANG']['PA2']['downloadAlbum'][1] ?? '%s',
+				strip_tags((string) $objAlbum->title)
+			);
+		}
+
 		$objPagination = new Pagination($this->arrAllItems, $this->Template->intMaxItems, $this->Template->intItemsPerPage);
 
 		$this->arrItems = $objPagination->getItems();
@@ -160,6 +171,46 @@ class ImageViewParser extends ViewParser
 		$this->Template->totalItems = $objPagination->getTotalItems();
 
 		$this->parseImages();
+	}
+
+	/**
+	 * Sagt, ob die Foto-Ansicht den Download anbietet.
+	 *
+	 * @return bool true, wenn die Einstellung `pa2ImagesDownload` gesetzt ist
+	 */
+	protected function isDownloadEnabled(): bool
+	{
+		return (bool) $this->Template->pa2ImagesDownload;
+	}
+
+	/**
+	 * Lässt nur das Album durch, das diese Ansicht auch zeigt.
+	 *
+	 * Steht die Nummer im Inhaltselement fest, muss sie übereinstimmen. Sonst
+	 * wird der Wert aus der Adresse geprüft — dort kann auch ein Alias stehen,
+	 * der erst über den Datensatz aufzulösen ist.
+	 *
+	 * @param int $intAlbumId Die angeforderte Albumnummer
+	 *
+	 * @return bool true, wenn es das angezeigte Album ist
+	 */
+	protected function isDownloadableAlbum(int $intAlbumId): bool
+	{
+		if ($this->intAlbumId > 0)
+		{
+			return $this->intAlbumId === $intAlbumId;
+		}
+
+		$varCurrent = $this->getAlbumIdOrAlias();
+
+		if (is_numeric($varCurrent))
+		{
+			return (int) $varCurrent === $intAlbumId;
+		}
+
+		$objAlbum = AlbumModel::findPublishedByIdOrAlias((string) $varCurrent);
+
+		return null !== $objAlbum && $objAlbum->count() > 0 && (int) $objAlbum->current()->id === $intAlbumId;
 	}
 
 	/**

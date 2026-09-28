@@ -104,3 +104,15 @@ $GLOBALS['TL_LANG']['PA2']['pa2TimeFilterOptions']['days'] = 'Tag(en)';
 $GLOBALS['TL_LANG']['PA2']['pa2TimeFilterOptions']['weeks'] = 'Woche(n)';
 $GLOBALS['TL_LANG']['PA2']['pa2TimeFilterOptions']['months'] = 'Monat(en)';
 $GLOBALS['TL_LANG']['PA2']['pa2TimeFilterOptions']['years'] = 'Jahr(en)';
+
+/**
+ * Download
+ */
+$GLOBALS['TL_LANG']['PA2']['downloadAlbum'] = array('Album herunterladen', 'Alle Fotos und Videos des Albums „%s“ als ZIP-Archiv herunterladen');
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['date'] = 'Aufnahmedatum';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['event'] = 'Ereignis';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['place'] = 'Aufnahmeort';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['photographer'] = 'Fotograf';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['files'] = 'Dateien';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['description'] = 'Beschreibung';
+$GLOBALS['TL_LANG']['PA2']['downloadInfo']['source'] = 'Heruntergeladen am %s von %s';

@@ -136,6 +136,9 @@ $arrClasses = array(
 	'Schachbulle\ContaoPhotoalbumsBundle\Helper\TimeFilter',
 	'Schachbulle\ContaoPhotoalbumsBundle\Helper\Thumbnail',
 	'Schachbulle\ContaoPhotoalbumsBundle\Helper\EmptyTemplate',
+	'Schachbulle\ContaoPhotoalbumsBundle\Helper\Video',
+	'Schachbulle\ContaoPhotoalbumsBundle\Download\ZipStream',
+	'Schachbulle\ContaoPhotoalbumsBundle\Download\AlbumArchive',
 	'Schachbulle\ContaoPhotoalbumsBundle\Widget\ImageSortWizard',
 	'Schachbulle\ContaoPhotoalbumsBundle\Widget\SortWizard',
 	'Schachbulle\ContaoPhotoalbumsBundle\Modules\ModulePhotoalbums2',
@@ -494,7 +497,171 @@ foreach (array('pa2_image', 'pa2_image_fluid') as $strTemplate)
 	pruefe($strTemplate.': Videozweig vorhanden', false !== strpos($strMarkup, 'data-pa2-video='));
 }
 
-echo "\n10. Dienstdefinitionen\n";
+echo "\n10. Download\n";
+
+/*
+ * Das ZIP-Format selbst prueft `tools/zipprobe.php` — dort wird jedes erzeugte
+ * Archiv mit ZipArchive gegengelesen. Hier geht es nur um den Einbau: Stehen
+ * die Felder in den richtigen Paletten, gibt es die Beschriftungen, und tragen
+ * die Templates den Knopf?
+ */
+foreach (array('pa2AlbumsDownload', 'pa2ImagesDownload') as $strField)
+{
+	pruefe('tl_module: Feld '.$strField, isset($GLOBALS['TL_DCA']['tl_module']['fields'][$strField]));
+}
+
+pruefe('tl_content: Feld pa2ImagesDownload', isset($GLOBALS['TL_DCA']['tl_content']['fields']['pa2ImagesDownload']));
+
+/*
+ * Jede Palette muss genau den Schalter fuehren, dessen Ansicht sie ueberhaupt
+ * erzeugt: Der Modus „Nur Album-Ansicht mit Lightbox“ hat keine Foto-Ansicht,
+ * das Modul „Leser“ keine Uebersicht. Ein Schalter in der falschen Palette
+ * waere ein Knopf, der nie erscheint.
+ */
+$arrPaletteChecks = array(
+	'pa2_on_one_page' => array('pa2AlbumsDownload' => true, 'pa2ImagesDownload' => true),
+	'pa2_only_album_view' => array('pa2AlbumsDownload' => true, 'pa2ImagesDownload' => false),
+	'pa2_with_detail_page' => array('pa2AlbumsDownload' => true, 'pa2ImagesDownload' => true),
+	'photoalbums2list' => array('pa2AlbumsDownload' => true, 'pa2ImagesDownload' => false),
+	'photoalbums2view' => array('pa2AlbumsDownload' => false, 'pa2ImagesDownload' => true),
+);
+
+foreach ($arrPaletteChecks as $strPalette => $arrExpected)
+{
+	$strValue = (string) ($GLOBALS['TL_DCA']['tl_module']['palettes'][$strPalette] ?? '');
+
+	foreach ($arrExpected as $strField => $blnExpected)
+	{
+		pruefe(
+			sprintf('%-22s %s %s', $strPalette, $blnExpected ? 'fuehrt  ' : 'ohne    ', $strField),
+			(false !== strpos($strValue, ','.$strField)) === $blnExpected
+		);
+	}
+}
+
+pruefe(
+	'tl_content-Palette fuehrt pa2ImagesDownload',
+	false !== strpos((string) ($GLOBALS['TL_DCA']['tl_content']['palettes']['photoalbums2'] ?? ''), ',pa2ImagesDownload')
+);
+
+// Beschriftungen in beiden Sprachen
+foreach (array('de', 'en') as $strLanguage)
+{
+	$GLOBALS['TL_LANG'] = array();
+
+	include $strBundleDir.'/src/Resources/contao/languages/'.$strLanguage.'/default.php';
+	include $strBundleDir.'/src/Resources/contao/languages/'.$strLanguage.'/tl_module.php';
+	include $strBundleDir.'/src/Resources/contao/languages/'.$strLanguage.'/tl_content.php';
+
+	pruefe($strLanguage.': Knopfbeschriftung', '' !== (string) ($GLOBALS['TL_LANG']['PA2']['downloadAlbum'][0] ?? ''));
+	pruefe($strLanguage.': Titel mit Platzhalter', false !== strpos((string) ($GLOBALS['TL_LANG']['PA2']['downloadAlbum'][1] ?? ''), '%s'));
+	pruefe($strLanguage.': Quellzeile mit zwei Platzhaltern', 2 === substr_count((string) ($GLOBALS['TL_LANG']['PA2']['downloadInfo']['source'] ?? ''), '%s'));
+
+	foreach (array('date', 'event', 'place', 'photographer', 'files', 'description') as $strKey)
+	{
+		pruefe($strLanguage.': Infodatei-Beschriftung '.$strKey, '' !== (string) ($GLOBALS['TL_LANG']['PA2']['downloadInfo'][$strKey] ?? ''));
+	}
+
+	foreach (array('tl_module' => 'pa2AlbumsDownload', 'tl_content' => 'pa2ImagesDownload') as $strTable => $strField)
+	{
+		pruefe($strLanguage.': '.$strTable.'.'.$strField, '' !== (string) ($GLOBALS['TL_LANG'][$strTable][$strField][0] ?? ''));
+	}
+}
+
+// Die Templates tragen den Knopf, und zwar mit den Bremsen gegen Crawler
+foreach (array('pa2_wrap', 'pa2_album', 'pa2_album_fluid') as $strTemplate)
+{
+	$strMarkup = file_get_contents($strBundleDir.'/src/Resources/contao/templates/'.$strTemplate.'.html5');
+
+	pruefe($strTemplate.': Knopf vorhanden', false !== strpos($strMarkup, 'class="pa2-download"'));
+	pruefe($strTemplate.': Verweis mit nofollow', false !== strpos($strMarkup, 'rel="nofollow"'));
+	pruefe($strTemplate.': vom Indexer ausgenommen', false !== strpos($strMarkup, 'indexer::stop'));
+}
+
+/*
+ * Ohne gesetzten Schalter darf auch die Adresse mit `pa2_download` nichts
+ * liefern — sonst waere der abgeschaltete Knopf bloss unsichtbar. Die
+ * Basisfassung des Parsers verneint deshalb grundsaetzlich.
+ */
+$objStub = new class() extends \Schachbulle\ContaoPhotoalbumsBundle\Parser\ViewParser
+{
+	/**
+	 * Umgeht den Konstruktor der Elternklasse, der ein Template verlangt.
+	 */
+	public function __construct()
+	{
+	}
+
+	/**
+	 * Pflichtmethode der Elternklasse; hier ohne Aufgabe.
+	 *
+	 * @return void
+	 */
+	protected function compile(): void
+	{
+	}
+
+	/**
+	 * Macht die geschuetzte Antwort fuer die Pruefung zugaenglich.
+	 *
+	 * @return bool Was die Basisfassung sagt
+	 */
+	public function askDownloadEnabled(): bool
+	{
+		return $this->isDownloadEnabled();
+	}
+};
+
+pruefe('ViewParser verneint den Download grundsaetzlich', false === $objStub->askDownloadEnabled());
+
+foreach (array('AlbumViewParser', 'ImageViewParser') as $strParser)
+{
+	$objRefl = new \ReflectionClass('Schachbulle\ContaoPhotoalbumsBundle\Parser\\'.$strParser);
+
+	pruefe(
+		$strParser.' beantwortet isDownloadEnabled selbst',
+		$objRefl->getName() === $objRefl->getMethod('isDownloadEnabled')->getDeclaringClass()->getName()
+	);
+}
+
+// Das Stylesheet haengt ausschliesslich an der bundleeigenen Klasse
+$strCss = file_get_contents($strBundleDir.'/src/Resources/public/photoalbums.css');
+
+// Kommentare heraus, sonst zaehlen sie beim Zerlegen zum Selektor
+$strCss = (string) preg_replace('#/\*.*?\*/#s', '', $strCss);
+
+$arrDownloadRules = array();
+
+foreach (explode('}', $strCss) as $strBlock)
+{
+	$intBrace = strpos($strBlock, '{');
+
+	if (false === $intBrace || false === strpos($strBlock, 'pa2-download'))
+	{
+		continue;
+	}
+
+	$arrDownloadRules[] = trim(substr($strBlock, 0, $intBrace));
+}
+
+pruefe('Drei Regeln fuer den Knopf', 3 === \count($arrDownloadRules), implode(' | ', $arrDownloadRules));
+
+$blnScoped = true;
+
+foreach ($arrDownloadRules as $strSelector)
+{
+	foreach (explode(',', $strSelector) as $strSingle)
+	{
+		if (0 !== strpos(trim($strSingle), '.pa2-download'))
+		{
+			$blnScoped = false;
+		}
+	}
+}
+
+pruefe('Jede Regel beginnt mit .pa2-download', $blnScoped, implode(' | ', $arrDownloadRules));
+
+echo "\n11. Dienstdefinitionen\n";
 
 try
 {

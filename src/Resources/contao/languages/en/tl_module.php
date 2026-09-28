@@ -63,3 +63,6 @@ $GLOBALS['TL_LANG']['tl_module']['pa2Image_legend']              = 'Image settin
 $GLOBALS['TL_LANG']['tl_module']['pa2Meta_legend']               = 'Meta settings';
 $GLOBALS['TL_LANG']['tl_module']['pa2TimeFilter_legend']         = 'Time filter settings';
 $GLOBALS['TL_LANG']['tl_module']['pa2Other_legend']              = 'Other';
+
+$GLOBALS['TL_LANG']['tl_module']['pa2AlbumsDownload']           = array('Offer a download in the album overview', 'Set this checkbox to display a download button on every album tile. The archive contains all images and videos of the album at their original size plus an info file with the album details. Whoever may view an album may also download it.');
+$GLOBALS['TL_LANG']['tl_module']['pa2ImagesDownload']           = array('Offer a download in the image view', 'Set this checkbox to display a button in the image view that downloads the whole album.');
