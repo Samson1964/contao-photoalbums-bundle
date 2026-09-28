@@ -57,3 +57,15 @@ $GLOBALS['TL_LANG']['tl_photoalbums2_album']['cut']   = array('Fotoalbum verschi
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['delete'] = array('Fotoalbum löschen', 'Fotoalbum ID %s löschen');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['show']   = array('Details des Fotoalbum anzeigen', 'Details des Fotoalbum ID %s anzeigen');
 $GLOBALS['TL_LANG']['tl_photoalbums2_album']['toggle'] = array('Fotoalbum veröffentlichten/unveröffentlichen', 'Fotoalbum ID %s veröffentlichten/unveröffentlichen');
+
+/**
+ * Anzeige der Zielseite in der Albenliste
+ */
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlTarget'] = 'Verweise führen auf: %s';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlNone'] = 'Keine veröffentlichte Seite zeigt dieses Album — Verweise darauf bleiben leer. Tragen Sie im Archiv die „Seite mit der Foto-Ansicht“ ein.';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['archive'] = 'Einstellung im Archiv';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['detailPage'] = 'Detailseite des Moduls „%s“';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['reader'] = 'Seite des Moduls „%s“';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['onePage'] = 'Seite des Moduls „%s“';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['contentElement'] = 'Inhaltselement mit diesem Album';
+$GLOBALS['TL_LANG']['tl_photoalbums2_album']['urlSource']['albumView'] = 'Seite des Moduls „%s“';

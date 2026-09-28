@@ -335,6 +335,112 @@ foreach (array('pa2_wrap', 'pa2_album', 'pa2_album_fluid', 'pa2_image', 'pa2_ima
 $arrGroup = Controller::getTemplateGroup('pa2_wrap');
 pruefe('Templategruppe pa2_wrap gefunden', !empty($arrGroup), implode(', ', array_keys($arrGroup)));
 
+echo "\n7. Adresse eines Albums, Insert-Tags und Link-Picker\n";
+
+/*
+ * Erwartet wird der dokumentierte Aufbau der Testinstallationen: Album 1
+ * „Olympiade 1968“ in Archiv 1, Modul 9300 über ein Inhaltselement auf Seite
+ * 9300 eingebunden. Am Archiv ist keine Seite eingetragen — die Adresse muss
+ * also die Automatik finden.
+ */
+Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver::reset();
+
+$objAlbum1 = Contao\Database::getInstance()->prepare('SELECT * FROM tl_photoalbums2_album WHERE id=?')->limit(1)->execute(1);
+
+if ($objAlbum1->numRows < 1)
+{
+	pruefe('Testalbum 1 vorhanden', false);
+}
+else
+{
+	$objResolver = new Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver();
+	$arrTarget = $objResolver->findTarget((object) $objAlbum1->row());
+
+	pruefe('Automatik findet eine Seite', null !== $arrTarget);
+	pruefe('Es ist Seite 9300', null !== $arrTarget && 9300 === (int) $arrTarget['page']->id, null !== $arrTarget ? (string) $arrTarget['page']->id : '');
+	pruefe('Gefunden über die Einbindung des Moduls', null !== $arrTarget && \in_array($arrTarget['source'], array('onePage', 'albumView'), true), $arrTarget['source'] ?? '');
+	pruefe('Album kommt als Parameter in die Adresse', null !== $arrTarget && true === $arrTarget['withParameter']);
+
+	$strUrl = $objResolver->generate((object) $objAlbum1->row());
+	pruefe('Adresse enthält Seite und Alias', false !== strpos($strUrl, 'bundle-photoalbums') && false !== strpos($strUrl, 'olympiade-1968'), $strUrl);
+
+	$strAbsolute = $objResolver->generate((object) $objAlbum1->row(), true);
+	pruefe('Absolute Adresse mit Schema', (bool) preg_match('#^https?://#', $strAbsolute), $strAbsolute);
+
+	/*
+	 * Über Contaos eigenen Parser, nicht über die eigene Klasse: So ist auch
+	 * geprüft, dass der Hook in dieser Fassung überhaupt aufgerufen wird.
+	 */
+	$objParser = $container->get('contao.insert_tag.parser');
+	$fnReplace = static function (string $strText) use ($objParser): string
+	{
+		return method_exists($objParser, 'replaceInline') ? (string) $objParser->replaceInline($strText) : (string) $objParser->replace($strText);
+	};
+
+	pruefe('{{photoalbum_url::1}} liefert die Adresse', $strUrl === $fnReplace('{{photoalbum_url::1}}'), $fnReplace('{{photoalbum_url::1}}'));
+	pruefe('Alias statt Nummer ergibt dasselbe', $strUrl === $fnReplace('{{photoalbum_url::olympiade-1968}}'), $fnReplace('{{photoalbum_url::olympiade-1968}}'));
+	pruefe('{{photoalbum_title::1}} liefert den Titel', 'Olympiade 1968' === $fnReplace('{{photoalbum_title::1}}'), $fnReplace('{{photoalbum_title::1}}'));
+	pruefe('{{photoalbum::1}} liefert einen Verweis', (bool) preg_match('#^<a href="[^"]*olympiade-1968[^"]*" title="Olympiade 1968">Olympiade 1968</a>$#', $fnReplace('{{photoalbum::1}}')), $fnReplace('{{photoalbum::1}}'));
+	pruefe('|absolute liefert Schema und Domain', (bool) preg_match('#^https?://#', $fnReplace('{{photoalbum_url::1|absolute}}')), $fnReplace('{{photoalbum_url::1|absolute}}'));
+	pruefe('Unbekanntes Album ergibt nichts', '' === $fnReplace('{{photoalbum_url::999999}}'));
+	pruefe('Fremde Tags bleiben unberührt', date('Y') === $fnReplace('{{date::Y}}'), $fnReplace('{{date::Y}}'));
+
+	// Die Zeile in der Albenliste des Backends zeigt dieselbe Adresse
+	$strRow = (new Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\AlbumListener())->listAlbums($objAlbum1->row());
+	pruefe('Albenliste zeigt die Zielseite', false !== strpos($strRow, 'pa2-urltarget') && false !== strpos($strRow, 'olympiade-1968'), strip_tags($strRow));
+}
+
+/*
+ * Der Picker-Provider wird hier von Hand gebaut: Im übersetzten Behälter ist
+ * er privat. Die Rechteprüfung ersetzt ein Stellvertreter — ohne angemeldeten
+ * Backend-Benutzer verneinte die echte jeden Zugriff.
+ */
+$fnAuth = static function (bool $blnGranted)
+{
+	return new class($blnGranted) implements Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+	{
+		private $blnGranted;
+
+		public function __construct(bool $blnGranted)
+		{
+			$this->blnGranted = $blnGranted;
+		}
+
+		public function isGranted($attribute, $subject = null, $accessDecision = null): bool
+		{
+			return $this->blnGranted && 'contao_user.modules' === $attribute && 'photoalbums2' === $subject;
+		}
+	};
+};
+
+$fnProvider = static function (bool $blnGranted) use ($container, $fnAuth)
+{
+	return new Schachbulle\ContaoPhotoalbumsBundle\Picker\PhotoalbumPickerProvider(
+		new Knp\Menu\MenuFactory(),
+		$container->get('router'),
+		$container->get('translator'),
+		$fnAuth($blnGranted)
+	);
+};
+
+$objProvider = $fnProvider(true);
+$objConfig = new Contao\CoreBundle\Picker\PickerConfig('link', array(), '{{photoalbum_url::1}}', 'photoalbumPicker');
+
+pruefe('Picker: Reiter beim Verlinken', $objProvider->supportsContext('link'));
+pruefe('Picker: kein Reiter bei der Dateiauswahl', !$objProvider->supportsContext('file'));
+pruefe('Picker: kein Reiter ohne Modulrecht', !$fnProvider(false)->supportsContext('link'));
+pruefe('Picker: erkennt eigenen Tag', $objProvider->supportsValue($objConfig));
+pruefe('Picker: erkennt fremden Tag nicht', !$objProvider->supportsValue(new Contao\CoreBundle\Picker\PickerConfig('link', array(), '{{news_url::1}}')));
+pruefe('Picker: fügt {{photoalbum_url::5}} ein', '{{photoalbum_url::5}}' === $objProvider->convertDcaValue($objConfig, 5));
+pruefe('Picker: wählt Album 1 vor', '1' === (string) ($objProvider->getDcaAttributes($objConfig)['value'] ?? ''));
+pruefe('Picker: Liste der Alben', 'tl_photoalbums2_album' === $objProvider->getDcaTable());
+
+$strPickerUrl = (string) $objProvider->getUrl($objConfig);
+pruefe('Picker: öffnet gleich das Archiv des Albums', false !== strpos($strPickerUrl, 'do=photoalbums2') && false !== strpos($strPickerUrl, 'table=tl_photoalbums2_album') && (bool) preg_match('/[?&]id=1(&|$)/', $strPickerUrl), $strPickerUrl);
+
+$strLabel = (string) $objProvider->createMenuItem($objConfig)->getLabel();
+pruefe('Picker: Beschriftung des Reiters', \in_array($strLabel, array('Fotoalben', 'Photo albums'), true), $strLabel);
+
 echo "\n";
 echo $intErrors > 0
 	? "ERGEBNIS: $intErrors von $intChecks Prüfungen fehlgeschlagen.\n"

@@ -17,11 +17,11 @@ use Contao\Database;
 use Contao\Feed;
 use Contao\FeedItem;
 use Contao\File;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
+use Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver;
 
 /**
  * Erzeugt die RSS- beziehungsweise Atom-Dateien der Fotoalben-Archive.
@@ -119,14 +119,32 @@ class FeedGenerator
 	 *
 	 * @param ArchiveModel $objArchive Der Archivdatensatz
 	 *
-	 * @return void Ohne hinterlegte Modulseite geschieht nichts, weil sich
-	 *              dann keine Verweise auf die Alben bilden lassen
+	 * Die Verweise auf die Alben bildet der {@see AlbumUrlResolver} — derselbe,
+	 * den auch Link-Picker und Insert-Tags benutzen. Ist am Archiv eine Seite
+	 * eingetragen, gewinnt sie wie bisher; fehlt sie, wird die Seite aus der
+	 * Einbindung der Module ermittelt. Ein Album, das keine Seite zeigt, fehlt
+	 * im Feed: Ein Eintrag ohne gültigen Verweis wäre für Feedleser nutzlos.
+	 *
+	 * @return void Ohne ein einziges verlinkbares Album geschieht nichts, damit
+	 *              eine vorhandene Datei nicht durch einen leeren Feed ersetzt wird
 	 */
 	private function generateFiles(ArchiveModel $objArchive): void
 	{
-		$objTargetPage = PageModel::findWithDetails((int) $objArchive->modulePage);
+		$objResolver = new AlbumUrlResolver();
+		$arrAlbums = $this->findAlbums($objArchive);
+		$arrLinks = array();
 
-		if (null === $objTargetPage)
+		foreach ($arrAlbums as $arrAlbum)
+		{
+			$strUrl = $objResolver->generate((object) $arrAlbum);
+
+			if ('' !== $strUrl)
+			{
+				$arrLinks[(int) $arrAlbum['id']] = $strUrl;
+			}
+		}
+
+		if (empty($arrLinks))
 		{
 			return;
 		}
@@ -141,14 +159,16 @@ class FeedGenerator
 		$objFeed->language = $objArchive->language;
 		$objFeed->published = $objArchive->tstamp;
 
-		foreach ($this->findAlbums($objArchive) as $arrAlbum)
+		foreach ($arrAlbums as $arrAlbum)
 		{
-			$strAlias = '' !== (string) $arrAlbum['alias'] ? $arrAlbum['alias'] : $arrAlbum['id'];
-			$strParams = Runtime::useAutoItem() ? '/'.$strAlias : '/album/'.$strAlias;
+			if (!isset($arrLinks[(int) $arrAlbum['id']]))
+			{
+				continue;
+			}
 
 			$objItem = new FeedItem();
 			$objItem->title = $arrAlbum['title'];
-			$objItem->link = $this->buildAbsoluteUrl($strBase, $objTargetPage->getFrontendUrl($strParams));
+			$objItem->link = $this->buildAbsoluteUrl($strBase, $arrLinks[(int) $arrAlbum['id']]);
 			$objItem->published = (int) $arrAlbum['startdate'];
 			$objItem->author = $arrAlbum['authorName'];
 			$objItem->description = Runtime::replaceInsertTags((string) $arrAlbum['description']);

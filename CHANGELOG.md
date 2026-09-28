@@ -2,6 +2,37 @@
 
 ## Version 1.3.0 (2026-09-28)
 
+* Add: **Reiter „Fotoalben“ im Link-Picker**, neben Seiten, Dateien,
+  Nachrichten, Events, FAQ und Artikeln. Er fügt `{{photoalbum_url::ID}}` ein;
+  ist schon ein Album verlinkt, öffnet er gleich dessen Archiv. Eine einzige
+  Klasse bedient Contao 4.13 und 5: Die Schnittstellen unterscheiden sich in den
+  Typhinweisen, und die Methoden sind so weit gefasst geschrieben, dass sie zu
+  beiden passen.
+
+* Add: **Insert-Tags** `{{photoalbum_url::…}}`, `{{photoalbum::…}}`,
+  `{{photoalbum_open::…}}` und `{{photoalbum_title::…}}`, mit Nummer oder
+  Alias, auf Wunsch mit `|absolute`. Registriert über den Hook
+  `replaceInsertTags`, den auch Contao 5.7 noch für alle Tags aufruft, die kein
+  Resolver kennt.
+
+* Add: **Automatische Ermittlung der Album-Adresse.** Fotoalben haben keine feste
+  Weiterleitungsseite; wo ein Album erscheint, ergibt sich aus der Einbindung
+  der Module. Der neue `Routing\AlbumUrlResolver` sucht Detailseiten, Seiten
+  mit Leser-Modul, Seiten mit Modul „auf einer Seite“ und Inhaltselemente mit
+  genau diesem Album zusammen und wählt nach einer festen, im Prüfstand
+  festgeschriebenen Rangfolge. Module, die das Archiv tatsächlich führen,
+  gehen vor; bei mehrsprachigen Auftritten gewinnt der eigene Seitenbaum.
+
+* Add: Die Albenliste im Backend zeigt unter jedem Album, wohin Verweise
+  führen und warum — oder dass keine Seite gefunden wurde. Das fällt damit auf,
+  bevor jemand im Picker ein Album wählt, das ins Leere führen würde.
+
+* Change: Das Archiv-Feld `modulePage` heißt jetzt „Seite mit der
+  Foto-Ansicht“, steht in den Grundeinstellungen statt in den Feed-Einstellungen
+  und ist keine Pflichtangabe mehr. Eingetragen übersteuert es die Automatik;
+  leer ermittelt die Automatik die Seite. Der Feed bildet seine Verweise jetzt
+  über dieselbe Ermittlung.
+
 * Change: Echte Umlaute im gesamten Altbestand. Kommentare, Meldungen der
   Prüfwerkzeuge und Fehlermeldungen schrieben seit der Portierung `ue`, `oe`,
   `ae` und `ss` — 909 Stellen in 80 Dateien. Ersetzt wurde nach einer

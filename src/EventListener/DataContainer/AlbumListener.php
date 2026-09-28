@@ -22,6 +22,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Palette;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Thumbnail;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
+use Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver;
 
 /**
  * Rückrufe des Datenbereichs `tl_photoalbums2_album`.
@@ -210,6 +211,7 @@ class AlbumListener
 		$strReturn = '<div class="cte_type '.$strKey.'"'.($blnShowPreview ? ' style="margin-bottom:0"' : '').'>';
 		$strReturn .= $arrRow['title'];
 		$strReturn .= '</div>';
+		$strReturn .= $this->getTargetMarkup($arrRow);
 
 		if ('' !== $strContent)
 		{
@@ -217,6 +219,52 @@ class AlbumListener
 		}
 
 		return $strReturn;
+	}
+
+	/**
+	 * Zeigt, wohin Verweise auf dieses Album führen.
+	 *
+	 * Die Zielseite ermittelt der {@see AlbumUrlResolver} aus der Einbindung der
+	 * Module, und das ist von außen nicht zu sehen. Diese Zeile macht es
+	 * sichtbar — genau dort, wo die Redaktion im Link-Picker ein Album
+	 * auswählt. So fällt vor dem Einfügen auf, wenn ein Verweis ins Leere
+	 * ginge, und nicht erst auf der fertigen Seite.
+	 *
+	 * @param array<string, mixed> $arrRow Der Albumdatensatz
+	 *
+	 * @return string Das Markup der Hinweiszeile; leer, wenn die Ermittlung
+	 *                scheitert — die Liste soll daran nie zerbrechen
+	 */
+	private function getTargetMarkup(array $arrRow): string
+	{
+		$arrLang = $GLOBALS['TL_LANG']['tl_photoalbums2_album'] ?? array();
+
+		try
+		{
+			$objAlbum = (object) $arrRow;
+			$objResolver = new AlbumUrlResolver();
+			$arrTarget = $objResolver->findTarget($objAlbum);
+
+			if (null === $arrTarget)
+			{
+				return '<div class="tl_gray pa2-urltarget" style="margin:2px 0 4px">'.StringUtil::specialchars((string) ($arrLang['urlNone'] ?? '')).'</div>';
+			}
+
+			$strUrl = $objResolver->generate($objAlbum);
+			$strSource = sprintf((string) ($arrLang['urlSource'][$arrTarget['source']] ?? $arrTarget['source']), $arrTarget['module']);
+
+			$strLink = '' !== $strUrl
+				? '<a href="'.StringUtil::specialchars($strUrl).'" target="_blank" rel="noopener">'.StringUtil::specialchars($strUrl).'</a>'
+				: StringUtil::specialchars((string) $arrTarget['page']->title);
+
+			return '<div class="tl_gray pa2-urltarget" style="margin:2px 0 4px">'
+				.sprintf((string) ($arrLang['urlTarget'] ?? '%s'), $strLink)
+				.' ('.StringUtil::specialchars($strSource).')</div>';
+		}
+		catch (\Throwable $e)
+		{
+			return '';
+		}
 	}
 
 	/**

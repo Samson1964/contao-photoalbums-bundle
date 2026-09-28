@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_archive'] = array
 	'palettes' => array
 	(
 		'__selector__' => array('allowComments', 'protected', 'makeFeed'),
-		'default'      => '{title_legend},title;{comments_legend:hide},allowComments;{protected_legend},protected;{feed_legend:hide},makeFeed',
+		'default'      => '{title_legend},title,modulePage;{comments_legend:hide},allowComments;{protected_legend},protected;{feed_legend:hide},makeFeed',
 	),
 
 	// Unterpaletten
@@ -126,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_archive'] = array
 	(
 		'allowComments' => 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha',
 		'protected'     => 'users,groups',
-		'makeFeed'      => 'format,language,maxItems,feedBase,alias,modulePage,description',
+		'makeFeed'      => 'format,language,maxItems,feedBase,alias,description',
 	),
 
 	// Felder
@@ -318,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_archive'] = array
 			'label'     => &$GLOBALS['TL_LANG']['tl_photoalbums2_archive']['modulePage'],
 			'exclude'   => true,
 			'inputType' => 'pageTree',
-			'eval'      => array('mandatory' => true, 'fieldType' => 'radio'),
+			'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr'),
 			'sql'       => "int(10) unsigned NOT NULL default '0'",
 		),
 		'description' => array

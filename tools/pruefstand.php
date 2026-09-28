@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Contao\System;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
+use Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver as Resolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 $strInstall = $argv[1] ?? '';
@@ -139,6 +140,11 @@ $arrClasses = array(
 	'Schachbulle\ContaoPhotoalbumsBundle\Helper\Video',
 	'Schachbulle\ContaoPhotoalbumsBundle\Download\ZipStream',
 	'Schachbulle\ContaoPhotoalbumsBundle\Download\AlbumArchive',
+	'Schachbulle\ContaoPhotoalbumsBundle\Routing\AlbumUrlResolver',
+	'Schachbulle\ContaoPhotoalbumsBundle\EventListener\InsertTagsListener',
+	// Scheitert als fataler Fehler, wenn eine Signatur nicht zur Elternklasse
+	// dieser Contao-Fassung passt — der eigentliche Verträglichkeitstest
+	'Schachbulle\ContaoPhotoalbumsBundle\Picker\PhotoalbumPickerProvider',
 	'Schachbulle\ContaoPhotoalbumsBundle\Widget\ImageSortWizard',
 	'Schachbulle\ContaoPhotoalbumsBundle\Widget\SortWizard',
 	'Schachbulle\ContaoPhotoalbumsBundle\Modules\ModulePhotoalbums2',
@@ -661,7 +667,65 @@ foreach ($arrDownloadRules as $strSelector)
 
 pruefe('Jede Regel beginnt mit .pa2-download', $blnScoped, implode(' | ', $arrDownloadRules));
 
-echo "\n11. Dienstdefinitionen\n";
+echo "\n11. Rangfolge bei der Suche nach der Seite eines Albums\n";
+
+/*
+ * Welche Seite ein Verweis auf ein Album ansteuert, entscheidet die Wertung im
+ * AlbumUrlResolver. Die Regeln sind hier einzeln festgeschrieben: Jede
+ * spätere Änderung an der Wertung, die eine davon kippt, fällt sofort auf.
+ */
+$fnPick = static function (array $arrCandidates): int
+{
+	$arrSorted = Resolver::sortCandidates($arrCandidates);
+
+	return (int) $arrSorted[0]['pageId'];
+};
+
+$fnCand = static function (int $intPage, string $strSource, bool $blnMatch, bool $blnSameRoot = false): array
+{
+	return array('pageId' => $intPage, 'score' => Resolver::score($strSource, $blnMatch), 'sameRoot' => $blnSameRoot);
+};
+
+$arrRankCases = array(
+	'Archiv-Einstellung schlägt alles' => array(
+		array($fnCand(10, Resolver::SOURCE_DETAIL_PAGE, true), $fnCand(20, Resolver::SOURCE_ARCHIVE, true)), 20,
+	),
+	'Detailseite vor Leser-Modul' => array(
+		array($fnCand(10, Resolver::SOURCE_READER, true), $fnCand(20, Resolver::SOURCE_DETAIL_PAGE, true)), 20,
+	),
+	'Leser-Modul vor „auf einer Seite“' => array(
+		array($fnCand(10, Resolver::SOURCE_ONE_PAGE, true), $fnCand(20, Resolver::SOURCE_READER, true)), 20,
+	),
+	'„Auf einer Seite“ vor Inhaltselement' => array(
+		array($fnCand(10, Resolver::SOURCE_CONTENT_ELEMENT, true), $fnCand(20, Resolver::SOURCE_ONE_PAGE, true)), 20,
+	),
+	'Inhaltselement vor „nur Album-Ansicht“' => array(
+		array($fnCand(10, Resolver::SOURCE_ALBUM_VIEW, true), $fnCand(20, Resolver::SOURCE_CONTENT_ELEMENT, true)), 20,
+	),
+	'Passendes Archiv schlägt bessere Stufe' => array(
+		array($fnCand(10, Resolver::SOURCE_DETAIL_PAGE, false), $fnCand(20, Resolver::SOURCE_ALBUM_VIEW, true)), 20,
+	),
+	'Unpassendes nur als Rückfall' => array(
+		array($fnCand(10, Resolver::SOURCE_READER, false)), 10,
+	),
+	'Gleichstand: eigener Seitenbaum gewinnt' => array(
+		array($fnCand(10, Resolver::SOURCE_READER, true, false), $fnCand(20, Resolver::SOURCE_READER, true, true)), 20,
+	),
+	'Seitenbaum sticht die Stufe nicht' => array(
+		array($fnCand(10, Resolver::SOURCE_DETAIL_PAGE, true, false), $fnCand(20, Resolver::SOURCE_READER, true, true)), 10,
+	),
+	'Voller Gleichstand: kleinere Seitennummer' => array(
+		array($fnCand(30, Resolver::SOURCE_READER, true), $fnCand(20, Resolver::SOURCE_READER, true)), 20,
+	),
+);
+
+foreach ($arrRankCases as $strLabel => list($arrCandidates, $intExpected))
+{
+	$intActual = $fnPick($arrCandidates);
+	pruefe($strLabel, $intExpected === $intActual, 'gewählt: Seite '.$intActual);
+}
+
+echo "\n12. Dienstdefinitionen\n";
 
 try
 {
@@ -675,12 +739,36 @@ try
 	$objDiContainer->setAlias(\Contao\CoreBundle\Framework\ContaoFramework::class, 'contao.framework');
 	$objDiContainer->setAlias(\Doctrine\DBAL\Connection::class, 'database_connection');
 
+	// Für den Link-Picker; die Dienst-IDs sind in beiden Fassungen dieselben
+	foreach (array('knp_menu.factory', 'router', 'translator', 'security.authorization_checker') as $strService)
+	{
+		$objDiContainer->register($strService, \stdClass::class)->setSynthetic(true);
+	}
+
 	$objExtension = new \Schachbulle\ContaoPhotoalbumsBundle\DependencyInjection\ContaoPhotoalbumsExtension();
 	$objExtension->load(array(), $objDiContainer);
 
 	pruefe('services.yml geladen', true);
 	pruefe('Cron-Auftrag registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Feed\FeedGenerator::class));
 	pruefe('Migration registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Migration\TranslationFieldsMigration::class));
+
+	$strPicker = \Schachbulle\ContaoPhotoalbumsBundle\Picker\PhotoalbumPickerProvider::class;
+	$arrPickerTags = $objDiContainer->hasDefinition($strPicker) ? $objDiContainer->getDefinition($strPicker)->getTag('contao.picker_provider') : array();
+
+	/*
+	 * Genau ein Tag, mit Priorität: Beide Fassungen tagen Picker-Provider bei
+	 * autoconfigure von selbst. Stünde es hier ein zweites Mal, erschiene der
+	 * Reiter doppelt im Picker.
+	 */
+	pruefe('Picker-Provider genau einmal getaggt', 1 === \count($arrPickerTags), \count($arrPickerTags).' Tags');
+	pruefe('Picker-Provider nicht autokonfiguriert', $objDiContainer->hasDefinition($strPicker) && !$objDiContainer->getDefinition($strPicker)->isAutoconfigured());
+	pruefe('Picker hinter FAQ, vor Artikeln (Priorität 32)', 32 === (int) ($arrPickerTags[0]['priority'] ?? 0));
+
+	$arrHookTags = $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\EventListener\InsertTagsListener::class)
+		? $objDiContainer->getDefinition(\Schachbulle\ContaoPhotoalbumsBundle\EventListener\InsertTagsListener::class)->getTag('contao.hook')
+		: array();
+
+	pruefe('Insert-Tags am Hook replaceInsertTags', 'replaceInsertTags' === ($arrHookTags[0]['hook'] ?? ''));
 
 	$objDiContainer->compile();
 	pruefe('Behälter übersetzt', true);

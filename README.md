@@ -110,6 +110,62 @@ Beide Wege gibt es unverändert in Contao 4.13 und Contao 5. Bringt das Theme
 eine eigene Lightbox mit, muss diese lediglich auf `a[data-lightbox]` hören;
 der Wert des Attributs ist je Album eindeutig und gruppiert die Fotos.
 
+## Auf ein Album verlinken
+
+Im Link-Picker des Backends — dort, wo auch Seiten, Dateien, Nachrichten,
+Events, FAQ und Artikel stehen — gibt es einen Reiter **Fotoalben**. Er öffnet
+die Albenliste; ein Klick auf ein Album fügt `{{photoalbum_url::5}}` ein. Ist
+schon ein Album verlinkt, öffnet der Picker gleich dessen Archiv mit dem Album
+vorausgewählt. Der Reiter erscheint nur für Benutzer, die das Backend-Modul
+„Fotoalben“ öffnen dürfen.
+
+Dieselben Tags lassen sich auch von Hand schreiben:
+
+| Tag | Ergebnis |
+| --- | --- |
+| `{{photoalbum_url::5}}` | Adresse des Albums |
+| `{{photoalbum::5}}` | Vollständiger Verweis mit dem Titel |
+| `{{photoalbum_open::5}}` | Nur das öffnende `<a>` |
+| `{{photoalbum_title::5}}` | Nur der Titel |
+
+Statt der Nummer darf auch der Alias stehen. Der Picker trägt bewusst die
+**Nummer** ein: Ändert sich der Alias später, bleibt der Verweis gültig. Mit
+`|absolute` — etwa `{{photoalbum_url::5|absolute}}` — entsteht eine Adresse
+mit Schema und Domain, wie sie ein Newsletter braucht.
+
+### Unter welcher Adresse ist ein Album zu sehen?
+
+Anders als Nachrichten haben Fotoalben keine feste Weiterleitungsseite: Wo ein
+Album erscheint, ergibt sich aus der Einbindung der Module. Das Bundle sucht
+diese Stellen zusammen und nimmt die erste veröffentlichte Seite in dieser
+Rangfolge:
+
+1. Die Seite, die im Archiv unter **„Seite mit der Foto-Ansicht“** eingetragen
+   ist. Sie übersteuert alles Folgende.
+2. Die Detailseite eines Moduls „Fotoalbum“ im Modus „auf getrennten Seiten“
+   oder eines Moduls „Fotoalben Liste“.
+3. Die Seite, auf der ein Modul „Fotoalbum Leser“ eingebunden ist.
+4. Die Seite, auf der ein Modul „Fotoalbum“ im Modus „auf einer Seite“ steht.
+5. Die Seite eines Inhaltselements „Fotoalbum“, das genau dieses Album zeigt.
+6. Die Seite eines Moduls im Modus „Nur Album-Ansicht mit Lightbox“.
+
+Module, deren Archiv-Auswahl das Archiv des Albums enthält, gehen dabei stets
+vor den übrigen. Bei mehrsprachigen Auftritten gewinnt bei Gleichstand die
+Seite aus demselben Seitenbaum — ein Verweis auf der englischen Seite führt auf
+die englische Galerie.
+
+**Welche Seite herauskommt, zeigt die Albenliste im Backend** unter jedem
+Album: „Verweise führen auf: …“ samt dem Grund. Findet sich keine Seite, steht
+dort ein Hinweis — noch bevor jemand im Picker ein Album wählt, das ins Leere
+führen würde.
+
+Nicht berücksichtigt werden Module, die über das Seitenlayout oder
+`{{insert_module::…}}` eingebunden sind: Sie hängen an keiner bestimmten
+Seite. Für diesen Fall ist die Einstellung am Archiv da.
+
+Dieselbe Ermittlung bildet auch die Verweise im RSS-/Atom-Feed. Die Seite am
+Archiv ist deshalb keine Pflichtangabe des Feeds mehr.
+
 ## Album herunterladen
 
 Ein Album lässt sich als ZIP-Archiv herunterladen — mit allen Fotos und Videos

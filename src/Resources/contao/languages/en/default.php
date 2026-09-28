@@ -116,3 +116,8 @@ $GLOBALS['TL_LANG']['PA2']['downloadInfo']['photographer'] = 'Photographer';
 $GLOBALS['TL_LANG']['PA2']['downloadInfo']['files'] = 'Files';
 $GLOBALS['TL_LANG']['PA2']['downloadInfo']['description'] = 'Description';
 $GLOBALS['TL_LANG']['PA2']['downloadInfo']['source'] = 'Downloaded on %s from %s';
+
+/**
+ * Link picker
+ */
+$GLOBALS['TL_LANG']['MSC']['photoalbumPicker'] = 'Photo albums';
