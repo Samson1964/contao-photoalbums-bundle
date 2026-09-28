@@ -23,9 +23,9 @@ use Schachbulle\ContaoPhotoalbumsBundle\Sorter\ImageSorter;
  * Arbeitet mit einer Auswahl von Fotoalben.
  *
  * Die Klasse wirft aus der Liste alles heraus, was der Besucher nicht sehen
- * darf — unveroeffentlichte Alben, geschuetzte Alben ohne Zugriffsrecht, Alben
- * aus einem gesperrten Archiv und Alben ausserhalb des Zeitfilters. Zu den
- * verbleibenden Alben liefert sie die fertig aufbereiteten Datensaetze samt
+ * darf — unveröffentlichte Alben, geschützte Alben ohne Zugriffsrecht, Alben
+ * aus einem gesperrten Archiv und Alben außerhalb des Zeitfilters. Zu den
+ * verbleibenden Alben liefert sie die fertig aufbereiteten Datensätze samt
  * sortierter Fotoliste und Vorschaubild.
  */
 class Album extends ItemList
@@ -33,7 +33,7 @@ class Album extends ItemList
 	/**
 	 * @param mixed                $varValue Albumnummer, Feld von Nummern oder
 	 *                                       ein Alias; ein Alias wird sofort in
-	 *                                       die zugehoerige Nummer uebersetzt
+	 *                                       die zugehörige Nummer übersetzt
 	 * @param array<string, mixed> $arrData  Die Daten des aufrufenden Moduls
 	 */
 	public function __construct($varValue, $arrData)
@@ -47,13 +47,13 @@ class Album extends ItemList
 	}
 
 	/**
-	 * Uebersetzt einen Album-Alias in die Datensatznummer.
+	 * Übersetzt einen Album-Alias in die Datensatznummer.
 	 *
 	 * @param string $strAlias Der Alias aus der Adresse
 	 *
 	 * @return int|string Die Nummer des Albums oder — wenn kein
-	 *                    veroeffentlichtes Album dazu existiert — der
-	 *                    unveraenderte Alias, damit der Aufrufer die leere
+	 *                    veröffentlichtes Album dazu existiert — der
+	 *                    unveränderte Alias, damit der Aufrufer die leere
 	 *                    Ausgabe erzeugen kann
 	 */
 	private function getIdByAlias(string $strAlias)
@@ -74,9 +74,9 @@ class Album extends ItemList
 	 * Entfernt alle Alben aus der Liste, die im Frontend nicht sichtbar sind.
 	 *
 	 * Im Backend bleibt die Liste unangetastet: Dort soll die Vorschau eines
-	 * Inhaltselements auch ein noch unveroeffentlichtes Album zeigen.
+	 * Inhaltselements auch ein noch unveröffentlichtes Album zeigen.
 	 *
-	 * @return void Schreibt die bereinigte Liste zurueck nach $this->items
+	 * @return void Schreibt die bereinigte Liste zurück nach $this->items
 	 */
 	protected function sortOut(): void
 	{
@@ -113,10 +113,10 @@ class Album extends ItemList
 	}
 
 	/**
-	 * Prueft, ob ein einzelnes Album im Frontend ausgegeben werden darf.
+	 * Prüft, ob ein einzelnes Album im Frontend ausgegeben werden darf.
 	 *
-	 * Geprueft werden nacheinander der Zugriffsschutz des Albums selbst, der
-	 * Zugriffsschutz des uebergeordneten Archivs und zuletzt der Zeitfilter des
+	 * Geprüft werden nacheinander der Zugriffsschutz des Albums selbst, der
+	 * Zugriffsschutz des übergeordneten Archivs und zuletzt der Zeitfilter des
 	 * aufrufenden Moduls.
 	 *
 	 * @param AlbumModel|null $objAlbum Der Albumdatensatz
@@ -135,7 +135,7 @@ class Album extends ItemList
 			return false;
 		}
 
-		// Das Archiv darf nicht gesperrt sein, sonst waere das Album ueber den
+		// Das Archiv darf nicht gesperrt sein, sonst wäre das Album über den
 		// Umweg der Albumnummer trotz gesperrtem Archiv erreichbar
 		$objArchive = new Archive($objAlbum->pid, $this->getData());
 		$arrArchiveIds = $objArchive->getArchiveIds();
@@ -159,7 +159,7 @@ class Album extends ItemList
 	}
 
 	/**
-	 * Prueft den Zugriff des angemeldeten Mitglieds auf ein geschuetztes Album.
+	 * Prüft den Zugriff des angemeldeten Mitglieds auf ein geschütztes Album.
 	 *
 	 * @param mixed $varUsers  Serialisiertes Feld der freigeschalteten Mitglieder
 	 * @param mixed $varGroups Serialisiertes Feld der freigeschalteten Gruppen
@@ -205,9 +205,9 @@ class Album extends ItemList
 	/**
 	 * Liefert die sichtbaren Alben als aufbereitete Datensatzsammlung.
 	 *
-	 * Jeder Datensatz bekommt dabei drei zusaetzliche Eigenschaften:
+	 * Jeder Datensatz bekommt dabei drei zusätzliche Eigenschaften:
 	 * `images` und `imageSort` liegen deserialisiert vor, `objPreviewImage`
-	 * traegt den Dateidatensatz des Vorschaubildes und `arrSortedImageUuids`
+	 * trägt den Dateidatensatz des Vorschaubildes und `arrSortedImageUuids`
 	 * die fertig sortierte Liste aller Fotos des Albums.
 	 *
 	 * @return Collection|null Die Alben oder null, wenn keines sichtbar ist

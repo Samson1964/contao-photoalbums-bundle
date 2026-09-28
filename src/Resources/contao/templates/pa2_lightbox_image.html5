@@ -2,8 +2,8 @@
 /*
  * Versteckter Verweis auf ein Foto einer Lightbox-Gruppe.
  *
- * Wird in der Alben-Uebersicht gebraucht, wenn die Kachel beim Anklicken die
- * Lightbox mit allen Fotos des Albums oeffnen soll. Das Bild selbst ist ein
+ * Wird in der Alben-Übersicht gebraucht, wenn die Kachel beim Anklicken die
+ * Lightbox mit allen Fotos des Albums öffnen soll. Das Bild selbst ist ein
  * leeres Ein-Punkt-Bild als Datenadresse; geladen wird erst, was die Lightbox
  * anfordert.
  *

@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace Schachbulle\ContaoPhotoalbumsBundle\Sorter;
 
 /**
- * Bringt die Fotos eines Albums in die im Backend gewaehlte Reihenfolge.
+ * Bringt die Fotos eines Albums in die im Backend gewählte Reihenfolge.
  *
- * Die Klasse ist die Bruecke zwischen dem Feldwert aus `imageSortType`
+ * Die Klasse ist die Brücke zwischen dem Feldwert aus `imageSortType`
  * (etwa `name_asc` oder `custom`) und dem {@see FileSorter}, der die
  * eigentliche Arbeit macht.
  */
@@ -28,7 +28,7 @@ class ImageSorter
 	private $strSortKey;
 
 	/**
-	 * Die im Album ausgewaehlten Dateien und Ordner.
+	 * Die im Album ausgewählten Dateien und Ordner.
 	 *
 	 * @var array<int, mixed>
 	 */
@@ -44,7 +44,7 @@ class ImageSorter
 	/**
 	 * @param mixed $strSortKey     Sortierkriterium, etwa `name_asc`,
 	 *                              `date_desc`, `random` oder `custom`;
-	 *                              ein leerer Wert liefert spaeter die
+	 *                              ein leerer Wert liefert später die
 	 *                              unsortierte Liste
 	 * @param mixed $arrUuids       Feld mit UUIDs von Dateien und Ordnern
 	 * @param mixed $arrCustomUuids Feld mit der eigenen Reihenfolge; ist es
@@ -60,10 +60,10 @@ class ImageSorter
 	/**
 	 * Liefert die sortierten Datei-UUIDs des Albums.
 	 *
-	 * Das Kriterium traegt die Richtung als Endung (`_asc`/`_desc`); bei
+	 * Das Kriterium trägt die Richtung als Endung (`_asc`/`_desc`); bei
 	 * `custom` wird stattdessen die im Assistenten festgelegte Reihenfolge als
 	 * Ausgangsliste genommen. Ordner in der Auswahl werden dabei vom
-	 * {@see FileSorter} rekursiv aufgeloest.
+	 * {@see FileSorter} rekursiv aufgelöst.
 	 *
 	 * @return array<int, string> Die UUIDs der Fotos in Ausgabereihenfolge
 	 */
@@ -83,9 +83,9 @@ class ImageSorter
 			$arrUuids = $this->arrCustomUuids;
 		}
 
-		// Die Endungsliste haelt Fremdes aus einem mitausgewaehlten Ordner
-		// heraus — dort koennen neben Fotos und Videos auch PDF-Dateien oder
-		// Textdateien liegen, die als Kachel nur eine Luecke ergaeben
+		// Die Endungsliste hält Fremdes aus einem mitausgewählten Ordner
+		// heraus — dort können neben Fotos und Videos auch PDF-Dateien oder
+		// Textdateien liegen, die als Kachel nur eine Lücke ergäben
 		$objFileSorter = new FileSorter($arrUuids, $GLOBALS['pa2']['mediaExtensions'] ?? null);
 		$objFileSorter->sortImagesBy($strSortKey, $strSortDirection);
 

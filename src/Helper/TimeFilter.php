@@ -17,8 +17,8 @@ use Contao\StringUtil;
  * Rechnet die im Modul eingestellte Zeitspanne in Zeitstempel um.
  *
  * Im Backend steht dort etwas wie „von vor 10 Tagen bis vor 5 Tagen“. Diese
- * Klasse macht daraus zwei feste Zeitpunkte und beantwortet anschliessend die
- * Frage, ob ein Album mit seinem Start- und Enddatum in diese Spanne faellt.
+ * Klasse macht daraus zwei feste Zeitpunkte und beantwortet anschließend die
+ * Frage, ob ein Album mit seinem Start- und Enddatum in diese Spanne fällt.
  */
 class TimeFilter
 {
@@ -55,9 +55,9 @@ class TimeFilter
 	}
 
 	/**
-	 * Prueft, ob eine Zeitangabe vollstaendig ist.
+	 * Prüft, ob eine Zeitangabe vollständig ist.
 	 *
-	 * @param mixed $var Die zu pruefende Angabe
+	 * @param mixed $var Die zu prüfende Angabe
 	 *
 	 * @return bool true, wenn es ein Feld mit `unit` und einem numerischen
 	 *              `value` ist
@@ -70,14 +70,14 @@ class TimeFilter
 	/**
 	 * Rechnet eine Zeitangabe in einen Zeitstempel um.
 	 *
-	 * Gerechnet wird immer von heute rueckwaerts. Beim Ende der Spanne wird
-	 * zusaetzlich eine Einheit aufgeschlagen, damit der genannte Tag, die
-	 * Woche, der Monat oder das Jahr noch vollstaendig dazugehoert — sonst
+	 * Gerechnet wird immer von heute rückwärts. Beim Ende der Spanne wird
+	 * zusätzlich eine Einheit aufgeschlagen, damit der genannte Tag, die
+	 * Woche, der Monat oder das Jahr noch vollständig dazugehört — sonst
 	 * fiele „bis vor 0 Tagen“ auf Mitternacht heute und damit auf einen leeren
 	 * Zeitraum.
 	 *
 	 * @param array<string, mixed> $arrData Feld mit `unit` und `value`
-	 * @param bool                 $blnEnd  true fuer das Ende der Spanne
+	 * @param bool                 $blnEnd  true für das Ende der Spanne
 	 *
 	 * @return int|null Der Zeitstempel oder null bei unbekannter Einheit
 	 */
@@ -117,7 +117,7 @@ class TimeFilter
 	 * Entscheidet, ob ein Album aus der Ausgabe fliegt.
 	 *
 	 * Ein Album bleibt drin, sobald **eines** seiner beiden Daten in die
-	 * Zeitspanne faellt. Ist gar kein Filter gesetzt, bleibt ebenfalls alles
+	 * Zeitspanne fällt. Ist gar kein Filter gesetzt, bleibt ebenfalls alles
 	 * drin.
 	 *
 	 * @param mixed $dateStart Startdatum des Albums als Unix-Zeitstempel

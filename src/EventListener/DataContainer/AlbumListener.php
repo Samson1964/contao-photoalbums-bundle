@@ -24,18 +24,18 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Thumbnail;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 
 /**
- * Rueckrufe des Datenbereichs `tl_photoalbums2_album`.
+ * Rückrufe des Datenbereichs `tl_photoalbums2_album`.
  *
  * Die Klasse erbt bewusst **nicht** von `Contao\Backend`: Sie braucht nichts
- * daraus, und ohne Elternklasse entfaellt die unter Contao 4.13 lauernde Falle
- * mit dem dort nur geschuetzten Konstruktor. Contao erzeugt sie ueber
+ * daraus, und ohne Elternklasse entfällt die unter Contao 4.13 lauernde Falle
+ * mit dem dort nur geschützten Konstruktor. Contao erzeugt sie über
  * `System::importStatic()`, was bei einem Klassennamen mit Namensraum und ohne
  * gleichnamigen Dienst schlicht `new` aufruft.
  */
 class AlbumListener
 {
 	/**
-	 * Prueft, ob der angemeldete Benutzer den Vorgang ausfuehren darf.
+	 * Prüft, ob der angemeldete Benutzer den Vorgang ausführen darf.
 	 *
 	 * Ein Benutzer darf nur mit Alben aus den Archiven arbeiten, die ihm oder
 	 * seiner Gruppe unter „Erlaubte Archive“ zugewiesen sind.
@@ -83,14 +83,14 @@ class AlbumListener
 			case 'copy':
 				$varPid = Input::get('pid');
 
-				// Beim Einfuegen "in ein Album" verweist pid auf das Geschwisteralbum
+				// Beim Einfügen "in ein Album" verweist pid auf das Geschwisteralbum
 				if (1 == Input::get('mode'))
 				{
 					$objAlbum = AlbumModel::findByPk(Input::get('pid'));
 
 					if (null === $objAlbum)
 					{
-						$this->deny('Ungueltige Fotoalbum-ID "'.Input::get('pid').'".');
+						$this->deny('Ungültige Fotoalbum-ID "'.Input::get('pid').'".');
 					}
 
 					$varPid = $objAlbum->pid;
@@ -100,7 +100,7 @@ class AlbumListener
 				{
 					$this->deny('Nicht genug Rechte, um das Fotoalbum ID "'.$varId.'" in das Archiv ID "'.Input::get('pid').'" zu verschieben.');
 				}
-				// Kein break: der Datensatz selbst wird unten geprueft
+				// Kein break: der Datensatz selbst wird unten geprüft
 
 			case 'edit':
 			case 'show':
@@ -110,7 +110,7 @@ class AlbumListener
 
 				if (null === $objAlbum)
 				{
-					$this->deny('Ungueltige Fotoalbum-ID "'.$varId.'".');
+					$this->deny('Ungültige Fotoalbum-ID "'.$varId.'".');
 				}
 
 				if (!\in_array($objAlbum->pid, $arrRoot))
@@ -133,12 +133,12 @@ class AlbumListener
 				break;
 
 			default:
-				$this->deny('Ungueltiger Befehl "'.Input::get('act').'".');
+				$this->deny('Ungültiger Befehl "'.Input::get('act').'".');
 		}
 	}
 
 	/**
-	 * Beschraenkt eine Sammelbearbeitung auf die Alben des erlaubten Archivs.
+	 * Beschränkt eine Sammelbearbeitung auf die Alben des erlaubten Archivs.
 	 *
 	 * @param int $intArchiveId Nummer des Archivs
 	 *
@@ -171,9 +171,9 @@ class AlbumListener
 	/**
 	 * Bricht den Vorgang ab und schreibt eine Meldung ins Protokoll.
 	 *
-	 * @param string $strMessage Die Begruendung
+	 * @param string $strMessage Die Begründung
 	 *
-	 * @return void Die Methode kehrt nie zurueck
+	 * @return void Die Methode kehrt nie zurück
 	 *
 	 * @throws AccessDeniedException Immer
 	 */
@@ -185,12 +185,12 @@ class AlbumListener
 	}
 
 	/**
-	 * Erzeugt die Zeile eines Albums in der Uebersicht des Backends.
+	 * Erzeugt die Zeile eines Albums in der Übersicht des Backends.
 	 *
-	 * Neben dem Titel erscheint das Vorschaubild — oder, wenn keines gewaehlt
-	 * ist, ein Hinweis darauf. Ueber die Systemeinstellung
-	 * `pa2HidePreviewImageInBackend` laesst sich die Vorschau abschalten, was
-	 * bei sehr grossen Archiven spuerbar Zeit spart.
+	 * Neben dem Titel erscheint das Vorschaubild — oder, wenn keines gewählt
+	 * ist, ein Hinweis darauf. Über die Systemeinstellung
+	 * `pa2HidePreviewImageInBackend` lässt sich die Vorschau abschalten, was
+	 * bei sehr großen Archiven spürbar Zeit spart.
 	 *
 	 * @param array<string, mixed> $arrRow Der Albumdatensatz
 	 *
@@ -220,7 +220,7 @@ class AlbumListener
 	}
 
 	/**
-	 * Baut die Vorschau eines Albums fuer die Backend-Uebersicht.
+	 * Baut die Vorschau eines Albums für die Backend-Übersicht.
 	 *
 	 * @param array<string, mixed> $arrRow Der Albumdatensatz
 	 *
@@ -259,7 +259,7 @@ class AlbumListener
 	 * @param mixed         $varValue Der eingegebene Alias
 	 * @param DataContainer $dc       Der Data Container
 	 *
-	 * @return string Der gepruefte Alias
+	 * @return string Der geprüfte Alias
 	 *
 	 * @throws \Exception Wenn ein von Hand eingegebener Alias schon vergeben ist
 	 */
@@ -289,7 +289,7 @@ class AlbumListener
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'] ?? 'Der Alias "%s" ist bereits vergeben.', $varValue));
 		}
 
-		// Bei automatisch erzeugten Aliassen die Datensatznummer anhaengen
+		// Bei automatisch erzeugten Aliassen die Datensatznummer anhängen
 		if (null !== $objAlias && $blnAutoAlias)
 		{
 			$varValue .= '-'.$dc->id;
@@ -299,15 +299,15 @@ class AlbumListener
 	}
 
 	/**
-	 * Ergaenzt fehlende Datumsangaben und haelt Start und Ende plausibel.
+	 * Ergänzt fehlende Datumsangaben und hält Start und Ende plausibel.
 	 *
 	 * **Hier steckt die Behebung des Fehlers mit Daten vor 1970.** Die
-	 * Urfassung hat mit `$startdate < 1` geprueft und deshalb jeden negativen
+	 * Urfassung hat mit `$startdate < 1` geprüft und deshalb jeden negativen
 	 * Zeitstempel als „nicht gesetzt“ behandelt: Ein eingegebenes Datum von
 	 * 1968 wurde beim Speichern kommentarlos durch das heutige ersetzt.
-	 * Geprueft wird jetzt auf eine **leere** Angabe.
+	 * Geprüft wird jetzt auf eine **leere** Angabe.
 	 *
-	 * Der `onsubmit_callback` laeuft in beiden Contao-Fassungen nach dem
+	 * Der `onsubmit_callback` läuft in beiden Contao-Fassungen nach dem
 	 * Schreiben des Datensatzes; die Werte werden deshalb aus der Datenbank
 	 * gelesen und dort auch wieder abgelegt.
 	 *
@@ -340,8 +340,8 @@ class AlbumListener
 		// Ohne Startdatum den heutigen Tag nehmen
 		$intStart = '' === $strStart ? mktime(0, 0, 0, (int) date('n'), (int) date('j'), (int) date('Y')) : (int) $strStart;
 
-		// Ein leeres oder zu frueh liegendes Enddatum auf das Startdatum ziehen.
-		// Der Wert 0 gilt in Altbestaenden als "kein Enddatum" und wird deshalb
+		// Ein leeres oder zu früh liegendes Enddatum auf das Startdatum ziehen.
+		// Der Wert 0 gilt in Altbeständen als "kein Enddatum" und wird deshalb
 		// wie eine leere Angabe behandelt.
 		if ('' === $strEnd || 0 === (int) $strEnd || (int) $strEnd < $intStart)
 		{
@@ -365,8 +365,8 @@ class AlbumListener
 	/**
 	 * Erzeugt die vorgemerkten Feeds neu.
 	 *
-	 * Laeuft als `onload_callback`, also beim naechsten Aufruf des
-	 * Backend-Moduls nach einer Aenderung. So bleibt das Speichern selbst
+	 * Läuft als `onload_callback`, also beim nächsten Aufruf des
+	 * Backend-Moduls nach einer Änderung. So bleibt das Speichern selbst
 	 * schnell, auch wenn ein Archiv viele Alben hat.
 	 *
 	 * @return void
@@ -377,7 +377,7 @@ class AlbumListener
 	}
 
 	/**
-	 * Merkt das Archiv des bearbeiteten Albums fuer eine Feed-Aktualisierung vor.
+	 * Merkt das Archiv des bearbeiteten Albums für eine Feed-Aktualisierung vor.
 	 *
 	 * @param DataContainer $dc Der Data Container
 	 *
@@ -394,12 +394,12 @@ class AlbumListener
 	}
 
 	/**
-	 * Blendet Felder aus, die zur gewaehlten Einstellung nicht passen.
+	 * Blendet Felder aus, die zur gewählten Einstellung nicht passen.
 	 *
-	 * Das Feld fuer das ausgewaehlte Vorschaubild erscheint nur bei
-	 * „Vorschau Foto auswaehlen“, der Sortier-Assistent nur bei „Eigene
-	 * Sortierung“. Beides laesst sich nicht ueber `subpalettes` abbilden, weil
-	 * dort nur ein einziger Wert je Selektor moeglich waere.
+	 * Das Feld für das ausgewählte Vorschaubild erscheint nur bei
+	 * „Vorschau Foto auswählen“, der Sortier-Assistent nur bei „Eigene
+	 * Sortierung“. Beides lässt sich nicht über `subpalettes` abbilden, weil
+	 * dort nur ein einziger Wert je Selektor möglich wäre.
 	 *
 	 * @param DataContainer $dc Der Data Container
 	 *

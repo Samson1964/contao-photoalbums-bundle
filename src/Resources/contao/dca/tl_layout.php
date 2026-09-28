@@ -12,11 +12,11 @@ declare(strict_types=1);
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 /*
- * Ergaenzung an tl_layout: Schalter, um das mitgelieferte Stylesheet
+ * Ergänzung an tl_layout: Schalter, um das mitgelieferte Stylesheet
  * abzuschalten.
  *
  * Die Urfassung hat das Feld per str_replace hinter `loadingOrder` gesetzt.
- * Das Feld gibt es unter Contao 5 nicht mehr; der PaletteManipulator haengt es
+ * Das Feld gibt es unter Contao 5 nicht mehr; der PaletteManipulator hängt es
  * stattdessen an die Gruppe „Stil“ an, die in beiden Fassungen vorhanden ist.
  */
 if (false === strpos($GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] ?? '', 'skipPhotoalbums2'))

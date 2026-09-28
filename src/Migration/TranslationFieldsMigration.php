@@ -16,14 +16,14 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 
 /**
- * Holt die Texte aus `tl_translation_fields` in die Felder zurueck.
+ * Holt die Texte aus `tl_translation_fields` in die Felder zurück.
  *
- * Die Vorgaengererweiterung photoalbums2 hat mehrere Textfelder ueber die
- * Erweiterung `craffft/contao-translation-fields` mehrsprachig gefuehrt. In den
+ * Die Vorgängererweiterung photoalbums2 hat mehrere Textfelder über die
+ * Erweiterung `craffft/contao-translation-fields` mehrsprachig geführt. In den
  * Feldern selbst stand dann nicht der Text, sondern nur eine Nummer, die auf
  * eine Zeile in `tl_translation_fields` verwies.
  *
- * Dieses Bundle kennt keine Mehrsprachigkeit mehr. Ohne Umzug wuerde im
+ * Dieses Bundle kennt keine Mehrsprachigkeit mehr. Ohne Umzug würde im
  * Backend und im Frontend die nackte Nummer erscheinen — genau das Bild, das
  * betroffene Installationen zeigen.
  *
@@ -32,8 +32,8 @@ use Doctrine\DBAL\Connection;
  * 1. **Zu der Nummer gibt es eine Zeile mit Text** — der Text tritt an die
  *    Stelle der Nummer.
  * 2. **Die Zeile gibt es, sie ist aber leer** — dann war das Feld auch unter
- *    photoalbums2 leer und die Nummer ist nichts als ein Ueberbleibsel des
- *    Uebersetzungsverfahrens. Sie kommt weg, das Feld bleibt leer.
+ *    photoalbums2 leer und die Nummer ist nichts als ein Überbleibsel des
+ *    Übersetzungsverfahrens. Sie kommt weg, das Feld bleibt leer.
  * 3. **Zu der Nummer gibt es gar keine Zeile** — dann ist die Zahl kein
  *    Verweis, sondern ein echter Wert (ein Ereignis „1968" etwa). Sie bleibt
  *    unangetastet.
@@ -46,9 +46,9 @@ use Doctrine\DBAL\Connection;
  *
  * Die Tabelle `tl_translation_fields` bleibt unangetastet: Sie kann noch von
  * anderen Erweiterungen benutzt werden, und ein zweiter Anlauf der Migration
- * soll moeglich bleiben.
+ * soll möglich bleiben.
  *
- * **Wichtig fuer die Fehlersuche:** `shouldRun()` und `run()` benutzen
+ * **Wichtig für die Fehlersuche:** `shouldRun()` und `run()` benutzen
  * dieselbe Methode {@see self::analyse()}. Das ist keine Kosmetik,
  * sondern Bedingung: Meldete `shouldRun()` Arbeit, die `run()` dann nicht
  * erledigen kann, bliebe die Migration ewig als „ausstehend“ stehen und der
@@ -57,7 +57,7 @@ use Doctrine\DBAL\Connection;
 class TranslationFieldsMigration extends AbstractMigration
 {
 	/**
-	 * Die Tabellen und Felder, in denen Verweise stehen koennen.
+	 * Die Tabellen und Felder, in denen Verweise stehen können.
 	 *
 	 * @var array<string, array<int, string>>
 	 */
@@ -75,12 +75,12 @@ class TranslationFieldsMigration extends AbstractMigration
 	private const PREFERRED_LANGUAGE = 'de';
 
 	/**
-	 * Hoechstlaenge eines Feldwertes, der noch als Verweis in Frage kommt.
+	 * Höchstlänge eines Feldwertes, der noch als Verweis in Frage kommt.
 	 *
-	 * Eine nackte Nummer ist vier bis fuenf Zeichen lang, eine in Markup
-	 * verpackte („<p>2071</p>") etwa elf. Der grosszuegige Wert laesst auch
-	 * geschachteltes Markup durch, haelt aber echte Fliesstexte davon ab,
-	 * ueberhaupt erst geprueft zu werden.
+	 * Eine nackte Nummer ist vier bis fünf Zeichen lang, eine in Markup
+	 * verpackte („<p>2071</p>") etwa elf. Der großzügige Wert lässt auch
+	 * geschachteltes Markup durch, hält aber echte Fließtexte davon ab,
+	 * überhaupt erst geprüft zu werden.
 	 *
 	 * @var int
 	 */
@@ -94,9 +94,9 @@ class TranslationFieldsMigration extends AbstractMigration
 	private $connection;
 
 	/**
-	 * Zwischenspeicher fuer aufgeloeste Verweisnummern.
+	 * Zwischenspeicher für aufgelöste Verweisnummern.
 	 *
-	 * Ein Verweis kommt haeufig in mehreren Datensaetzen vor; ohne diesen
+	 * Ein Verweis kommt häufig in mehreren Datensätzen vor; ohne diesen
 	 * Speicher liefe je Datensatz eine eigene Abfrage.
 	 *
 	 * @var array<int, string|null>
@@ -104,7 +104,7 @@ class TranslationFieldsMigration extends AbstractMigration
 	private $arrTranslations = array();
 
 	/**
-	 * Zwischenspeicher fuer die Frage, ob es eine Zeile zu einer fid gibt.
+	 * Zwischenspeicher für die Frage, ob es eine Zeile zu einer fid gibt.
 	 *
 	 * @var array<int, bool>
 	 */
@@ -125,14 +125,14 @@ class TranslationFieldsMigration extends AbstractMigration
 	 */
 	public function getName(): string
 	{
-		return 'Fotoalben: Texte aus tl_translation_fields in die Felder zuruecknehmen';
+		return 'Fotoalben: Texte aus tl_translation_fields in die Felder zurücknehmen';
 	}
 
 	/**
-	 * Prueft, ob es etwas umzuziehen gibt, das sich auch wirklich umziehen laesst.
+	 * Prüft, ob es etwas umzuziehen gibt, das sich auch wirklich umziehen lässt.
 	 *
-	 * Ein Verweis, zu dem es keinen brauchbaren Text gibt, zaehlt hier
-	 * ausdruecklich **nicht** als Arbeit — sonst bliebe die Migration
+	 * Ein Verweis, zu dem es keinen brauchbaren Text gibt, zählt hier
+	 * ausdrücklich **nicht** als Arbeit — sonst bliebe die Migration
 	 * dauerhaft ausstehend.
 	 *
 	 * @return bool true, wenn mindestens ein Feld ersetzt werden kann
@@ -159,10 +159,10 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Fuehrt den Umzug durch.
+	 * Führt den Umzug durch.
 	 *
-	 * @return MigrationResult Das Ergebnis mit der Zahl der geaenderten
-	 *                         Datensaetze je Tabelle und Feld
+	 * @return MigrationResult Das Ergebnis mit der Zahl der geänderten
+	 *                         Datensätze je Tabelle und Feld
 	 */
 	public function run(): MigrationResult
 	{
@@ -193,7 +193,7 @@ class TranslationFieldsMigration extends AbstractMigration
 				if (!empty($arrResult['updates']))
 				{
 					$arrMessages[] = sprintf(
-						'%s.%s: %d uebernommen, %d geleert',
+						'%s.%s: %d übernommen, %d geleert',
 						$strTable,
 						$strField,
 						$arrResult['replaced'],
@@ -210,14 +210,14 @@ class TranslationFieldsMigration extends AbstractMigration
 		else
 		{
 			$strResult = sprintf(
-				'%d Texte aus tl_translation_fields uebernommen, %d leere Verweise entfernt — %s.',
+				'%d Texte aus tl_translation_fields übernommen, %d leere Verweise entfernt — %s.',
 				$intReplaced,
 				$intCleared,
 				implode('; ', $arrMessages)
 			);
 		}
 
-		// Uebergangene Verweise werden gemeldet, weil in diesen Feldern
+		// Übergangene Verweise werden gemeldet, weil in diesen Feldern
 		// weiterhin eine nackte Nummer steht und jemand von Hand nachsehen muss
 		if ($intChained > 0)
 		{
@@ -230,25 +230,25 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Ermittelt die Datensaetze, die sich in einem Feld wirklich ersetzen lassen.
+	 * Ermittelt die Datensätze, die sich in einem Feld wirklich ersetzen lassen.
 	 *
-	 * Ausgeschlossen werden zwei Faelle:
+	 * Ausgeschlossen werden zwei Fälle:
 	 *
 	 * 1. Zu der Verweisnummer gibt es keinen oder nur einen leeren Text. Ihn
-	 *    durch nichts zu ersetzen waere schlimmer als die Nummer stehen zu
+	 *    durch nichts zu ersetzen wäre schlimmer als die Nummer stehen zu
 	 *    lassen — die Nummer ist der letzte Anhaltspunkt, um den Text von Hand
 	 *    wiederzufinden.
-	 * 2. Der gefundene Text besteht selbst nur aus Ziffern **und** liesse sich
-	 *    seinerseits als Verweis aufloesen. Nach dem Ersetzen saehe das Feld
-	 *    wieder wie ein Verweis aus, und die Migration wuerde beim naechsten
+	 * 2. Der gefundene Text besteht selbst nur aus Ziffern **und** ließe sich
+	 *    seinerseits als Verweis auflösen. Nach dem Ersetzen sähe das Feld
+	 *    wieder wie ein Verweis aus, und die Migration würde beim nächsten
 	 *    Lauf erneut zuschlagen.
 	 *
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
 	 *
 	 * @return array{updates: array<int, array{id: mixed, content: string}>, replaced: int, cleared: int, chained: int}
-	 *         Die zu aendernden Datensaetze sowie die Zahl der uebernommenen,
-	 *         der geleerten und der uebergangenen Verweise
+	 *         Die zu ändernden Datensätze sowie die Zahl der übernommenen,
+	 *         der geleerten und der übergangenen Verweise
 	 */
 	private function analyse(string $strTable, string $strField): array
 	{
@@ -262,8 +262,8 @@ class TranslationFieldsMigration extends AbstractMigration
 			$strContent = $this->findTranslation($arrRow['fid']);
 
 			// Die Zeile gibt es, sie ist aber leer: Dann war das Feld auch unter
-			// photoalbums2 leer, und die Nummer ist nichts als ein Ueberbleibsel
-			// des Uebersetzungsverfahrens. Sie kommt weg.
+			// photoalbums2 leer, und die Nummer ist nichts als ein Überbleibsel
+			// des Übersetzungsverfahrens. Sie kommt weg.
 			if (null === $strContent)
 			{
 				$arrUpdates[] = array('id' => $arrRow['id'], 'content' => '');
@@ -291,16 +291,16 @@ class TranslationFieldsMigration extends AbstractMigration
 	 *
 	 * Erkannt wird die nackte Nummer **und** eine in Markup verpackte, etwa
 	 * `<p>2071</p>`. Letzteres entsteht bei den Feldern mit Rich-Text-Editor:
-	 * Wer ein Album im Backend oeffnet und speichert, bekommt die rohe Nummer
+	 * Wer ein Album im Backend öffnet und speichert, bekommt die rohe Nummer
 	 * vom Editor in einen Absatz gepackt. Ohne diese zweite Form bliebe genau
 	 * dort die Zahl im Frontend stehen.
 	 *
-	 * Geprueft wird zusaetzlich, ob es zu der Nummer ueberhaupt eine Zeile in
-	 * `tl_translation_fields` gibt — sonst wuerde eine Beschreibung, die
-	 * zufaellig nur aus Ziffern besteht, faelschlich als Verweis gelten.
+	 * Geprüft wird zusätzlich, ob es zu der Nummer überhaupt eine Zeile in
+	 * `tl_translation_fields` gibt — sonst würde eine Beschreibung, die
+	 * zufällig nur aus Ziffern besteht, fälschlich als Verweis gelten.
 	 *
 	 * Fehlt die Spalte oder ist sie noch eine Ganzzahlspalte, kommt eine leere
-	 * Liste zurueck (siehe {@see self::isTextColumn()}).
+	 * Liste zurück (siehe {@see self::isTextColumn()}).
 	 *
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name des Feldes
@@ -315,10 +315,10 @@ class TranslationFieldsMigration extends AbstractMigration
 			return array();
 		}
 
-		// Vorauswahl in der Datenbank: nicht leer, nicht "0", kurz genug fuer
-		// eine verpackte Nummer und mit mindestens einer Ziffer. Die Laenge
-		// haelt echte Fliesstexte von vornherein draussen; entschieden wird
-		// danach in PHP, weil sich Markup dort verlaesslicher abstreifen laesst
+		// Vorauswahl in der Datenbank: nicht leer, nicht "0", kurz genug für
+		// eine verpackte Nummer und mit mindestens einer Ziffer. Die Länge
+		// hält echte Fließtexte von vornherein draußen; entschieden wird
+		// danach in PHP, weil sich Markup dort verlässlicher abstreifen lässt
 		// als mit einem SQL-Muster.
 		$strSql = sprintf(
 			'SELECT t.id AS id, t.%1$s AS value
@@ -351,18 +351,18 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Schaelt aus einem Feldwert die Verweisnummer heraus.
+	 * Schält aus einem Feldwert die Verweisnummer heraus.
 	 *
-	 * Erlaubt ist ausschliesslich Markup und Leerraum um die Ziffern herum.
-	 * Sobald noch irgendein anderes Zeichen uebrig bleibt — ein Buchstabe, ein
+	 * Erlaubt ist ausschließlich Markup und Leerraum um die Ziffern herum.
+	 * Sobald noch irgendein anderes Zeichen übrig bleibt — ein Buchstabe, ein
 	 * Punkt, ein zweites Wort —, ist es keine Verweisnummer, sondern ein Text,
-	 * der zufaellig Ziffern enthaelt.
+	 * der zufällig Ziffern enthält.
 	 *
-	 * Eine Grenze bleibt: Ein Text aus **zwei** Absaetzen, die je nur Ziffern
+	 * Eine Grenze bleibt: Ein Text aus **zwei** Absätzen, die je nur Ziffern
 	 * enthalten (`<p>20</p><p>71</p>`), ergibt beim Abstreifen des Markups
 	 * ebenfalls eine Zahl. Ein solcher Wert ist nicht sinnvoll konstruierbar,
-	 * und selbst dann muesste die entstehende Nummer zufaellig eine Zeile in
-	 * `tl_translation_fields` haben, damit ueberhaupt etwas geschieht.
+	 * und selbst dann müsste die entstehende Nummer zufällig eine Zeile in
+	 * `tl_translation_fields` haben, damit überhaupt etwas geschieht.
 	 *
 	 * @param string $strValue Der rohe Feldwert
 	 *
@@ -373,7 +373,7 @@ class TranslationFieldsMigration extends AbstractMigration
 		$strBare = strip_tags($strValue);
 		$strBare = html_entity_decode($strBare, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-		// Das geschuetzte Leerzeichen aus dem Editor ist kein normaler Leerraum
+		// Das geschützte Leerzeichen aus dem Editor ist kein normaler Leerraum
 		$strBare = str_replace("\xC2\xA0", ' ', $strBare);
 		$strBare = trim($strBare);
 
@@ -386,7 +386,7 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Prueft, ob es zu einer Nummer ueberhaupt eine Uebersetzungszeile gibt.
+	 * Prüft, ob es zu einer Nummer überhaupt eine Übersetzungszeile gibt.
 	 *
 	 * Das unterscheidet einen echten Verweis von einer Zahl, die einfach als
 	 * Wert im Feld steht — ein Ereignis „1968" etwa.
@@ -448,7 +448,7 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Prueft, ob eine Tabelle vorhanden ist.
+	 * Prüft, ob eine Tabelle vorhanden ist.
 	 *
 	 * @param string $strTable Name der Tabelle
 	 *
@@ -460,15 +460,15 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Prueft, ob eine Spalte vorhanden **und** vom Typ Text ist.
+	 * Prüft, ob eine Spalte vorhanden **und** vom Typ Text ist.
 	 *
 	 * Der Typ ist wichtig: `tl_content.pa2Teaser` war unter photoalbums2 eine
-	 * Ganzzahlspalte. Contao fuehrt Migrationen einmal **vor** und einmal
+	 * Ganzzahlspalte. Contao führt Migrationen einmal **vor** und einmal
 	 * **nach** dem Angleichen des Datenbankschemas aus. Liefe die Migration
-	 * schon im ersten Durchgang, wuerde der Text in die Ganzzahlspalte
-	 * geschrieben und dabei zu 0 — der Inhalt waere unwiederbringlich weg.
-	 * Deshalb wird die Spalte im ersten Durchgang uebersprungen; im zweiten
-	 * ist sie laengst in eine Textspalte umgewandelt.
+	 * schon im ersten Durchgang, würde der Text in die Ganzzahlspalte
+	 * geschrieben und dabei zu 0 — der Inhalt wäre unwiederbringlich weg.
+	 * Deshalb wird die Spalte im ersten Durchgang übersprungen; im zweiten
+	 * ist sie längst in eine Textspalte umgewandelt.
 	 *
 	 * @param string $strTable Name der Tabelle
 	 * @param string $strField Name der Spalte
@@ -496,23 +496,23 @@ class TranslationFieldsMigration extends AbstractMigration
 	}
 
 	/**
-	 * Prueft einen Bezeichner, bevor er in eine Abfrage geschrieben wird.
+	 * Prüft einen Bezeichner, bevor er in eine Abfrage geschrieben wird.
 	 *
 	 * Die Namen stammen zwar alle aus der Konstanten oben und sind damit fest
-	 * verdrahtet; die Pruefung steht trotzdem hier, damit eine spaetere
-	 * Erweiterung der Liste nicht unbemerkt eine Luecke aufreisst.
+	 * verdrahtet; die Prüfung steht trotzdem hier, damit eine spätere
+	 * Erweiterung der Liste nicht unbemerkt eine Lücke aufreißt.
 	 *
 	 * @param string $strName Tabellen- oder Spaltenname
 	 *
 	 * @return string Derselbe Name
 	 *
-	 * @throws \InvalidArgumentException Wenn der Name Sonderzeichen enthaelt
+	 * @throws \InvalidArgumentException Wenn der Name Sonderzeichen enthält
 	 */
 	private function quoteIdentifier(string $strName): string
 	{
 		if (!preg_match('/^[A-Za-z0-9_]+$/', $strName))
 		{
-			throw new \InvalidArgumentException(sprintf('Ungueltiger Bezeichner "%s"', $strName));
+			throw new \InvalidArgumentException(sprintf('Ungültiger Bezeichner "%s"', $strName));
 		}
 
 		return $strName;

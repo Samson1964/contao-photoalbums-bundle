@@ -22,21 +22,21 @@ use Schachbulle\ContaoPhotoalbumsBundle\Sorter\AlbumSorter;
 /**
  * Arbeitet mit einer Auswahl von Fotoalben-Archiven.
  *
- * Die Klasse hat zwei Aufgaben: Sie wirft geschuetzte Archive aus der Liste,
+ * Die Klasse hat zwei Aufgaben: Sie wirft geschützte Archive aus der Liste,
  * auf die der angemeldete Besucher keinen Zugriff hat, und sie liefert zu den
- * verbleibenden Archiven die zugehoerigen Alben — bereits in der im Modul
+ * verbleibenden Archiven die zugehörigen Alben — bereits in der im Modul
  * eingestellten Reihenfolge.
  */
 class Archive extends ItemList
 {
 	/**
-	 * Entfernt geschuetzte Archive ohne Zugriffsrecht aus der Liste.
+	 * Entfernt geschützte Archive ohne Zugriffsrecht aus der Liste.
 	 *
-	 * Ein Archiv gilt als zugaenglich, wenn es nicht geschuetzt ist oder wenn
+	 * Ein Archiv gilt als zugänglich, wenn es nicht geschützt ist oder wenn
 	 * das angemeldete Mitglied entweder selbst freigeschaltet ist oder einer
-	 * freigeschalteten Mitgliedergruppe angehoert.
+	 * freigeschalteten Mitgliedergruppe angehört.
 	 *
-	 * @return void Schreibt die bereinigte Liste zurueck nach $this->items
+	 * @return void Schreibt die bereinigte Liste zurück nach $this->items
 	 */
 	protected function sortOut(): void
 	{
@@ -65,13 +65,13 @@ class Archive extends ItemList
 	}
 
 	/**
-	 * Prueft den Zugriff des angemeldeten Mitglieds auf ein geschuetztes Archiv.
+	 * Prüft den Zugriff des angemeldeten Mitglieds auf ein geschütztes Archiv.
 	 *
 	 * @param mixed $varUsers  Serialisiertes Feld der freigeschalteten Mitglieder
 	 * @param mixed $varGroups Serialisiertes Feld der freigeschalteten Gruppen
 	 *
 	 * @return bool true, wenn der Zugriff erlaubt ist; false auch dann, wenn
-	 *              ueberhaupt niemand angemeldet ist
+	 *              überhaupt niemand angemeldet ist
 	 */
 	private function hasAccess($varUsers, $varGroups): bool
 	{
@@ -100,7 +100,7 @@ class Archive extends ItemList
 	}
 
 	/**
-	 * Liefert die Nummern der zugaenglichen Archive.
+	 * Liefert die Nummern der zugänglichen Archive.
 	 *
 	 * @return array<int, int|string> Die bereinigte Nummernliste
 	 */
@@ -110,9 +110,9 @@ class Archive extends ItemList
 	}
 
 	/**
-	 * Liefert die zugaenglichen Archive als Datensatzsammlung.
+	 * Liefert die zugänglichen Archive als Datensatzsammlung.
 	 *
-	 * @return Collection|null Die Archive oder null, wenn keines uebrig ist
+	 * @return Collection|null Die Archive oder null, wenn keines übrig ist
 	 */
 	public function getArchives(): ?Collection
 	{
@@ -125,11 +125,11 @@ class Archive extends ItemList
 	}
 
 	/**
-	 * Liefert die Nummern aller Alben aus den zugaenglichen Archiven.
+	 * Liefert die Nummern aller Alben aus den zugänglichen Archiven.
 	 *
-	 * Die Liste wird zunaechst nach der im Modul gewaehlten Albensortierung
+	 * Die Liste wird zunächst nach der im Modul gewählten Albensortierung
 	 * geordnet und danach durch {@see Album} noch einmal um alles bereinigt,
-	 * was durch den Zugriffsschutz oder den Zeitfilter faellt.
+	 * was durch den Zugriffsschutz oder den Zeitfilter fällt.
 	 *
 	 * @return array<int, int|string>|null Die Albumnummern oder null, wenn es
 	 *                                     keine gibt
@@ -166,7 +166,7 @@ class Archive extends ItemList
 	}
 
 	/**
-	 * Liefert die Alben der zugaenglichen Archive als Datensatzsammlung.
+	 * Liefert die Alben der zugänglichen Archive als Datensatzsammlung.
 	 *
 	 * @return Collection|null Die Alben oder null, wenn es keine gibt
 	 */

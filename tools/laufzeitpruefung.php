@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 /*
- * Laufzeitpruefung des Fotoalben-Bundles.
+ * Laufzeitprüfung des Fotoalben-Bundles.
  *
- * Anders als tools/pruefstand.php braucht dieses Werkzeug eine vollstaendige
+ * Anders als tools/pruefstand.php braucht dieses Werkzeug eine vollständige
  * Contao-Installation samt Datenbank, in der das Bundle per Composer
- * eingebunden ist. Es startet den Kernel, laedt die Datenbereiche mit den
- * echten Kern-Definitionen und ruft einzelne Rueckrufe gegen echte Datensaetze
- * auf. Damit faellt auf, was der reine Ladetest nicht sieht — etwa eine
+ * eingebunden ist. Es startet den Kernel, lädt die Datenbereiche mit den
+ * echten Kern-Definitionen und ruft einzelne Rückrufe gegen echte Datensätze
+ * auf. Damit fällt auf, was der reine Ladetest nicht sieht — etwa eine
  * Palette, die auf ein Kernfeld verweist, das es gar nicht gibt.
  *
  * Aufruf aus dem Verzeichnis der Contao-Installation heraus:
@@ -39,9 +39,9 @@ $intErrors = 0;
 $intChecks = 0;
 
 /**
- * Meldet das Ergebnis einer Pruefung.
+ * Meldet das Ergebnis einer Prüfung.
  *
- * @param string $strLabel Was geprueft wurde
+ * @param string $strLabel Was geprüft wurde
  * @param bool   $blnOk    Ergebnis
  * @param string $strHint  Zusatzangabe
  */
@@ -68,7 +68,7 @@ $kernel->boot();
 $container = $kernel->getContainer();
 System::setContainer($container);
 
-// Eine Backend-Anfrage vortaeuschen, damit Scope-Abfragen sinnvoll antworten
+// Eine Backend-Anfrage vortäuschen, damit Scope-Abfragen sinnvoll antworten
 $request = Request::create('/contao?do=photoalbums2');
 $request->attributes->set('_scope', 'backend');
 $container->get('request_stack')->push($request);
@@ -77,10 +77,10 @@ $container->get('request_stack')->push($request);
 $framework = $container->get('contao.framework');
 $framework->initialize();
 
-echo "Laufzeitpruefung Fotoalben\n";
+echo "Laufzeitprüfung Fotoalben\n";
 echo 'Contao: '.Contao\CoreBundle\ContaoCoreBundle::getVersion().'    PHP: '.PHP_VERSION."\n\n";
 
-echo "1. Datenbereiche mit den Kern-Definitionen zusammenfuehren\n";
+echo "1. Datenbereiche mit den Kern-Definitionen zusammenführen\n";
 
 foreach (array('tl_photoalbums2_archive', 'tl_photoalbums2_album', 'tl_module', 'tl_content', 'tl_layout', 'tl_user', 'tl_user_group') as $strTable)
 {
@@ -101,7 +101,7 @@ System::loadLanguageFile('modules', 'de');
 
 echo "\n2. Paletten und Beschriftungen\n";
 
-pruefe('Album-Palette vollstaendig', str_contains((string) $GLOBALS['TL_DCA']['tl_photoalbums2_album']['palettes']['default'], 'startdate,enddate'));
+pruefe('Album-Palette vollständig', str_contains((string) $GLOBALS['TL_DCA']['tl_photoalbums2_album']['palettes']['default'], 'startdate,enddate'));
 pruefe('Modul-Palette photoalbums2', isset($GLOBALS['TL_DCA']['tl_module']['palettes']['pa2_on_one_page']));
 pruefe('Element-Palette photoalbums2', isset($GLOBALS['TL_DCA']['tl_content']['palettes']['photoalbums2']));
 pruefe('skipPhotoalbums2 im Layout', str_contains((string) $GLOBALS['TL_DCA']['tl_layout']['palettes']['default'], 'skipPhotoalbums2'));
@@ -111,7 +111,7 @@ pruefe('Beschriftung Backend-Modul', '' !== ($GLOBALS['TL_LANG']['MOD']['photoal
 
 /*
  * Jedes Feld einer Palette muss auch definiert sein — sonst bricht der Data
- * Container beim Oeffnen ab.
+ * Container beim Öffnen ab.
  */
 foreach (array('tl_photoalbums2_album', 'tl_photoalbums2_archive') as $strTable)
 {
@@ -191,8 +191,8 @@ else
 
 	$objAfter = $objDb->prepare('SELECT startdate, enddate FROM tl_photoalbums2_album WHERE id=?')->limit(1)->execute($intId);
 
-	pruefe('adjustTime laesst das Startdatum stehen', $strStart === (string) $objAfter->startdate, (string) $objAfter->startdate);
-	pruefe('adjustTime laesst das Enddatum stehen', $strEnd === (string) $objAfter->enddate, (string) $objAfter->enddate);
+	pruefe('adjustTime lässt das Startdatum stehen', $strStart === (string) $objAfter->startdate, (string) $objAfter->startdate);
+	pruefe('adjustTime lässt das Enddatum stehen', $strEnd === (string) $objAfter->enddate, (string) $objAfter->enddate);
 	pruefe('Datum bleibt 1968', '17.10.1968' === Contao\Date::parse('d.m.Y', (int) $objAfter->startdate), Contao\Date::parse('d.m.Y', (int) $objAfter->startdate));
 
 	pruefe('Keine Verweisnummer mehr im Feld event', !preg_match('/^[0-9]+$/', (string) $objAlbum->event), (string) $objAlbum->event);
@@ -201,8 +201,8 @@ else
 	echo "\n4. Backend-Ausgabe der Albenliste\n";
 
 	$strRow = $objListener->listAlbums($objAlbum->row());
-	pruefe('Albumzeile enthaelt den Titel', str_contains($strRow, (string) $objAlbum->title));
-	pruefe('Albumzeile enthaelt die Statusklasse', str_contains($strRow, 'cte_type'));
+	pruefe('Albumzeile enthält den Titel', str_contains($strRow, (string) $objAlbum->title));
+	pruefe('Albumzeile enthält die Statusklasse', str_contains($strRow, 'cte_type'));
 }
 
 echo "\n5. Sortier-Assistent\n";
@@ -223,9 +223,9 @@ try
 	pruefe('Skript eingebunden', \in_array('bundles/contaophotoalbums/sortwizard.js', $GLOBALS['TL_JAVASCRIPT'] ?? array(), true));
 
 	/*
-	 * Ohne Datensatz kennt der Assistent keine Dateien. Fuer die Kacheln
+	 * Ohne Datensatz kennt der Assistent keine Dateien. Für die Kacheln
 	 * braucht es deshalb ein Album mit echtem Inhalt — gesucht wird eines,
-	 * das sowohl ein Foto als auch ein Video enthaelt.
+	 * das sowohl ein Foto als auch ein Video enthält.
 	 */
 	$objMitVideo = null;
 	$objAlle = $objDb->execute('SELECT id, images FROM tl_photoalbums2_album');
@@ -264,7 +264,7 @@ try
 
 	if (null === $objMitVideo)
 	{
-		pruefe('Testalbum mit Foto und Video vorhanden', false, 'kein Album gefunden, das beides enthaelt');
+		pruefe('Testalbum mit Foto und Video vorhanden', false, 'kein Album gefunden, das beides enthält');
 	}
 	else
 	{
@@ -297,7 +297,7 @@ try
 
 		/*
 		 * Der Pfad muss relativ bleiben — genau wie der von Contao erzeugte
-		 * Daumennagel daneben. Eine vollstaendige Adresse waere hier nicht
+		 * Daumennagel daneben. Eine vollständige Adresse wäre hier nicht
 		 * sicherer, sondern unsicherer: Auf der Kommandozeile hat die Anfrage
 		 * gar keinen Rechnernamen, und `Environment::get('base')` lieferte
 		 * dann `http:///`.
@@ -337,7 +337,7 @@ pruefe('Templategruppe pa2_wrap gefunden', !empty($arrGroup), implode(', ', arra
 
 echo "\n";
 echo $intErrors > 0
-	? "ERGEBNIS: $intErrors von $intChecks Pruefungen fehlgeschlagen.\n"
-	: "ERGEBNIS: alle $intChecks Pruefungen bestanden.\n";
+	? "ERGEBNIS: $intErrors von $intChecks Prüfungen fehlgeschlagen.\n"
+	: "ERGEBNIS: alle $intChecks Prüfungen bestanden.\n";
 
 exit($intErrors > 0 ? 1 : 0);

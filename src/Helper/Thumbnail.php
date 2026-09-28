@@ -15,11 +15,11 @@ use Contao\StringUtil;
 use Contao\System;
 
 /**
- * Erzeugt Daumennaegel fuer die Anzeige im Backend.
+ * Erzeugt Daumennägel für die Anzeige im Backend.
  *
- * Der frueher benutzte `Controller::getImage()` ist unter Contao 5 entfallen.
+ * Der früher benutzte `Controller::getImage()` ist unter Contao 5 entfallen.
  * Der Dienst `contao.image.factory` gibt es dagegen in beiden Fassungen und
- * ist in beiden oeffentlich.
+ * ist in beiden öffentlich.
  */
 class Thumbnail
 {
@@ -27,13 +27,13 @@ class Thumbnail
 	 * Erzeugt das img-Element eines Daumennagels.
 	 *
 	 * @param string $strPath Projektrelativer Pfad der Bilddatei
-	 * @param string $strAlt  Alternativtext, ueblicherweise der Dateiname
-	 * @param int    $intWidth  Hoechstbreite in Bildpunkten
-	 * @param int    $intHeight Hoechsthoehe in Bildpunkten
+	 * @param string $strAlt  Alternativtext, üblicherweise der Dateiname
+	 * @param int    $intWidth  Höchstbreite in Bildpunkten
+	 * @param int    $intHeight Höchsthöhe in Bildpunkten
 	 *
 	 * @return string Das img-Element oder eine leere Zeichenkette, wenn sich
-	 *                aus der Datei kein Bild erzeugen laesst (fehlende Datei,
-	 *                unbekanntes Format, zu grosse Abmessungen)
+	 *                aus der Datei kein Bild erzeugen lässt (fehlende Datei,
+	 *                unbekanntes Format, zu große Abmessungen)
 	 */
 	public static function generate(string $strPath, string $strAlt = '', int $intWidth = 80, int $intHeight = 60): string
 	{

@@ -17,22 +17,22 @@ use Contao\StringUtil;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\TimeFilter;
 
 /**
- * Haelt die beiden Werte des Zeitfilters plausibel.
+ * Hält die beiden Werte des Zeitfilters plausibel.
  *
  * Negative Zahlen werden auf 0 gesetzt, und ein Ende, das vor dem Anfang
- * laege, wird auf den Anfang gezogen — sonst waere die Zeitspanne leer und im
+ * läge, wird auf den Anfang gezogen — sonst wäre die Zeitspanne leer und im
  * Frontend erschiene gar kein Album.
  *
- * Der Rueckruf haengt als `onsubmit_callback` an `tl_module` und `tl_content`.
- * Die Urfassung hat in beiden Faellen nach `tl_module` geschrieben; hier wird
+ * Der Rückruf hängt als `onsubmit_callback` an `tl_module` und `tl_content`.
+ * Die Urfassung hat in beiden Fällen nach `tl_module` geschrieben; hier wird
  * die Tabelle aus dem Data Container genommen.
  */
 class TimeFilterListener
 {
 	/**
-	 * Prueft und berichtigt die Werte des Zeitfilters.
+	 * Prüft und berichtigt die Werte des Zeitfilters.
 	 *
-	 * Der `onsubmit_callback` laeuft in beiden Contao-Fassungen **nach** dem
+	 * Der `onsubmit_callback` läuft in beiden Contao-Fassungen **nach** dem
 	 * Schreiben des Datensatzes; die Werte werden deshalb aus der Datenbank
 	 * gelesen und dort auch wieder abgelegt.
 	 *
@@ -69,7 +69,7 @@ class TimeFilterListener
 
 		$objTimeFilter = new TimeFilter($arrStart, $arrEnd);
 
-		// Ein Ende vor dem Anfang ergaebe eine leere Zeitspanne
+		// Ein Ende vor dem Anfang ergäbe eine leere Zeitspanne
 		if (null !== $objTimeFilter->getFilterStart() && null !== $objTimeFilter->getFilterEnd() && $objTimeFilter->getFilterStart() > $objTimeFilter->getFilterEnd())
 		{
 			$arrEnd = $arrStart;
@@ -81,7 +81,7 @@ class TimeFilterListener
 	}
 
 	/**
-	 * Macht aus einer Eingabe eine gueltige Anzahl.
+	 * Macht aus einer Eingabe eine gültige Anzahl.
 	 *
 	 * @param mixed $varValue Der eingegebene Wert
 	 *

@@ -24,11 +24,11 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 use Schachbulle\ContaoPhotoalbumsBundle\Sorter\ImageSorter;
 
 /**
- * Baut die Alben-Uebersicht.
+ * Baut die Alben-Übersicht.
  *
  * Ausgegeben wird eine Kachelliste der Alben eines oder mehrerer Archive, je
- * Album mit Vorschaubild, Titel und den ausgewaehlten Meta-Angaben. Wahlweise
- * traegt jede Kachel schon alle Fotos des Albums als versteckte Lightbox-Gruppe
+ * Album mit Vorschaubild, Titel und den ausgewählten Meta-Angaben. Wahlweise
+ * trägt jede Kachel schon alle Fotos des Albums als versteckte Lightbox-Gruppe
  * mit sich — dann braucht es gar keine Detailseite.
  */
 class AlbumViewParser extends ViewParser
@@ -41,7 +41,7 @@ class AlbumViewParser extends ViewParser
 	private $objAlbums;
 
 	/**
-	 * Uebernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
+	 * Übernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
 	 *
 	 * @return void
 	 */
@@ -85,7 +85,7 @@ class AlbumViewParser extends ViewParser
 	 */
 	protected function compile(): void
 	{
-		// Das Modul-Template durch das gewaehlte Rahmen-Template ersetzen
+		// Das Modul-Template durch das gewählte Rahmen-Template ersetzen
 		$objTemplate = new FrontendTemplate($this->Template->strTemplate);
 		$objTemplate->setData($this->Template->getData());
 		$this->Template = $objTemplate;
@@ -119,8 +119,8 @@ class AlbumViewParser extends ViewParser
 	 * Erzeugt zu jedem Album ein Teil-Template.
 	 *
 	 * Nebenbei werden Seitennummer und Seitennummer-Kennung in der Sitzung
-	 * abgelegt; die Foto-Ansicht baut daraus spaeter den Rueckverweis auf genau
-	 * die Uebersichtsseite, von der der Besucher gekommen ist.
+	 * abgelegt; die Foto-Ansicht baut daraus später den Rückverweis auf genau
+	 * die Übersichtsseite, von der der Besucher gekommen ist.
 	 *
 	 * @return void
 	 */
@@ -180,8 +180,8 @@ class AlbumViewParser extends ViewParser
 			$objPreviewImage = new PreviewImage($objAlbums->current(), $objSubtemplate->pa2PreviewImage);
 			$objImage = new Image($objPreviewImage->getPreviewImageUuid());
 
-			// Enthaelt ein Album nur Videos, ist auch die Kachel ein Video. Sie
-			// bekommt die Platzhaltergrafik, fuehrt aber wie jede andere Kachel
+			// Enthält ein Album nur Videos, ist auch die Kachel ein Video. Sie
+			// bekommt die Platzhaltergrafik, führt aber wie jede andere Kachel
 			// auf die Detailseite und spielt hier nichts ab.
 			if ($objImage->isVideo())
 			{
@@ -193,7 +193,7 @@ class AlbumViewParser extends ViewParser
 				$objImage->addToTemplate($objSubtemplate);
 			}
 
-			// Die im Album hinterlegte CSS-Klasse an die berechneten anhaengen
+			// Die im Album hinterlegte CSS-Klasse an die berechneten anhängen
 			$strClass = (string) ($objSubtemplate->class ?? '');
 			$strAlbumClass = (string) ($objAlbums->cssClass ?? '');
 
@@ -213,11 +213,11 @@ class AlbumViewParser extends ViewParser
 	}
 
 	/**
-	 * Haengt alle Fotos eines Albums als versteckte Lightbox-Gruppe an.
+	 * Hängt alle Fotos eines Albums als versteckte Lightbox-Gruppe an.
 	 *
 	 * Das erste Foto wird zum Ziel des Kachel-Verweises; alle weiteren stehen
 	 * als unsichtbare Verweise im Markup, damit die Lightbox sie kennt, ohne
-	 * dass der Browser sie beim Seitenaufbau laedt.
+	 * dass der Browser sie beim Seitenaufbau lädt.
 	 *
 	 * @param object $objTemplate Das Teil-Template der Kachel
 	 * @param object $objAlbum    Der Albumdatensatz
@@ -255,10 +255,10 @@ class AlbumViewParser extends ViewParser
 				continue;
 			}
 
-			// Videos bleiben aussen vor: Die Lightbox des Themes bekommt ihre
-			// Einstellungen einmal fuer alle Verweise und wuerde ein Video als
+			// Videos bleiben außen vor: Die Lightbox des Themes bekommt ihre
+			// Einstellungen einmal für alle Verweise und würde ein Video als
 			// Bild zu laden versuchen. In diesem Modus sind Videos also nur
-			// ueber die Foto-Ansicht zu erreichen.
+			// über die Foto-Ansicht zu erreichen.
 			if ($objImage->isVideo())
 			{
 				continue;

@@ -22,7 +22,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Widget\ImageSortWizard;
 use Schachbulle\ContaoPhotoalbumsBundle\Widget\SortWizard;
 
 /*
- * Stilvorlage fuer die Eingabemasken im Backend
+ * Stilvorlage für die Eingabemasken im Backend
  */
 if (Runtime::isBackend())
 {
@@ -41,7 +41,7 @@ $GLOBALS['BE_MOD']['content']['photoalbums2'] = array
 /*
  * Frontend-Module
  *
- * Die Registrierung ueber $GLOBALS['FE_MOD'] mit dem vollen Klassennamen
+ * Die Registrierung über $GLOBALS['FE_MOD'] mit dem vollen Klassennamen
  * funktioniert unter Contao 4.13 wie unter Contao 5 (Module::findClass()).
  */
 $GLOBALS['FE_MOD']['photoalbums2_legend'] = array
@@ -79,17 +79,17 @@ $GLOBALS['TL_PERMISSIONS'][] = 'photoalbums2p';
  *
  * Sie stehen bewusst in einem globalen Feld statt in Klassenkonstanten: Die
  * DCA-Dateien greifen unmittelbar darauf zu, und eine Installation kann sie
- * in der eigenen config.php ergaenzen.
+ * in der eigenen config.php ergänzen.
  */
 $GLOBALS['pa2'] = array();
 
-/* Zugelassene Dateiendungen fuer Fotos */
+/* Zugelassene Dateiendungen für Fotos */
 $GLOBALS['pa2']['imageExtensions'] = 'png,jpg,jpeg,gif,webp,avif';
 
 /*
- * Zugelassene Dateiendungen fuer Videos
+ * Zugelassene Dateiendungen für Videos
  *
- * Alle vier duerfen mit Contaos Voreinstellung fuer `uploadTypes` ohne weitere
+ * Alle vier dürfen mit Contaos Voreinstellung für `uploadTypes` ohne weitere
  * Einrichtung hochgeladen werden.
  */
 $GLOBALS['pa2']['videoExtensions'] = Video::DEFAULT_EXTENSIONS;
@@ -114,7 +114,7 @@ $GLOBALS['pa2']['imageSortTypes'] = array
 	'custom'         => 'custom',
 );
 
-/* Sortierung der Alben in der Uebersicht */
+/* Sortierung der Alben in der Übersicht */
 $GLOBALS['pa2']['albumSortTypes'] = array
 (
 	'title_asc'           => 'title_asc',
@@ -151,5 +151,5 @@ $GLOBALS['pa2']['modulePreviewImageTypes'] = array
 /* Einheiten des Zeitfilters */
 $GLOBALS['pa2']['timeFilterOptions'] = array('days', 'weeks', 'months', 'years');
 
-/* Angaben, die unter einem Album ausgegeben werden koennen */
+/* Angaben, die unter einem Album ausgegeben werden können */
 $GLOBALS['pa2']['metaFields'] = array('date', 'event', 'place', 'photographer', 'description', 'numberOfAllImages');

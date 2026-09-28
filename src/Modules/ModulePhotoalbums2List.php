@@ -16,7 +16,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
 /**
  * Frontend-Modul „Fotoalben Liste“.
  *
- * Zeigt ausschliesslich die Alben-Uebersicht. Wird ein Album gewaehlt, leitet
+ * Zeigt ausschließlich die Alben-Übersicht. Wird ein Album gewählt, leitet
  * das Modul auf die eingestellte Foto-Ansicht-Seite um — es gibt hier also
  * bewusst keinen Weg, die Fotos auf derselben Seite darzustellen.
  */
@@ -30,7 +30,7 @@ class ModulePhotoalbums2List extends ModulePhotoalbums2
 	protected $strPa2Type = 'MOD_LIST';
 
 	/**
-	 * Schluessel der Modulbezeichnung fuer den Platzhalter im Backend.
+	 * Schlüssel der Modulbezeichnung für den Platzhalter im Backend.
 	 *
 	 * @var string
 	 */
@@ -47,10 +47,10 @@ class ModulePhotoalbums2List extends ModulePhotoalbums2
 	}
 
 	/**
-	 * Nimmt die Uebersichtsseite aus den Einstellungen.
+	 * Nimmt die Übersichtsseite aus den Einstellungen.
 	 *
-	 * Dieses Modul *ist* die Uebersicht; ein Rueckverweis auf eine andere
-	 * Uebersichtsseite ergaebe hier keinen Sinn.
+	 * Dieses Modul *ist* die Übersicht; ein Rückverweis auf eine andere
+	 * Übersichtsseite ergäbe hier keinen Sinn.
 	 *
 	 * @return void
 	 */
@@ -60,7 +60,7 @@ class ModulePhotoalbums2List extends ModulePhotoalbums2
 	}
 
 	/**
-	 * Zeigt die Alben-Uebersicht oder leitet zur Foto-Ansicht weiter.
+	 * Zeigt die Alben-Übersicht oder leitet zur Foto-Ansicht weiter.
 	 *
 	 * @return void
 	 */

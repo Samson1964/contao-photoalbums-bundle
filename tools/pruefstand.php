@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 /*
- * Pruefstand des Fotoalben-Bundles.
+ * Prüfstand des Fotoalben-Bundles.
  *
- * Prueft ohne Datenbank und ohne Composer-Installation des Bundles, ob sich
+ * Prüft ohne Datenbank und ohne Composer-Installation des Bundles, ob sich
  * Klassen, Konfiguration, Sprachdateien und Datenbereiche unter einer
- * bestimmten Contao-Fassung ueberhaupt laden lassen. Das faengt genau die
+ * bestimmten Contao-Fassung überhaupt laden lassen. Das fängt genau die
  * Fehler ab, die ein `php -l` nicht sieht: fehlende Klassen, entfallene
  * Konstanten, falsche Elternklassen.
  *
- * Aufruf (der XAMPP-Interpreter ist noetig, die Testinstallationen sind fuer
+ * Aufruf (der XAMPP-Interpreter ist nötig, die Testinstallationen sind für
  * PHP 8.4 gebaut):
  *
  *   C:\xampp\php\php.exe tools/pruefstand.php F:\Claude\contao-test-413
@@ -36,8 +36,8 @@ $strBundleDir = \dirname(__DIR__);
 
 /*
  * Der eigene Autoloader muss VOR dem von Composer stehen: Liegt in der
- * Testinstallation schon eine Packagist-Fassung des Bundles, wuerde sonst die
- * geprueft und nicht der Arbeitsstand.
+ * Testinstallation schon eine Packagist-Fassung des Bundles, würde sonst die
+ * geprüft und nicht der Arbeitsstand.
  */
 spl_autoload_register(
 	static function (string $strClass) use ($strBundleDir): void
@@ -66,9 +66,9 @@ $intErrors = 0;
 $intChecks = 0;
 
 /**
- * Meldet das Ergebnis einer Pruefung.
+ * Meldet das Ergebnis einer Prüfung.
  *
- * @param string $strLabel Was geprueft wurde
+ * @param string $strLabel Was geprüft wurde
  * @param bool   $blnOk    Ergebnis
  * @param string $strHint  Zusatzangabe im Fehlerfall
  */
@@ -89,13 +89,13 @@ function pruefe(string $strLabel, bool $blnOk, string $strHint = ''): void
 	echo '  [FEHL] '.$strLabel.('' !== $strHint ? ' — '.$strHint : '')."\n";
 }
 
-echo "Pruefstand Fotoalben — Installation: $strInstall\n";
+echo "Prüfstand Fotoalben — Installation: $strInstall\n";
 echo 'Contao-Fassung: '.(class_exists('Contao\CoreBundle\ContaoCoreBundle') ? \Contao\CoreBundle\ContaoCoreBundle::getVersion() : 'unbekannt')."\n";
 echo 'PHP: '.PHP_VERSION."\n\n";
 
 /*
- * Ein leerer Behaelter genuegt: Die eigenen Klassen fragen ihn nur nach
- * Diensten, die sie im Zweifel auch entbehren koennen.
+ * Ein leerer Behälter genügt: Die eigenen Klassen fragen ihn nur nach
+ * Diensten, die sie im Zweifel auch entbehren können.
  */
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['REQUEST_URI'] = '/';
@@ -214,8 +214,8 @@ pruefe('Widget pa2SortWizard', class_exists($GLOBALS['BE_FFL']['pa2SortWizard'] 
 echo "\n4. Datenbereiche\n";
 
 /*
- * Die Kerntabellen werden nur so weit vorbelegt, wie die eigenen Ergaenzungen
- * es brauchen. Ein echtes loadDataContainer() waere ohne Kernel nicht moeglich.
+ * Die Kerntabellen werden nur so weit vorbelegt, wie die eigenen Ergänzungen
+ * es brauchen. Ein echtes loadDataContainer() wäre ohne Kernel nicht möglich.
  */
 $GLOBALS['TL_DCA']['tl_module'] = array(
 	'palettes' => array('__selector__' => array('type')),
@@ -260,21 +260,21 @@ foreach (glob($strBundleDir.'/src/Resources/contao/dca/*.php') as $strFile)
 
 pruefe('Album-Tabelle definiert', isset($GLOBALS['TL_DCA']['tl_photoalbums2_album']['fields']['startdate']));
 pruefe('startdate ist varchar(11)', str_starts_with((string) ($GLOBALS['TL_DCA']['tl_photoalbums2_album']['fields']['startdate']['sql'] ?? ''), 'varchar(11)'), (string) ($GLOBALS['TL_DCA']['tl_photoalbums2_album']['fields']['startdate']['sql'] ?? ''));
-pruefe('Kein translation-fields-Rueckruf mehr', !str_contains(serialize($GLOBALS['TL_DCA']['tl_photoalbums2_album']), 'TranslationFieldsHelper'));
+pruefe('Kein translation-fields-Rückruf mehr', !str_contains(serialize($GLOBALS['TL_DCA']['tl_photoalbums2_album']), 'TranslationFieldsHelper'));
 pruefe('Palette photoalbums2 vorhanden', isset($GLOBALS['TL_DCA']['tl_module']['palettes']['photoalbums2']));
 pruefe('skipPhotoalbums2 in tl_layout', str_contains((string) $GLOBALS['TL_DCA']['tl_layout']['palettes']['default'], 'skipPhotoalbums2'));
 pruefe('photoalbums2s in tl_user (extend)', str_contains((string) $GLOBALS['TL_DCA']['tl_user']['palettes']['extend'], 'photoalbums2s'));
 pruefe('photoalbums2s in tl_user_group', str_contains((string) $GLOBALS['TL_DCA']['tl_user_group']['palettes']['default'], 'photoalbums2s'));
 
-echo "\n5. Rueckrufe aus den Datenbereichen\n";
+echo "\n5. Rückrufe aus den Datenbereichen\n";
 
 $arrCallbacks = array();
 
 /**
- * Sammelt alle Rueckrufe aus einer DCA-Teilstruktur ein.
+ * Sammelt alle Rückrufe aus einer DCA-Teilstruktur ein.
  *
  * @param mixed                       $varNode Ein Ausschnitt der DCA
- * @param array<int, array<int, mixed>> $arrOut  Sammelbehaelter
+ * @param array<int, array<int, mixed>> $arrOut  Sammelbehälter
  */
 function sammleRueckrufe($varNode, array &$arrOut): void
 {
@@ -317,7 +317,7 @@ foreach ($arrCallbacks as $arrCallback)
 	pruefe($strKey, class_exists($arrCallback[0]) && method_exists($arrCallback[0], $arrCallback[1]));
 }
 
-pruefe('Mindestens zehn Rueckrufe gefunden', \count($arrSeen) >= 10, 'gefunden: '.\count($arrSeen));
+pruefe('Mindestens zehn Rückrufe gefunden', \count($arrSeen) >= 10, 'gefunden: '.\count($arrSeen));
 
 echo "\n6. Zeitrechnung mit Daten vor 1970\n";
 
@@ -330,8 +330,8 @@ pruefe('Enddatum nach Startdatum', $intEnd > $intStart);
 pruefe('Zeitstempel passt in varchar(11)', \strlen((string) $intStart) <= 11, (string) \strlen((string) $intStart));
 
 /*
- * Der eigentliche Fehler steckte in der Ansicht: Sie hat mit "> 0" geprueft.
- * Hier wird die geerbte Methode ueber Reflection direkt aufgerufen.
+ * Der eigentliche Fehler steckte in der Ansicht: Sie hat mit "> 0" geprüft.
+ * Hier wird die geerbte Methode über Reflection direkt aufgerufen.
  */
 $objTemplate = new \stdClass();
 $objParser = (new \ReflectionClass(\Schachbulle\ContaoPhotoalbumsBundle\Parser\AlbumViewParser::class))->newInstanceWithoutConstructor();
@@ -358,19 +358,19 @@ $objFilter = new \Schachbulle\ContaoPhotoalbumsBundle\Helper\TimeFilter(
 	array('unit' => 'days', 'value' => 0)
 );
 pruefe('Zeitfilter: heute bleibt drin', !$objFilter->doFilter(time(), time()));
-pruefe('Zeitfilter: 1968 faellt heraus', $objFilter->doFilter($intStart, $intEnd));
+pruefe('Zeitfilter: 1968 fällt heraus', $objFilter->doFilter($intStart, $intEnd));
 
 $objOhneFilter = new \Schachbulle\ContaoPhotoalbumsBundle\Helper\TimeFilter('', '');
-pruefe('Ohne Filter faellt nichts heraus', !$objOhneFilter->doFilter($intStart, $intEnd));
+pruefe('Ohne Filter fällt nichts heraus', !$objOhneFilter->doFilter($intStart, $intEnd));
 
 echo "\n8. Erkennung der Verweisnummern in der Migration\n";
 
 /*
  * extractReference() entscheidet, ob ein Feldwert ein Verweis auf
- * tl_translation_fields ist. Zu grosszuegig hiesse: echte Texte werden
- * geleert. Zu streng hiesse: eine Nummer bleibt im Frontend stehen — genau
+ * tl_translation_fields ist. Zu großzügig hieße: echte Texte werden
+ * geleert. Zu streng hieße: eine Nummer bleibt im Frontend stehen — genau
  * das war bei einer im Editor gespeicherten Beschreibung der Fall
- * (`<p>2071</p>`). Die Faelle sind deshalb hier festgeschrieben.
+ * (`<p>2071</p>`). Die Fälle sind deshalb hier festgeschrieben.
  */
 $objMigrationRefl = new \ReflectionClass(\Schachbulle\ContaoPhotoalbumsBundle\Migration\TranslationFieldsMigration::class);
 $objMigration = $objMigrationRefl->newInstanceWithoutConstructor();
@@ -393,7 +393,7 @@ $arrCases = array(
 	array('2071 und 2072', null),
 	array('20.71', null),
 	array('Berlin, Hauptbahnhof', null),
-	array('<p>Turnierseite: <a href="{{link_url::466}}">Maenner</a></p>', null),
+	array('<p>Turnierseite: <a href="{{link_url::466}}">Männer</a></p>', null),
 	array('Frank Hoppe', null),
 );
 
@@ -413,9 +413,9 @@ echo "\n9. Videos\n";
 
 /*
  * Was als Video gilt, entscheidet allein die Dateiendung — der Sortierer holt
- * die Dateien aus dem Dateisystem, ohne sie zu oeffnen. Die Liste steht in
+ * die Dateien aus dem Dateisystem, ohne sie zu öffnen. Die Liste steht in
  * $GLOBALS['pa2']['videoExtensions'] und darf von einer Installation
- * ueberschrieben werden; die Klasse muss beides vertragen.
+ * überschrieben werden; die Klasse muss beides vertragen.
  */
 $arrVideoCases = array(
 	// Endung   ist Video   MIME-Typ
@@ -450,20 +450,20 @@ foreach ($arrVideoCases as $arrCase)
 
 pruefe('Voreingestellte Endungen', array('mp4', 'm4v', 'webm', 'ogv') === Video::getExtensions(), implode(',', Video::getExtensions()));
 
-// Eine eigene Liste muss durchschlagen, auch mit Leerzeichen und Grossschreibung
+// Eine eigene Liste muss durchschlagen, auch mit Leerzeichen und Großschreibung
 $strMerker = $GLOBALS['pa2']['videoExtensions'];
 $GLOBALS['pa2']['videoExtensions'] = 'MP4, MOV ,mkv';
 pruefe('Eigene Liste wird genommen', Video::isVideoExtension('mov') && Video::isVideoExtension('mkv'));
-pruefe('Nicht Gelistetes faellt heraus', !Video::isVideoExtension('webm'));
+pruefe('Nicht Gelistetes fällt heraus', !Video::isVideoExtension('webm'));
 $GLOBALS['pa2']['videoExtensions'] = $strMerker;
 
-pruefe('mediaExtensions enthaelt Fotos und Videos', false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'jpg') && false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'mp4'));
+pruefe('mediaExtensions enthält Fotos und Videos', false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'jpg') && false !== strpos($GLOBALS['pa2']['mediaExtensions'], 'mp4'));
 pruefe('imageExtensions bleibt ohne Videos', false === strpos($GLOBALS['pa2']['imageExtensions'], 'mp4'));
 
-// Die Platzhalterkachel muss ausgeliefert werden koennen
+// Die Platzhalterkachel muss ausgeliefert werden können
 pruefe('Platzhaltergrafik vorhanden', is_file($strBundleDir.'/src/Resources/public/images/video.svg'));
-pruefe('Ueberlagerer-Skript vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.js'));
-pruefe('Ueberlagerer-Stilvorlage vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.css'));
+pruefe('Überlagerer-Skript vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.js'));
+pruefe('Überlagerer-Stilvorlage vorhanden', is_file($strBundleDir.'/src/Resources/public/photoalbums-video.css'));
 pruefe('PLACEHOLDER zeigt auf die Grafik', 'bundles/contaophotoalbums/images/video.svg' === Video::PLACEHOLDER, Video::PLACEHOLDER);
 
 /*
@@ -500,7 +500,7 @@ foreach (array('pa2_image', 'pa2_image_fluid') as $strTemplate)
 echo "\n10. Download\n";
 
 /*
- * Das ZIP-Format selbst prueft `tools/zipprobe.php` — dort wird jedes erzeugte
+ * Das ZIP-Format selbst prüft `tools/zipprobe.php` — dort wird jedes erzeugte
  * Archiv mit ZipArchive gegengelesen. Hier geht es nur um den Einbau: Stehen
  * die Felder in den richtigen Paletten, gibt es die Beschriftungen, und tragen
  * die Templates den Knopf?
@@ -513,10 +513,10 @@ foreach (array('pa2AlbumsDownload', 'pa2ImagesDownload') as $strField)
 pruefe('tl_content: Feld pa2ImagesDownload', isset($GLOBALS['TL_DCA']['tl_content']['fields']['pa2ImagesDownload']));
 
 /*
- * Jede Palette muss genau den Schalter fuehren, dessen Ansicht sie ueberhaupt
+ * Jede Palette muss genau den Schalter führen, dessen Ansicht sie überhaupt
  * erzeugt: Der Modus „Nur Album-Ansicht mit Lightbox“ hat keine Foto-Ansicht,
- * das Modul „Leser“ keine Uebersicht. Ein Schalter in der falschen Palette
- * waere ein Knopf, der nie erscheint.
+ * das Modul „Leser“ keine Übersicht. Ein Schalter in der falschen Palette
+ * wäre ein Knopf, der nie erscheint.
  */
 $arrPaletteChecks = array(
 	'pa2_on_one_page' => array('pa2AlbumsDownload' => true, 'pa2ImagesDownload' => true),
@@ -533,14 +533,14 @@ foreach ($arrPaletteChecks as $strPalette => $arrExpected)
 	foreach ($arrExpected as $strField => $blnExpected)
 	{
 		pruefe(
-			sprintf('%-22s %s %s', $strPalette, $blnExpected ? 'fuehrt  ' : 'ohne    ', $strField),
+			sprintf('%-22s %s %s', $strPalette, $blnExpected ? 'führt   ' : 'ohne    ', $strField),
 			(false !== strpos($strValue, ','.$strField)) === $blnExpected
 		);
 	}
 }
 
 pruefe(
-	'tl_content-Palette fuehrt pa2ImagesDownload',
+	'tl_content-Palette führt pa2ImagesDownload',
 	false !== strpos((string) ($GLOBALS['TL_DCA']['tl_content']['palettes']['photoalbums2'] ?? ''), ',pa2ImagesDownload')
 );
 
@@ -580,8 +580,8 @@ foreach (array('pa2_wrap', 'pa2_album', 'pa2_album_fluid') as $strTemplate)
 
 /*
  * Ohne gesetzten Schalter darf auch die Adresse mit `pa2_download` nichts
- * liefern — sonst waere der abgeschaltete Knopf bloss unsichtbar. Die
- * Basisfassung des Parsers verneint deshalb grundsaetzlich.
+ * liefern — sonst wäre der abgeschaltete Knopf bloß unsichtbar. Die
+ * Basisfassung des Parsers verneint deshalb grundsätzlich.
  */
 $objStub = new class() extends \Schachbulle\ContaoPhotoalbumsBundle\Parser\ViewParser
 {
@@ -602,7 +602,7 @@ $objStub = new class() extends \Schachbulle\ContaoPhotoalbumsBundle\Parser\ViewP
 	}
 
 	/**
-	 * Macht die geschuetzte Antwort fuer die Pruefung zugaenglich.
+	 * Macht die geschützte Antwort für die Prüfung zugänglich.
 	 *
 	 * @return bool Was die Basisfassung sagt
 	 */
@@ -612,7 +612,7 @@ $objStub = new class() extends \Schachbulle\ContaoPhotoalbumsBundle\Parser\ViewP
 	}
 };
 
-pruefe('ViewParser verneint den Download grundsaetzlich', false === $objStub->askDownloadEnabled());
+pruefe('ViewParser verneint den Download grundsätzlich', false === $objStub->askDownloadEnabled());
 
 foreach (array('AlbumViewParser', 'ImageViewParser') as $strParser)
 {
@@ -624,10 +624,10 @@ foreach (array('AlbumViewParser', 'ImageViewParser') as $strParser)
 	);
 }
 
-// Das Stylesheet haengt ausschliesslich an der bundleeigenen Klasse
+// Das Stylesheet hängt ausschließlich an der bundleeigenen Klasse
 $strCss = file_get_contents($strBundleDir.'/src/Resources/public/photoalbums.css');
 
-// Kommentare heraus, sonst zaehlen sie beim Zerlegen zum Selektor
+// Kommentare heraus, sonst zählen sie beim Zerlegen zum Selektor
 $strCss = (string) preg_replace('#/\*.*?\*/#s', '', $strCss);
 
 $arrDownloadRules = array();
@@ -644,7 +644,7 @@ foreach (explode('}', $strCss) as $strBlock)
 	$arrDownloadRules[] = trim(substr($strBlock, 0, $intBrace));
 }
 
-pruefe('Drei Regeln fuer den Knopf', 3 === \count($arrDownloadRules), implode(' | ', $arrDownloadRules));
+pruefe('Drei Regeln für den Knopf', 3 === \count($arrDownloadRules), implode(' | ', $arrDownloadRules));
 
 $blnScoped = true;
 
@@ -669,7 +669,7 @@ try
 	$objDiContainer->setParameter('kernel.debug', false);
 	$objDiContainer->setParameter('kernel.project_dir', $strInstall);
 
-	// Abhaengigkeiten, die der Kernel sonst mitbringt
+	// Abhängigkeiten, die der Kernel sonst mitbringt
 	$objDiContainer->register('contao.framework', \Contao\CoreBundle\Framework\ContaoFramework::class)->setSynthetic(true);
 	$objDiContainer->register('database_connection', \Doctrine\DBAL\Connection::class)->setSynthetic(true);
 	$objDiContainer->setAlias(\Contao\CoreBundle\Framework\ContaoFramework::class, 'contao.framework');
@@ -683,7 +683,7 @@ try
 	pruefe('Migration registriert', $objDiContainer->hasDefinition(\Schachbulle\ContaoPhotoalbumsBundle\Migration\TranslationFieldsMigration::class));
 
 	$objDiContainer->compile();
-	pruefe('Behaelter uebersetzt', true);
+	pruefe('Behälter übersetzt', true);
 }
 catch (\Throwable $e)
 {
@@ -695,7 +695,7 @@ pruefe('AsCronJob am FeedGenerator', array() !== (new \ReflectionClass(\Schachbu
 
 echo "\n";
 echo $intErrors > 0
-	? "ERGEBNIS: $intErrors von $intChecks Pruefungen fehlgeschlagen.\n"
-	: "ERGEBNIS: alle $intChecks Pruefungen bestanden.\n";
+	? "ERGEBNIS: $intErrors von $intChecks Prüfungen fehlgeschlagen.\n"
+	: "ERGEBNIS: alle $intChecks Prüfungen bestanden.\n";
 
 exit($intErrors > 0 ? 1 : 0);

@@ -23,18 +23,18 @@ use Contao\UserModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 
 /**
- * Rueckrufe des Datenbereichs `tl_photoalbums2_archive`.
+ * Rückrufe des Datenbereichs `tl_photoalbums2_archive`.
  *
- * Die Klasse erbt bewusst nicht von `Contao\Backend`; siehe die Begruendung
+ * Die Klasse erbt bewusst nicht von `Contao\Backend`; siehe die Begründung
  * bei {@see AlbumListener}.
  */
 class ArchiveListener
 {
 	/**
-	 * Prueft, ob der angemeldete Benutzer den Vorgang ausfuehren darf.
+	 * Prüft, ob der angemeldete Benutzer den Vorgang ausführen darf.
 	 *
 	 * Nebenbei wird die Liste der sichtbaren Archive auf die erlaubten
-	 * eingeschraenkt und das Anlegen neuer Archive gesperrt, wenn das Recht
+	 * eingeschränkt und das Anlegen neuer Archive gesperrt, wenn das Recht
 	 * dazu fehlt.
 	 *
 	 * @param DataContainer $dc Der Data Container
@@ -80,14 +80,14 @@ class ArchiveListener
 				{
 					$this->grantAccessToNewRecord($objUser, $arrRoot);
 				}
-				// Kein break: die Rechte werden unten geprueft
+				// Kein break: die Rechte werden unten geprüft
 
 			case 'copy':
 			case 'delete':
 			case 'show':
 				if (!\in_array(Input::get('id'), $arrRoot) || ('delete' === Input::get('act') && !$objUser->hasAccess('delete', 'photoalbums2p')))
 				{
-					$this->deny('Nicht genug Rechte, um "'.Input::get('act').'" auf dem Fotoalben-Archiv ID "'.Input::get('id').'" auszufuehren.');
+					$this->deny('Nicht genug Rechte, um "'.Input::get('act').'" auf dem Fotoalben-Archiv ID "'.Input::get('id').'" auszuführen.');
 				}
 				break;
 
@@ -98,19 +98,19 @@ class ArchiveListener
 				break;
 
 			default:
-				$this->deny('Nicht genug Rechte, um "'.Input::get('act').'" auf den Fotoalben-Archiven auszufuehren.');
+				$this->deny('Nicht genug Rechte, um "'.Input::get('act').'" auf den Fotoalben-Archiven auszuführen.');
 		}
 	}
 
 	/**
-	 * Traegt ein frisch angelegtes Archiv in die Rechte des Benutzers ein.
+	 * Trägt ein frisch angelegtes Archiv in die Rechte des Benutzers ein.
 	 *
-	 * Ohne diesen Schritt koennte ein Benutzer mit dem Recht „anlegen“ ein
-	 * Archiv erzeugen, es danach aber nicht mehr oeffnen.
+	 * Ohne diesen Schritt könnte ein Benutzer mit dem Recht „anlegen“ ein
+	 * Archiv erzeugen, es danach aber nicht mehr öffnen.
 	 *
 	 * @param BackendUser            $objUser Der angemeldete Benutzer
 	 * @param array<int, int|string> $arrRoot Die bisher erlaubten Archive,
-	 *                                       wird bei Erfolg ergaenzt
+	 *                                       wird bei Erfolg ergänzt
 	 *
 	 * @return void
 	 */
@@ -170,7 +170,7 @@ class ArchiveListener
 	}
 
 	/**
-	 * Beschraenkt eine Sammelbearbeitung auf die erlaubten Archive.
+	 * Beschränkt eine Sammelbearbeitung auf die erlaubten Archive.
 	 *
 	 * @param BackendUser            $objUser Der angemeldete Benutzer
 	 * @param array<int, int|string> $arrRoot Die erlaubten Archive
@@ -209,9 +209,9 @@ class ArchiveListener
 	/**
 	 * Bricht den Vorgang ab und schreibt eine Meldung ins Protokoll.
 	 *
-	 * @param string $strMessage Die Begruendung
+	 * @param string $strMessage Die Begründung
 	 *
-	 * @return void Die Methode kehrt nie zurueck
+	 * @return void Die Methode kehrt nie zurück
 	 *
 	 * @throws AccessDeniedException Immer
 	 */
@@ -233,7 +233,7 @@ class ArchiveListener
 	}
 
 	/**
-	 * Merkt das bearbeitete Archiv fuer eine Feed-Aktualisierung vor.
+	 * Merkt das bearbeitete Archiv für eine Feed-Aktualisierung vor.
 	 *
 	 * @param DataContainer $dc Der Data Container
 	 *
@@ -245,11 +245,11 @@ class ArchiveListener
 	}
 
 	/**
-	 * Zeigt den Loeschknopf nur, wenn das Recht dazu besteht.
+	 * Zeigt den Löschknopf nur, wenn das Recht dazu besteht.
 	 *
-	 * Die alte Rueckruf-Signatur mit dreizehn Einzelwerten funktioniert in
+	 * Die alte Rückruf-Signatur mit dreizehn Einzelwerten funktioniert in
 	 * beiden Contao-Fassungen. Wichtig ist, im gesperrten Fall eine **leere**
-	 * Zeichenkette zurueckzugeben: `null` wuerde unter Contao 5 dazu fuehren,
+	 * Zeichenkette zurückzugeben: `null` würde unter Contao 5 dazu führen,
 	 * dass der Standardknopf doch erscheint.
 	 *
 	 * @param array<string, mixed> $row         Der Archivdatensatz
@@ -257,7 +257,7 @@ class ArchiveListener
 	 * @param string               $label       Die Beschriftung
 	 * @param string               $title       Der Titel des Verweises
 	 * @param string               $icon        Das Symbol
-	 * @param string|object        $attributes  Zusaetzliche Attribute
+	 * @param string|object        $attributes  Zusätzliche Attribute
 	 *
 	 * @return string Das Markup des Knopfes oder eine leere Zeichenkette
 	 */

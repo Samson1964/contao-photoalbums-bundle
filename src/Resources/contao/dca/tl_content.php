@@ -15,7 +15,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\TemplateList
 use Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\TimeFilterListener;
 
 /*
- * Ergaenzungen an tl_content fuer das Inhaltselement „Fotoalbum“
+ * Ergänzungen an tl_content für das Inhaltselement „Fotoalbum“
  */
 $GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = array(TimeFilterListener::class, 'onSubmit');
 
@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'pa2TimeFilter'
 
 /*
  * `guests` gibt es unter Contao 5 nicht mehr; ein Palettenfeld ohne
- * Felddefinition laesst den Data Container abbrechen.
+ * Felddefinition lässt den Data Container abbrechen.
  */
 $strExpertLegend = '{expert_legend:hide},'.(isset($GLOBALS['TL_DCA']['tl_content']['fields']['guests']) ? 'guests,' : '').'cssID';
 
@@ -220,7 +220,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pa2TimeFilterEnd'] = array
 
 /*
  * Der Teaser stand unter photoalbums2 in tl_translation_fields; das Feld
- * fuehrte nur die Verweisnummer und war deshalb eine Ganzzahlspalte. Jetzt
+ * führte nur die Verweisnummer und war deshalb eine Ganzzahlspalte. Jetzt
  * steht der Text selbst darin — den Umzug erledigt die Migration
  * TranslationFieldsMigration.
  */

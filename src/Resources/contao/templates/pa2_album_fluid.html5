@@ -3,7 +3,7 @@
  * Kachel eines Albums als Listeneintrag.
  *
  * Anders als pa2_album baut dieses Template keine festen Zeilen, sondern eine
- * einzige Liste. Die Breite der Kacheln steuert das Stylesheet — brauchbar fuer
+ * einzige Liste. Die Breite der Kacheln steuert das Stylesheet — brauchbar für
  * Gestaltungen, die von sich aus umbrechen sollen.
  *
  * @license LGPL-3.0-or-later
@@ -15,7 +15,7 @@
   <div class="albumInside">
 
     <?php if ($this->showTitle && $this->title): ?>
-      <?php /* Siehe pa2_album: im Lightbox-Modus traegt nur ein sichtbares
+      <?php /* Siehe pa2_album: im Lightbox-Modus trägt nur ein sichtbares
              Element den Verweis, sonst erschiene das erste Foto doppelt. */ ?>
       <?php if ($this->albumLightbox && $this->addImage): ?>
         <h2><?= $this->title ?></h2>

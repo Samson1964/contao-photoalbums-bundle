@@ -17,9 +17,9 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 /*
  * Tabelle tl_photoalbums2_archive
  *
- * Der Tabellenname stammt aus der Vorgaengererweiterung photoalbums2 und
- * bleibt bewusst unveraendert, damit Bestandsinstallationen ohne Datenumzug
- * auf dieses Bundle wechseln koennen.
+ * Der Tabellenname stammt aus der Vorgängererweiterung photoalbums2 und
+ * bleibt bewusst unverändert, damit Bestandsinstallationen ohne Datenumzug
+ * auf dieses Bundle wechseln können.
  */
 $GLOBALS['TL_DCA']['tl_photoalbums2_archive'] = array
 (

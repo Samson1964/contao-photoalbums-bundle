@@ -1,9 +1,9 @@
 <?php
 /*
- * Kachel eines Albums in der Alben-Uebersicht.
+ * Kachel eines Albums in der Alben-Übersicht.
  *
- * Die Zeilenumbrueche steuert der Parser ueber rowStart und rowEnd; jede Zeile
- * bekommt eine eigene Umhuellung, damit sich Umbrueche sauber gestalten lassen.
+ * Die Zeilenumbrüche steuert der Parser über rowStart und rowEnd; jede Zeile
+ * bekommt eine eigene Umhüllung, damit sich Umbrüche sauber gestalten lassen.
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,8 +15,8 @@
 
     <?php if ($this->showTitle && $this->title): ?>
       <?php /* Im Lightbox-Modus darf nur EIN sichtbares Element den Verweis
-             tragen, sonst stuende das erste Foto zweimal in der Bildergalerie.
-             Gibt es ein Vorschaubild, uebernimmt dessen Verweis die Aufgabe und
+             tragen, sonst stünde das erste Foto zweimal in der Bildergalerie.
+             Gibt es ein Vorschaubild, übernimmt dessen Verweis die Aufgabe und
              der Titel bleibt reiner Text; ohne Vorschaubild ist der Titel der
              einzige Anfasser. */ ?>
       <?php if ($this->albumLightbox && $this->addImage): ?>

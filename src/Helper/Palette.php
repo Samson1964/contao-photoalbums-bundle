@@ -12,15 +12,15 @@ declare(strict_types=1);
 namespace Schachbulle\ContaoPhotoalbumsBundle\Helper;
 
 /**
- * Kleine Hilfen fuer den Umgang mit Paletten.
+ * Kleine Hilfen für den Umgang mit Paletten.
  */
 class Palette
 {
 	/**
 	 * Nimmt ein Feld aus einer Palette heraus.
 	 *
-	 * Gebraucht wird das fuer Felder, die nur bei einer bestimmten Einstellung
-	 * sichtbar sein sollen, sich aber nicht ueber `subpalettes` abbilden
+	 * Gebraucht wird das für Felder, die nur bei einer bestimmten Einstellung
+	 * sichtbar sein sollen, sich aber nicht über `subpalettes` abbilden
 	 * lassen — etwa der Sortier-Assistent, der nur bei „Eigene Sortierung“
 	 * erscheint.
 	 *

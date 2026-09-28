@@ -3,19 +3,19 @@
 declare(strict_types=1);
 
 /*
- * Vergleicht die deutschen und englischen Sprachdateien Schluessel fuer
- * Schluessel. Gemeldet wird, was nur in einer der beiden Sprachen vorkommt und
+ * Vergleicht die deutschen und englischen Sprachdateien Schlüssel für
+ * Schlüssel. Gemeldet wird, was nur in einer der beiden Sprachen vorkommt und
  * was in einer Sprache leer geblieben ist.
  */
 
 $strDir = \dirname(__DIR__).'/src/Resources/contao/languages';
 
 /**
- * Liest eine Sprachdatei ein und liefert die flachen Schluessel.
+ * Liest eine Sprachdatei ein und liefert die flachen Schlüssel.
  *
  * @param string $strFile Pfad der Sprachdatei
  *
- * @return array<string, mixed> Schluesselpfad => Wert
+ * @return array<string, mixed> Schlüsselpfad => Wert
  */
 function leseSprachdatei(string $strFile): array
 {
@@ -84,13 +84,13 @@ foreach (glob($strDir.'/de/*.php') as $strDe)
 	}
 
 	/*
-	 * Woertlich gleiche Werte: Ein englischer Text, der Zeichen fuer Zeichen
+	 * Wörtlich gleiche Werte: Ein englischer Text, der Zeichen für Zeichen
 	 * dem deutschen gleicht, ist fast immer ein beim Nachtragen vergessener
-	 * Schluessel. Genau so war `tl_content.pa2ImagesShowTeaser` monatelang
-	 * deutsch geblieben, ohne dass die Pruefung auf fehlende und leere
-	 * Schluessel etwas gemerkt haette.
+	 * Schlüssel. Genau so war `tl_content.pa2ImagesShowTeaser` monatelang
+	 * deutsch geblieben, ohne dass die Prüfung auf fehlende und leere
+	 * Schlüssel etwas gemerkt hätte.
 	 *
-	 * Manches ist zu Recht gleich — Eigennamen, reine Platzhalter, Abkuerzungen
+	 * Manches ist zu Recht gleich — Eigennamen, reine Platzhalter, Abkürzungen
 	 * wie „PGN“. Deshalb ist das ein Hinweis und kein Fehler; ausgenommen sind
 	 * Werte ohne einen einzigen Kleinbuchstaben-Wortteil und solche unter vier
 	 * Zeichen.
@@ -119,7 +119,7 @@ foreach (glob($strDir.'/de/*.php') as $strDe)
 				continue;
 			}
 
-			// Mindestens zwei Woerter mit Kleinbuchstaben: dann ist es ein Satz
+			// Mindestens zwei Wörter mit Kleinbuchstaben: dann ist es ein Satz
 			if (preg_match_all('/\b\p{Ll}{2,}/u', $varEinzel) < 2)
 			{
 				continue;
@@ -164,4 +164,4 @@ foreach (glob($strDir.'/de/*.php') as $strDe)
 	}
 }
 
-echo "\n".($intProbleme > 0 ? "$intProbleme Auffaelligkeiten\n" : "Keine Auffaelligkeiten\n");
+echo "\n".($intProbleme > 0 ? "$intProbleme Auffälligkeiten\n" : "Keine Auffälligkeiten\n");

@@ -21,7 +21,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Palette;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
 
 /**
- * Rueckrufe des Datenbereichs `tl_module` fuer die Fotoalben-Module.
+ * Rückrufe des Datenbereichs `tl_module` für die Fotoalben-Module.
  */
 class ModuleListener
 {
@@ -57,11 +57,11 @@ class ModuleListener
 	}
 
 	/**
-	 * Liefert die Alben der gewaehlten Archive fuer den Sortier-Assistenten.
+	 * Liefert die Alben der gewählten Archive für den Sortier-Assistenten.
 	 *
 	 * Gelesen wird das Feld `pa2Archives` aus der Datenbank statt aus
 	 * `$dc->activeRecord`: Letzteres gilt ab Contao 5 als veraltet, und zum
-	 * Zeitpunkt des Options-Rueckrufs steht der Datensatz ohnehin geschrieben
+	 * Zeitpunkt des Options-Rückrufs steht der Datensatz ohnehin geschrieben
 	 * in der Tabelle.
 	 *
 	 * @param DataContainer $dc Der Data Container
@@ -116,12 +116,12 @@ class ModuleListener
 	}
 
 	/**
-	 * Haelt den Ansichtsmodus der Module „Liste“ und „Leser“ stimmig.
+	 * Hält den Ansichtsmodus der Module „Liste“ und „Leser“ stimmig.
 	 *
 	 * Beide Module arbeiten immer mit getrennten Seiten, haben das Feld
-	 * `pa2Mode` aber gar nicht in ihrer Palette. Damit ein spaeterer Wechsel
+	 * `pa2Mode` aber gar nicht in ihrer Palette. Damit ein späterer Wechsel
 	 * des Modultyps nicht auf einem unpassenden Modus sitzen bleibt, wird der
-	 * Wert hier mitgefuehrt.
+	 * Wert hier mitgeführt.
 	 *
 	 * @param DataContainer $dc Der Data Container
 	 *
@@ -156,9 +156,9 @@ class ModuleListener
 	}
 
 	/**
-	 * Setzt die Palette des Moduls „Fotoalbum“ auf den gewaehlten Modus.
+	 * Setzt die Palette des Moduls „Fotoalbum“ auf den gewählten Modus.
 	 *
-	 * Contao waehlt die Palette allein anhand des Modultyps. Die drei
+	 * Contao wählt die Palette allein anhand des Modultyps. Die drei
 	 * Ansichtsmodi brauchen aber unterschiedliche Felder, deshalb wird die
 	 * passende Palette hier unter den Modulnamen kopiert.
 	 *

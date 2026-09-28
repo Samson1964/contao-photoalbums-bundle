@@ -31,12 +31,12 @@ use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
  * Gemeinsamer Unterbau der beiden Ansichten.
  *
  * Ein Parser bekommt das Template des Moduls oder Inhaltselements, reichert es
- * an und gibt es fertig zurueck. Die Aufteilung in `generate()` (Werte aus den
- * Moduleinstellungen uebernehmen) und `compile()` (Daten holen und Teil-
+ * an und gibt es fertig zurück. Die Aufteilung in `generate()` (Werte aus den
+ * Moduleinstellungen übernehmen) und `compile()` (Daten holen und Teil-
  * Templates bauen) stammt aus der Urfassung und ist beibehalten worden, damit
  * eigene Ableitungen weiter funktionieren.
  *
- * Die frueher hier benutzte Elternklasse `Contao\Frontend` ist entfallen. Ihre
+ * Die früher hier benutzte Elternklasse `Contao\Frontend` ist entfallen. Ihre
  * Methoden `parseDate()`, `prepareMetaDescription()` und `generateFrontendUrl()`
  * gibt es unter Contao 5 nicht mehr; sie sind hier durch eigene, in beiden
  * Fassungen funktionierende Wege ersetzt.
@@ -182,9 +182,9 @@ abstract class ViewParser
 	}
 
 	/**
-	 * Uebernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
+	 * Übernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
 	 *
-	 * Die Basisfassung tut nichts; die Ableitungen fuellen hier Werte wie
+	 * Die Basisfassung tut nichts; die Ableitungen füllen hier Werte wie
 	 * `intItemsPerPage` oder `strSubtemplate`.
 	 *
 	 * @return void
@@ -203,12 +203,12 @@ abstract class ViewParser
 	/**
 	 * Ersetzt das Template durch die Meldung „nichts gefunden“.
 	 *
-	 * Die Gestaltungsangaben des Moduls (CSS-Klasse, ID, Ueberschrift) werden
-	 * mituebernommen, damit die Meldung an derselben Stelle und im selben
+	 * Die Gestaltungsangaben des Moduls (CSS-Klasse, ID, Überschrift) werden
+	 * mitübernommen, damit die Meldung an derselben Stelle und im selben
 	 * Rahmen erscheint wie sonst die Alben.
 	 *
 	 * @param string            $strMessage Der Meldungstext
-	 * @param array<int, mixed> $arrItems   Bereits gefundene Eintraege; sind es
+	 * @param array<int, mixed> $arrItems   Bereits gefundene Einträge; sind es
 	 *                                      welche, bleibt das Template stehen
 	 *
 	 * @return void
@@ -233,11 +233,11 @@ abstract class ViewParser
 	}
 
 	/**
-	 * Bereitet Text aus dem Rich-Text-Editor fuer die Ausgabe auf.
+	 * Bereitet Text aus dem Rich-Text-Editor für die Ausgabe auf.
 	 *
-	 * Der frueher zusaetzliche Aufruf von `StringUtil::toHtml5()` ist entfallen:
+	 * Der früher zusätzliche Aufruf von `StringUtil::toHtml5()` ist entfallen:
 	 * Die Methode gibt es unter Contao 5 nicht mehr, und sie hat ohnehin nur
-	 * XHTML-Reste aus Contao-3-Zeiten aufgeraeumt.
+	 * XHTML-Reste aus Contao-3-Zeiten aufgeräumt.
 	 *
 	 * @param mixed $varText Der Text aus dem Editor
 	 *
@@ -254,7 +254,7 @@ abstract class ViewParser
 	}
 
 	/**
-	 * Haengt das Kommentarformular an das Template.
+	 * Hängt das Kommentarformular an das Template.
 	 *
 	 * Kommentare setzen das Paket `contao/comments-bundle` voraus. Fehlt es,
 	 * bleibt `allowComments` auf false und das Template gibt gar nichts aus —
@@ -284,7 +284,7 @@ abstract class ViewParser
 
 		$this->Template->allowComments = true;
 
-		// Die Kommentar-Ueberschrift eine Stufe unter die Modul-Ueberschrift setzen
+		// Die Kommentar-Überschrift eine Stufe unter die Modul-Überschrift setzen
 		$intHl = min((int) str_replace('h', '', (string) ($this->Template->hl ?? 'h2')), 5);
 		$this->Template->hlc = 'h'.($intHl + 1);
 
@@ -323,12 +323,12 @@ abstract class ViewParser
 	 * Schreibt das Aufnahmedatum ins Template.
 	 *
 	 * **Hier steckt die Behebung des Fehlers mit Daten vor 1970.** Die
-	 * Urfassung hat mit `$intStartdate > 0` geprueft und damit jeden negativen
+	 * Urfassung hat mit `$intStartdate > 0` geprüft und damit jeden negativen
 	 * Zeitstempel verworfen — eine Olympiade von 1968 hatte im Frontend gar
-	 * kein Datum. Geprueft wird jetzt auf „leer“ statt auf „groesser null“.
+	 * kein Datum. Geprüft wird jetzt auf „leer“ statt auf „größer null“.
 	 *
-	 * Der Wert 0 gilt weiterhin als „kein Datum“: Er steht in Altbestaenden
-	 * fuer ein nicht gesetztes Enddatum, und der 1. Januar 1970 ist als
+	 * Der Wert 0 gilt weiterhin als „kein Datum“: Er steht in Altbeständen
+	 * für ein nicht gesetztes Enddatum, und der 1. Januar 1970 ist als
 	 * Aufnahmedatum eines Fotoalbums nicht zu erwarten.
 	 *
 	 * @param object $objTemplate   Das Ziel-Template
@@ -399,7 +399,7 @@ abstract class ViewParser
 	}
 
 	/**
-	 * Baut aus den Meta-Feldern die Liste fuer die Ausgabe.
+	 * Baut aus den Meta-Feldern die Liste für die Ausgabe.
 	 *
 	 * Welche Felder erscheinen, steht im Modul (`pa2AlbumsMetaFields` bzw.
 	 * `pa2ImagesMetaFields`). Je nach Einstellung wird die Beschriftung
@@ -444,7 +444,7 @@ abstract class ViewParser
 				$varLabel = ('1' == $varFieldValue || \count($varLabel) < 2) ? $varLabel[0] : $varLabel[1];
 			}
 
-			// Ohne Platzhalter wuerde der Wert selbst verlorengehen
+			// Ohne Platzhalter würde der Wert selbst verlorengehen
 			if (false === strpos((string) $varLabel, '%s'))
 			{
 				$varLabel = '%s';
@@ -469,7 +469,7 @@ abstract class ViewParser
 	 *
 	 * Daraus entstehen im Markup die Klassen `first`, `last`, `even`, `odd`,
 	 * `first_page`, `last_page`, `first_all`, `last_all` und `itemNumber_N`
-	 * sowie die Umbrueche der Zeilen (`rowStart`/`rowEnd`).
+	 * sowie die Umbrüche der Zeilen (`rowStart`/`rowEnd`).
 	 *
 	 * @param object $objTemplate Das Ziel-Template
 	 * @param int    $i           Laufende Nummer des Eintrags auf dieser Seite,
@@ -494,7 +494,7 @@ abstract class ViewParser
 		$objTemplate->rowStart = false;
 		$objTemplate->rowEnd = false;
 
-		// Ohne Seitenumbruch bilden alle Eintraege eine einzige Seite;
+		// Ohne Seitenumbruch bilden alle Einträge eine einzige Seite;
 		// das verhindert zugleich eine Division durch null
 		if ($intItemsPerPage < 1)
 		{
@@ -519,7 +519,7 @@ abstract class ViewParser
 
 		$arrStyles[] = 'width: '.(100 / $intItemsPerRow).'%;';
 
-		// Hoch- oder Querformat aus der eingestellten Bildgroesse ableiten
+		// Hoch- oder Querformat aus der eingestellten Bildgröße ableiten
 		$arrImageSize = StringUtil::deserialize($objTemplate->size, true);
 		$intWidth = (int) ($arrImageSize[0] ?? 0);
 		$intHeight = (int) ($arrImageSize[1] ?? 0);
@@ -605,7 +605,7 @@ abstract class ViewParser
 	 * Setzt den Verweis auf die Foto-Ansicht eines Albums.
 	 *
 	 * Ziel ist entweder die im Modul eingestellte Detailseite oder — wenn keine
-	 * eingestellt ist — die aktuelle Seite. Der Ersatz fuer das unter Contao 5
+	 * eingestellt ist — die aktuelle Seite. Der Ersatz für das unter Contao 5
 	 * entfallene `Controller::generateFrontendUrl()` ist
 	 * `PageModel::getFrontendUrl()`; es gibt beide Fassungen.
 	 *
@@ -669,7 +669,7 @@ abstract class ViewParser
 	 * Gebraucht wird sie, um die Lightbox-Gruppen mehrerer Alben auf derselben
 	 * Seite auseinanderzuhalten.
 	 *
-	 * @return string Zwoelf Zeichen aus einer Pruefsumme
+	 * @return string Zwölf Zeichen aus einer Prüfsumme
 	 */
 	protected function generateIndividualId(): string
 	{
@@ -724,15 +724,15 @@ abstract class ViewParser
 	}
 
 	/**
-	 * Kuerzt einen Text auf die Laenge einer Meta-Beschreibung.
+	 * Kürzt einen Text auf die Länge einer Meta-Beschreibung.
 	 *
-	 * Ersatz fuer `Frontend::prepareMetaDescription()`, das es unter Contao 5
+	 * Ersatz für `Frontend::prepareMetaDescription()`, das es unter Contao 5
 	 * nicht mehr gibt.
 	 *
-	 * @param mixed $varText Der Ausgangstext, ueblicherweise die
+	 * @param mixed $varText Der Ausgangstext, üblicherweise die
 	 *                       Albumbeschreibung aus dem Editor
 	 *
-	 * @return string Der auf 320 Zeichen gekuerzte Text ohne Markup
+	 * @return string Der auf 320 Zeichen gekürzte Text ohne Markup
 	 */
 	protected function prepareDescription($varText): string
 	{

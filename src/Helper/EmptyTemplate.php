@@ -14,15 +14,15 @@ namespace Schachbulle\ContaoPhotoalbumsBundle\Helper;
 use Contao\FrontendTemplate;
 
 /**
- * Erzeugt das Ersatz-Template fuer den Fall, dass nichts auszugeben ist.
+ * Erzeugt das Ersatz-Template für den Fall, dass nichts auszugeben ist.
  *
- * Statt einer leeren Flaeche erscheint dann ein Satz wie „Es sind keine
+ * Statt einer leeren Fläche erscheint dann ein Satz wie „Es sind keine
  * Fotoalben vorhanden!“.
  *
- * Die Urfassung hat an dieser Stelle zusaetzlich per `header()` einen
+ * Die Urfassung hat an dieser Stelle zusätzlich per `header()` einen
  * 404-Status gesetzt. Das ist ersatzlos entfallen: Unter Symfony wird die
- * Statuszeile beim Senden der Response ohnehin ueberschrieben, der Aufruf war
- * also schon unter Contao 4 wirkungslos. Ein echter 404 waere hier auch
+ * Statuszeile beim Senden der Response ohnehin überschrieben, der Aufruf war
+ * also schon unter Contao 4 wirkungslos. Ein echter 404 wäre hier auch
  * unpassend — die Seite selbst gibt es ja, nur das Modul hat nichts zu zeigen.
  */
 class EmptyTemplate
@@ -35,16 +35,16 @@ class EmptyTemplate
 	private $strMessage;
 
 	/**
-	 * Die bereits gefundenen Eintraege.
+	 * Die bereits gefundenen Einträge.
 	 *
 	 * @var array<int, mixed>
 	 */
 	private $arrItems;
 
 	/**
-	 * @param string $strMessage Der Meldungstext, ueblicherweise aus
+	 * @param string $strMessage Der Meldungstext, üblicherweise aus
 	 *                           $GLOBALS['TL_LANG']['MSC']
-	 * @param mixed  $arrItems   Die bereits gefundenen Eintraege; sind es
+	 * @param mixed  $arrItems   Die bereits gefundenen Einträge; sind es
 	 *                           welche, wird gar kein Ersatz-Template erzeugt
 	 */
 	public function __construct(string $strMessage, $arrItems = array())
@@ -57,7 +57,7 @@ class EmptyTemplate
 	 * Erzeugt das Ersatz-Template.
 	 *
 	 * @return FrontendTemplate|null Das Template `pa2_empty` mit gesetzter
-	 *                               Meldung oder null, wenn doch Eintraege
+	 *                               Meldung oder null, wenn doch Einträge
 	 *                               vorliegen und die Ausgabe normal
 	 *                               weiterlaufen soll
 	 */

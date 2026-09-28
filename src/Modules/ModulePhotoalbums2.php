@@ -24,14 +24,14 @@ use Schachbulle\ContaoPhotoalbumsBundle\Parser\ImageViewParser;
 /**
  * Frontend-Modul „Fotoalbum“.
  *
- * Das Modul kann beides: die Uebersicht der Alben und die Fotos eines
- * einzelnen Albums. Welche der beiden Ansichten erscheint, haengt vom
+ * Das Modul kann beides: die Übersicht der Alben und die Fotos eines
+ * einzelnen Albums. Welche der beiden Ansichten erscheint, hängt vom
  * eingestellten Modus und davon ab, ob in der Adresse ein Album steht.
  *
- * Die Registrierung erfolgt ueber `$GLOBALS['FE_MOD']` mit dem vollen
+ * Die Registrierung erfolgt über `$GLOBALS['FE_MOD']` mit dem vollen
  * Klassennamen. Das funktioniert unter Contao 4.13 wie unter Contao 5
  * (`Module::findClass()`), ohne dass das Modul zu einem Fragment-Controller
- * umgebaut werden muesste.
+ * umgebaut werden müsste.
  */
 class ModulePhotoalbums2 extends Module
 {
@@ -53,7 +53,7 @@ class ModulePhotoalbums2 extends Module
 	 * Kennung der Ansicht, die dieses Modul liefert.
 	 *
 	 * Die Foto-Ansicht wertet sie aus, um zu entscheiden, ob sie Seitentitel
-	 * und Seitenbeschreibung ueberschreiben darf. Die Ableitungen setzen hier
+	 * und Seitenbeschreibung überschreiben darf. Die Ableitungen setzen hier
 	 * `MOD_LIST` beziehungsweise `MOD_VIEW`.
 	 *
 	 * @var string
@@ -61,7 +61,7 @@ class ModulePhotoalbums2 extends Module
 	protected $strPa2Type = 'MOD';
 
 	/**
-	 * Schluessel der Modulbezeichnung fuer den Platzhalter im Backend.
+	 * Schlüssel der Modulbezeichnung für den Platzhalter im Backend.
 	 *
 	 * @var string
 	 */
@@ -70,8 +70,8 @@ class ModulePhotoalbums2 extends Module
 	/**
 	 * Bereitet die Moduldaten auf und erzeugt die Ausgabe.
 	 *
-	 * Im Backend erscheint statt der Alben der uebliche Platzhalter, damit die
-	 * Modulliste uebersichtlich bleibt und keine Bilder erzeugt werden.
+	 * Im Backend erscheint statt der Alben der übliche Platzhalter, damit die
+	 * Modulliste übersichtlich bleibt und keine Bilder erzeugt werden.
 	 *
 	 * @return string Das fertige Markup des Moduls
 	 */
@@ -116,9 +116,9 @@ class ModulePhotoalbums2 extends Module
 	 * Liefert den Ansichtsmodus des Moduls.
 	 *
 	 * Die Ableitungen „Liste“ und „Leser“ haben das Feld `pa2Mode` gar nicht in
-	 * ihrer Palette; sie arbeiten immer mit getrennten Seiten und ueberschreiben
-	 * diese Methode entsprechend. So haengt ihr Verhalten nicht davon ab, ob in
-	 * der Datenbank zufaellig der richtige Modus steht.
+	 * ihrer Palette; sie arbeiten immer mit getrennten Seiten und überschreiben
+	 * diese Methode entsprechend. So hängt ihr Verhalten nicht davon ab, ob in
+	 * der Datenbank zufällig der richtige Modus steht.
 	 *
 	 * @return string Einer der Werte `pa2_on_one_page`, `pa2_only_album_view`
 	 *                oder `pa2_with_detail_page`
@@ -129,7 +129,7 @@ class ModulePhotoalbums2 extends Module
 	}
 
 	/**
-	 * Haken fuer die Ableitungen, um Einstellungen zu uebersteuern.
+	 * Haken für die Ableitungen, um Einstellungen zu übersteürn.
 	 *
 	 * Der Aufruf erfolgt, nachdem alle Felder aufbereitet sind, aber bevor
 	 * Contao das Template erzeugt und `compile()` aufruft. Die Basisfassung tut
@@ -163,7 +163,7 @@ class ModulePhotoalbums2 extends Module
 			return;
 		}
 
-		// Alben-Uebersicht zeigen
+		// Alben-Übersicht zeigen
 		if (null === $varAlbum && ('' === (string) $this->pa2DetailPage || $this->pa2DetailPage != $intPageId))
 		{
 			$this->prepareAlbums();
@@ -171,7 +171,7 @@ class ModulePhotoalbums2 extends Module
 			return;
 		}
 
-		// Album gewaehlt, aber die Fotos gehoeren auf eine andere Seite
+		// Album gewählt, aber die Fotos gehören auf eine andere Seite
 		if (null !== $varAlbum)
 		{
 			$this->goToDetailPage();
@@ -179,7 +179,7 @@ class ModulePhotoalbums2 extends Module
 			return;
 		}
 
-		// Uebersichtsseite anspringen, sonst die Startseite
+		// Übersichtsseite anspringen, sonst die Startseite
 		if (is_numeric($this->pa2OverviewPage) && $this->pa2OverviewPage > 0 && $intPageId !== (int) $this->pa2OverviewPage)
 		{
 			$this->goToOverviewPage();
@@ -191,12 +191,12 @@ class ModulePhotoalbums2 extends Module
 	}
 
 	/**
-	 * Liest das gewaehlte Album aus der Adresse.
+	 * Liest das gewählte Album aus der Adresse.
 	 *
-	 * Gelesen werden beide moeglichen Formen: das benannte Paar
-	 * `/album/albumalias` und das namenlose Anhaengsel `/albumalias`. Contao
+	 * Gelesen werden beide möglichen Formen: das benannte Paar
+	 * `/album/albumalias` und das namenlose Anhängsel `/albumalias`. Contao
 	 * 4.13 erzeugt je nach Systemeinstellung die eine oder die andere; unter
-	 * Contao 5 gibt es nur noch das Anhaengsel.
+	 * Contao 5 gibt es nur noch das Anhängsel.
 	 *
 	 * @return string|null Der Wert aus der Adresse oder null, wenn kein Album
 	 *                     angegeben wurde
@@ -214,9 +214,9 @@ class ModulePhotoalbums2 extends Module
 	}
 
 	/**
-	 * Prueft, ob die aktuelle Seite die eingestellte Foto-Ansicht-Seite ist.
+	 * Prüft, ob die aktuelle Seite die eingestellte Foto-Ansicht-Seite ist.
 	 *
-	 * Beruecksichtigt wird auch die Uebersetzung einer Seite: Steht das Modul
+	 * Berücksichtigt wird auch die Übersetzung einer Seite: Steht das Modul
 	 * auf der deutschen Detailseite und wird die englische aufgerufen, verweist
 	 * deren `languageMain` auf die deutsche.
 	 *
@@ -250,7 +250,7 @@ class ModulePhotoalbums2 extends Module
 	}
 
 	/**
-	 * Baut die Alben-Uebersicht.
+	 * Baut die Alben-Übersicht.
 	 *
 	 * @return void
 	 */
@@ -264,9 +264,9 @@ class ModulePhotoalbums2 extends Module
 	 * Leitet auf die Seite mit der Foto-Ansicht um.
 	 *
 	 * Eine gesetzte Seitenzahl wird mitgenommen, damit der Besucher beim
-	 * Zurueckgehen wieder auf derselben Seite der Blaetterliste landet.
+	 * Zurückgehen wieder auf derselben Seite der Blätterliste landet.
 	 *
-	 * @return void Die Methode kehrt nur zurueck, wenn gar nicht umgeleitet
+	 * @return void Die Methode kehrt nur zurück, wenn gar nicht umgeleitet
 	 *              werden muss; sonst beendet die Umleitung den Aufruf
 	 */
 	public function goToDetailPage(): void
@@ -300,7 +300,7 @@ class ModulePhotoalbums2 extends Module
 	}
 
 	/**
-	 * Leitet auf die Seite mit der Alben-Uebersicht um.
+	 * Leitet auf die Seite mit der Alben-Übersicht um.
 	 *
 	 * @return void
 	 */
@@ -327,7 +327,7 @@ class ModulePhotoalbums2 extends Module
 	 * Leitet auf die Startseite um.
 	 *
 	 * Kommt zum Zug, wenn weder ein Album angegeben ist noch eine
-	 * Uebersichtsseite eingestellt wurde. Die Seite wird vorher aus Index und
+	 * Übersichtsseite eingestellt wurde. Die Seite wird vorher aus Index und
 	 * Cache genommen, damit die Umleitung nicht zwischengespeichert wird.
 	 *
 	 * @return void

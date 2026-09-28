@@ -29,9 +29,9 @@ use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
  * Die Dateien liegen unter `<Webverzeichnis>/share/<alias>.xml` — an derselben
  * Stelle, an der auch Contao 4 seine Nachrichten- und Kalenderfeeds ablegt.
  *
- * Aufgerufen wird die Klasse taeglich ueber den Cron-Auftrag und ausserdem aus
- * den Datenbereichen heraus, sobald ein Archiv oder ein Album geaendert wurde.
- * Die frueher benutzte Registrierung ueber `$GLOBALS['TL_CRON']` gibt es unter
+ * Aufgerufen wird die Klasse täglich über den Cron-Auftrag und außerdem aus
+ * den Datenbereichen heraus, sobald ein Archiv oder ein Album geändert wurde.
+ * Die früher benutzte Registrierung über `$GLOBALS['TL_CRON']` gibt es unter
  * Contao 5 nicht mehr; das Attribut `AsCronJob` liegt dagegen in beiden
  * Fassungen am selben Ort.
  */
@@ -54,7 +54,7 @@ class FeedGenerator
 	}
 
 	/**
-	 * Einstiegspunkt des taeglichen Cron-Auftrags.
+	 * Einstiegspunkt des täglichen Cron-Auftrags.
 	 *
 	 * @return void
 	 */
@@ -67,8 +67,8 @@ class FeedGenerator
 	/**
 	 * Erzeugt die Dateien aller Archive, die einen Feed haben sollen.
 	 *
-	 * Geschuetzte Archive bleiben aussen vor: Ein Feed waere oeffentlich
-	 * lesbar und wuerde den Zugriffsschutz aushebeln.
+	 * Geschützte Archive bleiben außen vor: Ein Feed wäre öffentlich
+	 * lesbar und würde den Zugriffsschutz aushebeln.
 	 *
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ class FeedGenerator
 	}
 
 	/**
-	 * Erzeugt oder loescht die Datei eines einzelnen Archivs.
+	 * Erzeugt oder löscht die Datei eines einzelnen Archivs.
 	 *
 	 * @param int $intId Datensatznummer des Archivs
 	 *
@@ -103,7 +103,7 @@ class FeedGenerator
 			return;
 		}
 
-		// Kein Feed gewuenscht oder Archiv geschuetzt: vorhandene Datei entfernen
+		// Kein Feed gewünscht oder Archiv geschützt: vorhandene Datei entfernen
 		if (!$objArchive->makeFeed || $objArchive->protected)
 		{
 			$this->deleteFile($this->getFeedName($objArchive));
@@ -165,10 +165,10 @@ class FeedGenerator
 	}
 
 	/**
-	 * Liest die veroeffentlichten Alben eines Archivs.
+	 * Liest die veröffentlichten Alben eines Archivs.
 	 *
-	 * Die Abfrage laeuft bewusst ueber die Datenbankklasse statt ueber das
-	 * Modell, weil zusaetzlich der Name des Autors aus `tl_user` gebraucht wird.
+	 * Die Abfrage läuft bewusst über die Datenbankklasse statt über das
+	 * Modell, weil zusätzlich der Name des Autors aus `tl_user` gebraucht wird.
 	 *
 	 * @param ArchiveModel $objArchive Der Archivdatensatz
 	 *
@@ -212,7 +212,7 @@ class FeedGenerator
 	/**
 	 * Liefert das Ausgabeverzeichnis der Feeds, projektrelativ.
 	 *
-	 * Das Webverzeichnis heisst je nach Installation `public` oder `web`; der
+	 * Das Webverzeichnis heißt je nach Installation `public` oder `web`; der
 	 * Container-Parameter `contao.web_dir` kennt den richtigen Namen und ist in
 	 * beiden Contao-Fassungen gesetzt.
 	 *
@@ -226,7 +226,7 @@ class FeedGenerator
 	}
 
 	/**
-	 * Loescht eine vorhandene Feed-Datei.
+	 * Löscht eine vorhandene Feed-Datei.
 	 *
 	 * @param string $strFeedName Dateiname ohne Endung
 	 *
@@ -244,13 +244,13 @@ class FeedGenerator
 	}
 
 	/**
-	 * Setzt Basisadresse und Seitenadresse zu einer vollstaendigen Adresse zusammen.
+	 * Setzt Basisadresse und Seitenadresse zu einer vollständigen Adresse zusammen.
 	 *
 	 * @param string $strBase Die Basisadresse mit Protokoll
 	 * @param string $strUrl  Das Ergebnis von PageModel::getFrontendUrl()
 	 *
-	 * @return string Die vollstaendige Adresse; ist sie schon vollstaendig,
-	 *                bleibt sie unveraendert
+	 * @return string Die vollständige Adresse; ist sie schon vollständig,
+	 *                bleibt sie unverändert
 	 */
 	private function buildAbsoluteUrl(string $strBase, string $strUrl): string
 	{

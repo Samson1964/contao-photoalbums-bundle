@@ -1,21 +1,21 @@
 /*
  * Grundgestaltung der Fotoalben im Frontend.
  *
- * Das Stylesheet macht nur so viel, wie noetig ist, damit die Kacheln in
+ * Das Stylesheet macht nur so viel, wie nötig ist, damit die Kacheln in
  * Zeilen stehen und die versteckten Lightbox-Verweise unsichtbar bleiben.
- * Alles Weitere gehoert ins Theme. Ueber das Feld "Fotoalben Stylesheet
- * ignorieren" im Seitenlayout laesst sich die Datei ganz abschalten.
+ * Alles Weitere gehört ins Theme. Über das Feld "Fotoalben Stylesheet
+ * ignorieren" im Seitenlayout lässt sich die Datei ganz abschalten.
  *
- * WICHTIG: Jede Regel bleibt innerhalb der Umhuellungen `.albumswrap` und
- * `.imagewrap`. Diese beiden Klassen setzen ausschliesslich die mitgelieferten
+ * WICHTIG: Jede Regel bleibt innerhalb der Umhüllungen `.albumswrap` und
+ * `.imagewrap`. Diese beiden Klassen setzen ausschließlich die mitgelieferten
  * Templates. Wer eigene Templates benutzt — etwa mit einem Bootstrap-Raster —
- * bekommt von hier nichts ab. Ohne diese Eingrenzung wuerden `.first` und
- * `.last` in fremdem Markup die Spaltenabstaende zerstoeren.
+ * bekommt von hier nichts ab. Ohne diese Eingrenzung würden `.first` und
+ * `.last` in fremdem Markup die Spaltenabstände zerstören.
  *
  * @license LGPL-3.0-or-later
  */
 
-/* Fliessende Liste: Aufzaehlung ohne Einzug */
+/* Fließende Liste: Aufzählung ohne Einzug */
 .mod_photoalbums2.pa2_album_fluid ul,
 .mod_photoalbums2.pa2_album_fluid ul > li,
 .mod_photoalbums2list.pa2_album_fluid ul,
@@ -160,10 +160,10 @@
 /*
  * Knopf zum Herunterladen eines Albums.
  *
- * Diese Regel ist die einzige, die nicht aus der Urfassung stammt. Sie haengt
- * ausschliesslich an der Klasse `pa2-download`, die es nur in den
+ * Diese Regel ist die einzige, die nicht aus der Urfassung stammt. Sie hängt
+ * ausschließlich an der Klasse `pa2-download`, die es nur in den
  * mitgelieferten Templates gibt — in fremdem Markup kann sie deshalb nichts
- * treffen. Gestaltet wird bewusst nur das Noetigste; Farben und Form gehoeren
+ * treffen. Gestaltet wird bewusst nur das Nötigste; Farben und Form gehören
  * ins Theme.
  */
 .pa2-download {

@@ -19,10 +19,10 @@ use Schachbulle\ContaoPhotoalbumsBundle\Sorter\FileSorter;
 /**
  * Bestimmt das Vorschaubild eines Albums.
  *
- * Die Entscheidung faellt in zwei Stufen: Das Modul legt fest, ob es die
- * Einstellung des Albums uebernimmt oder sie uebersteuert; das Album selbst
- * legt fest, ob es gar kein Vorschaubild gibt, ein zufaelliges, das erste oder
- * ein von Hand ausgewaehltes.
+ * Die Entscheidung fällt in zwei Stufen: Das Modul legt fest, ob es die
+ * Einstellung des Albums übernimmt oder sie übersteürt; das Album selbst
+ * legt fest, ob es gar kein Vorschaubild gibt, ein zufälliges, das erste oder
+ * ein von Hand ausgewähltes.
  */
 class PreviewImage
 {
@@ -68,7 +68,7 @@ class PreviewImage
 	/**
 	 * Wertet die Moduleinstellung aus und legt die UUID fest.
 	 *
-	 * @return void Setzt ausschliesslich die Eigenschaft $uuid
+	 * @return void Setzt ausschließlich die Eigenschaft $uuid
 	 */
 	private function setPreviewImageUuid(): void
 	{
@@ -112,7 +112,7 @@ class PreviewImage
 	 * Wertet die Einstellung des Albums aus.
 	 *
 	 * @return string|null Die UUID des Vorschaubildes oder null, wenn das Album
-	 *                     ausdruecklich keines haben soll
+	 *                     ausdrücklich keines haben soll
 	 */
 	private function getImageByAlbumType(): ?string
 	{
@@ -161,7 +161,7 @@ class PreviewImage
 	}
 
 	/**
-	 * Zieht ein zufaelliges Foto des Albums.
+	 * Zieht ein zufälliges Foto des Albums.
 	 *
 	 * @return string|null Die UUID oder null, wenn das Album keine Fotos hat
 	 */
@@ -195,14 +195,14 @@ class PreviewImage
 	}
 
 	/**
-	 * Loest die Bildauswahl des Albums in eine reine Dateiliste auf.
+	 * Löst die Bildauswahl des Albums in eine reine Dateiliste auf.
 	 *
-	 * Im Feld `images` koennen auch Ordner stehen; der {@see FileSorter} steigt
-	 * in sie hinab und beruecksichtigt dabei die zugelassenen Dateiendungen.
+	 * Im Feld `images` können auch Ordner stehen; der {@see FileSorter} steigt
+	 * in sie hinab und berücksichtigt dabei die zugelassenen Dateiendungen.
 	 *
 	 * Gesucht wird zuerst unter den **Fotos**: Als Aufmacher eines Albums ist
 	 * ein echtes Bild allemal besser als die Platzhalterkachel eines Videos.
-	 * Erst wenn das Album ueberhaupt kein Foto enthaelt, kommen die Videos in
+	 * Erst wenn das Album überhaupt kein Foto enthält, kommen die Videos in
 	 * Betracht — dann bleibt nur der Platzhalter.
 	 *
 	 * @return array<int, string> Die UUIDs der in Frage kommenden Dateien

@@ -23,7 +23,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Video;
  * Ein einzelnes Foto und sein Weg ins Template.
  *
  * Die Klasse kapselt den Zugriff auf den Dateidatensatz und die Erzeugung des
- * skalierten Bildes. Der frueher benutzte `Controller::addImageToTemplate()`
+ * skalierten Bildes. Der früher benutzte `Controller::addImageToTemplate()`
  * ist unter Contao 5 entfallen; hier wird stattdessen der Dienst
  * `contao.image.studio` verwendet, den es in beiden Fassungen gibt.
  */
@@ -32,27 +32,27 @@ class Image
 	/**
 	 * Ein transparentes Bild von einem mal einem Bildpunkt.
 	 *
-	 * Wird fuer die versteckten Lightbox-Eintraege gebraucht: Dort steht im
+	 * Wird für die versteckten Lightbox-Einträge gebraucht: Dort steht im
 	 * Markup nur ein Verweis auf das echte Foto, das `img`-Element selbst darf
-	 * nichts laden. Die Urfassung hat dafuer eine `blank.gif` aus dem
+	 * nichts laden. Die Urfassung hat dafür eine `blank.gif` aus dem
 	 * Erweiterungsverzeichnis eingebunden — ein Pfad, den es unter Contao 4 und
 	 * 5 nicht mehr gibt. Als Datenadresse ist die Grafik vom Dateisystem
-	 * unabhaengig.
+	 * unabhängig.
 	 *
 	 * @var string
 	 */
 	private const BLANK_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 	/**
-	 * Die UUID der Bilddatei in binaerer oder lesbarer Form.
+	 * Die UUID der Bilddatei in binärer oder lesbarer Form.
 	 *
 	 * @var string|null
 	 */
 	private $uuid;
 
 	/**
-	 * @param mixed $uuid Die UUID der Bilddatei; alles, was keine gueltige UUID
-	 *                    ist, fuehrt dazu, dass die Klasse spaeter kein Bild
+	 * @param mixed $uuid Die UUID der Bilddatei; alles, was keine gültige UUID
+	 *                    ist, führt dazu, dass die Klasse später kein Bild
 	 *                    liefert
 	 */
 	public function __construct($uuid)
@@ -65,9 +65,9 @@ class Image
 	 *
 	 * Die Metadaten werden dabei entpackt auf dem Datensatz abgelegt, damit die
 	 * Aufrufer ohne weitere Umwandlung `$objFile->meta['de']['title']` lesen
-	 * koennen.
+	 * können.
 	 *
-	 * @return FilesModel|null Der Datensatz oder null, wenn keine gueltige UUID
+	 * @return FilesModel|null Der Datensatz oder null, wenn keine gültige UUID
 	 *                         vorliegt oder die Datei nicht mehr im Dateibaum
 	 *                         verzeichnet ist
 	 */
@@ -91,7 +91,7 @@ class Image
 	}
 
 	/**
-	 * Prueft, ob diese Datei ein Video ist.
+	 * Prüft, ob diese Datei ein Video ist.
 	 *
 	 * @return bool true, wenn die Dateiendung in der Videoliste steht
 	 */
@@ -110,26 +110,26 @@ class Image
 	/**
 	 * Legt ein Video in ein Template.
 	 *
-	 * Ein Video hat kein Bild, das sich skalieren liesse. Die Kachel bekommt
+	 * Ein Video hat kein Bild, das sich skalieren ließe. Die Kachel bekommt
 	 * deshalb eine einheitliche Platzhaltergrafik mit Abspielsymbol, und der
-	 * Verweis traegt `data-pa2-video` statt `data-lightbox` — die Lightbox des
+	 * Verweis trägt `data-pa2-video` statt `data-lightbox` — die Lightbox des
 	 * Themes kann mit einem Video nichts anfangen, der mitgelieferte
-	 * Ueberlagerer schon.
+	 * Überlagerer schon.
 	 *
 	 * Gesetzt werden dieselben Variablen wie bei einem Foto (`addImage`, `src`,
 	 * `imgSize`, `margin`, `alt`), damit ein bestehendes Template nichts
-	 * Zusaetzliches wissen muss. Zusaetzlich kommen `isVideo`, `videoSrc` und
+	 * Zusätzliches wissen muss. Zusätzlich kommen `isVideo`, `videoSrc` und
 	 * `videoType` hinzu.
 	 *
 	 * @param object               $objTemplate  Das Ziel-Template
 	 * @param array<string, mixed> $arrMergeData Werte, die die Daten des
-	 *                                           Templates ueberschreiben; hier
-	 *                                           wird `size` fuer die Abmessung
+	 *                                           Templates überschreiben; hier
+	 *                                           wird `size` für die Abmessung
 	 *                                           der Platzhalterkachel gelesen
-	 * @param bool                 $blnPlayable  false laesst `videoSrc` weg —
-	 *                                           gebraucht fuer die Kachel eines
+	 * @param bool                 $blnPlayable  false lässt `videoSrc` weg —
+	 *                                           gebraucht für die Kachel eines
 	 *                                           Albums, die auf die Detailseite
-	 *                                           fuehrt und nichts abspielen soll
+	 *                                           führt und nichts abspielen soll
 	 *
 	 * @return object Dasselbe Template
 	 */
@@ -177,7 +177,7 @@ class Image
 	/**
 	 * Legt das skalierte Foto in ein Template.
 	 *
-	 * Gesetzt werden dieselben Template-Variablen wie frueher durch
+	 * Gesetzt werden dieselben Template-Variablen wie früher durch
 	 * `Controller::addImageToTemplate()`: `addImage`, `src`, `imgSize`,
 	 * `margin`, `alt`, `caption` und `picture`. Ein bereits gesetztes `href`
 	 * bleibt unangetastet — die Ansichten tragen dort den Verweis auf das
@@ -185,7 +185,7 @@ class Image
 	 *
 	 * @param object               $objTemplate  Das Ziel-Template
 	 * @param array<string, mixed> $arrMergeData Werte, die die Daten des
-	 *                                           Templates ueberschreiben; hier
+	 *                                           Templates überschreiben; hier
 	 *                                           kommen `size` und `imagemargin`
 	 *                                           der jeweiligen Ansicht her
 	 *
@@ -229,7 +229,7 @@ class Image
 	/**
 	 * Legt statt des Fotos ein leeres Ein-Punkt-Bild ins Template.
 	 *
-	 * Gebraucht wird das fuer die versteckten Eintraege einer Lightbox-Galerie:
+	 * Gebraucht wird das für die versteckten Einträge einer Lightbox-Galerie:
 	 * Das Markup muss den Verweis auf das Foto enthalten, damit die Lightbox es
 	 * kennt, darf die Datei aber nicht laden.
 	 *
@@ -259,7 +259,7 @@ class Image
 	 * Stellt die Metadaten der Datei als `meta` ins Template.
 	 *
 	 * Bevorzugt wird die aktuelle Seitensprache; gibt es dazu nichts, wird auf
-	 * Englisch zurueckgefallen. Ohne Metadaten steht `meta` auf null, damit die
+	 * Englisch zurückgefallen. Ohne Metadaten steht `meta` auf null, damit die
 	 * Templates mit einer einfachen Abfrage auskommen.
 	 *
 	 * @param object     $objTemplate Das Ziel-Template

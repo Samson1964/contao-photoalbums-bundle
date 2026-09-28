@@ -16,9 +16,9 @@ namespace Schachbulle\ContaoPhotoalbumsBundle\Album;
  *
  * Beide Klassen bekommen eine Liste von Datensatznummern und die Daten des
  * aufrufenden Moduls oder Inhaltselements. Aus den Moduldaten stammen
- * Einstellungen wie der Zeitfilter oder die gewuenschte Albensortierung; sie
- * werden hier ueber die magischen Zugriffsmethoden erreichbar gemacht, damit
- * die abgeleiteten Klassen einfach `$this->pa2TimeFilter` schreiben koennen.
+ * Einstellungen wie der Zeitfilter oder die gewünschte Albensortierung; sie
+ * werden hier über die magischen Zugriffsmethoden erreichbar gemacht, damit
+ * die abgeleiteten Klassen einfach `$this->pa2TimeFilter` schreiben können.
  *
  * Die Urfassung erbte an dieser Stelle von `Contao\Controller`, benutzte davon
  * aber nichts. Die Elternklasse ist deshalb entfallen — das spart unter Contao
@@ -68,8 +68,8 @@ abstract class ItemList
 	/**
 	 * Setzt die Nummernliste oder einen Wert aus den Moduldaten.
 	 *
-	 * @param string $strKey   Der Schluessel `items` meint die Nummernliste,
-	 *                         jeder andere Schluessel die Moduldaten
+	 * @param string $strKey   Der Schlüssel `items` meint die Nummernliste,
+	 *                         jeder andere Schlüssel die Moduldaten
 	 * @param mixed  $varValue Der neue Wert
 	 *
 	 * @return void
@@ -89,10 +89,10 @@ abstract class ItemList
 	/**
 	 * Liest die Nummernliste oder einen Wert aus den Moduldaten.
 	 *
-	 * @param string $strKey Der Schluessel `items` meint die Nummernliste,
-	 *                       jeder andere Schluessel die Moduldaten
+	 * @param string $strKey Der Schlüssel `items` meint die Nummernliste,
+	 *                       jeder andere Schlüssel die Moduldaten
 	 *
-	 * @return mixed Der Wert oder null, wenn der Schluessel unbekannt ist
+	 * @return mixed Der Wert oder null, wenn der Schlüssel unbekannt ist
 	 */
 	public function __get($strKey)
 	{
@@ -105,11 +105,11 @@ abstract class ItemList
 	}
 
 	/**
-	 * Prueft, ob ein Schluessel belegt ist.
+	 * Prüft, ob ein Schlüssel belegt ist.
 	 *
-	 * @param string $strKey Der zu pruefende Schluessel
+	 * @param string $strKey Der zu prüfende Schlüssel
 	 *
-	 * @return bool true, wenn der Schluessel einen Wert hat
+	 * @return bool true, wenn der Schlüssel einen Wert hat
 	 */
 	public function __isset($strKey)
 	{
@@ -124,7 +124,7 @@ abstract class ItemList
 	/**
 	 * Liefert die Daten des aufrufenden Moduls.
 	 *
-	 * @return array<string, mixed> Die Moduldaten, wie sie uebergeben wurden
+	 * @return array<string, mixed> Die Moduldaten, wie sie übergeben wurden
 	 */
 	public function getData(): array
 	{

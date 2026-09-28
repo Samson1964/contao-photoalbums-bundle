@@ -15,7 +15,7 @@ use Contao\Input;
 use Contao\Pagination as ContaoPagination;
 
 /**
- * Zerteilt eine fertige Liste in Seiten und baut das Seitenmenue dazu.
+ * Zerteilt eine fertige Liste in Seiten und baut das Seitenmenü dazu.
  *
  * Anders als bei den Kernmodulen von Contao wird hier nicht in der Datenbank
  * limitiert: Die Liste der Alben beziehungsweise Fotos steht zu diesem
@@ -26,31 +26,31 @@ use Contao\Pagination as ContaoPagination;
 class Pagination
 {
 	/**
-	 * Die Eintraege der aktuellen Seite.
+	 * Die Einträge der aktuellen Seite.
 	 *
 	 * @var array<int, mixed>
 	 */
 	private $arrItems = array();
 
 	/**
-	 * Gesamtzahl der Eintraege nach Anwendung der Hoechstzahl.
+	 * Gesamtzahl der Einträge nach Anwendung der Höchstzahl.
 	 *
 	 * @var int
 	 */
 	private $intTotalItems = 0;
 
 	/**
-	 * Das fertige Markup des Seitenmenues.
+	 * Das fertige Markup des Seitenmenüs.
 	 *
 	 * @var string
 	 */
 	private $strPagination = '';
 
 	/**
-	 * @param mixed $arrItems        Feld der Eintraege (Albumnummern oder
+	 * @param mixed $arrItems        Feld der Einträge (Albumnummern oder
 	 *                               Datei-UUIDs)
-	 * @param mixed $intMaxItems     Hoechstzahl insgesamt; 0 bedeutet „alle“
-	 * @param mixed $intItemsPerPage Eintraege je Seite; 0 schaltet den
+	 * @param mixed $intMaxItems     Höchstzahl insgesamt; 0 bedeutet „alle“
+	 * @param mixed $intItemsPerPage Einträge je Seite; 0 schaltet den
 	 *                               Seitenumbruch ab
 	 */
 	public function __construct($arrItems, $intMaxItems = 0, $intItemsPerPage = 0)
@@ -69,8 +69,8 @@ class Pagination
 	/**
 	 * Schneidet die Liste auf die aktuelle Seite zu.
 	 *
-	 * @param int $intMaxItems     Hoechstzahl insgesamt; 0 bedeutet „alle“
-	 * @param int $intItemsPerPage Eintraege je Seite; 0 schaltet den
+	 * @param int $intMaxItems     Höchstzahl insgesamt; 0 bedeutet „alle“
+	 * @param int $intItemsPerPage Einträge je Seite; 0 schaltet den
 	 *                             Seitenumbruch ab
 	 *
 	 * @return void Setzt $arrItems, $intTotalItems und $strPagination
@@ -88,7 +88,7 @@ class Pagination
 			$this->intTotalItems = min($intMaxItems, $this->intTotalItems);
 		}
 
-		// Ohne Seitengroesse oder wenn die Hoechstzahl kleiner als eine Seite
+		// Ohne Seitengröße oder wenn die Höchstzahl kleiner als eine Seite
 		// ist, bleibt es bei einer einzigen Seite
 		if ($intItemsPerPage < 1 || (0 !== $intLimit && $intMaxItems <= $intItemsPerPage))
 		{
@@ -123,9 +123,9 @@ class Pagination
 	}
 
 	/**
-	 * Liefert die Eintraege der aktuellen Seite.
+	 * Liefert die Einträge der aktuellen Seite.
 	 *
-	 * @return array<int, mixed> Die Eintraege; leer, wenn es keine gibt
+	 * @return array<int, mixed> Die Einträge; leer, wenn es keine gibt
 	 */
 	public function getItems(): array
 	{
@@ -133,9 +133,9 @@ class Pagination
 	}
 
 	/**
-	 * Liefert die Gesamtzahl der Eintraege.
+	 * Liefert die Gesamtzahl der Einträge.
 	 *
-	 * @return int Die Zahl nach Anwendung der Hoechstzahl, aber vor dem
+	 * @return int Die Zahl nach Anwendung der Höchstzahl, aber vor dem
 	 *             Seitenumbruch
 	 */
 	public function getTotalItems(): int
@@ -144,10 +144,10 @@ class Pagination
 	}
 
 	/**
-	 * Liefert das Markup des Seitenmenues.
+	 * Liefert das Markup des Seitenmenüs.
 	 *
 	 * @return string Das Markup oder eine leere Zeichenkette, wenn kein
-	 *                Seitenumbruch noetig ist
+	 *                Seitenumbruch nötig ist
 	 */
 	public function getPagination(): string
 	{

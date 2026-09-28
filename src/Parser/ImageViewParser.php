@@ -24,9 +24,9 @@ use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 /**
  * Baut die Foto-Ansicht eines einzelnen Albums.
  *
- * Ausgegeben werden die Fotos der aktuellen Seite als Kacheln; alle uebrigen
- * Fotos des Albums stehen zusaetzlich als unsichtbare Verweise im Markup,
- * damit die Lightbox das ganze Album kennt und der Besucher darin blaettern
+ * Ausgegeben werden die Fotos der aktuellen Seite als Kacheln; alle übrigen
+ * Fotos des Albums stehen zusätzlich als unsichtbare Verweise im Markup,
+ * damit die Lightbox das ganze Album kennt und der Besucher darin blättern
  * kann, ohne die Seite zu wechseln.
  */
 class ImageViewParser extends ViewParser
@@ -76,7 +76,7 @@ class ImageViewParser extends ViewParser
 	}
 
 	/**
-	 * Uebernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
+	 * Übernimmt die Moduleinstellungen in die Arbeitsvariablen des Templates.
 	 *
 	 * @return void
 	 */
@@ -110,7 +110,7 @@ class ImageViewParser extends ViewParser
 	{
 		global $objPage;
 
-		// Das Modul-Template durch das gewaehlte Rahmen-Template ersetzen
+		// Das Modul-Template durch das gewählte Rahmen-Template ersetzen
 		$objTemplate = new FrontendTemplate($this->Template->strTemplate);
 		$objTemplate->setData($this->Template->getData());
 		$this->Template = $objTemplate;
@@ -218,8 +218,8 @@ class ImageViewParser extends ViewParser
 	 *
 	 * Vorrang hat die fest eingestellte Albumnummer des Inhaltselements. Sonst
 	 * wird der Parameter `album` aus der Adresse gelesen; fehlt er, greift das
-	 * namenlose Anhaengsel `auto_item`. Beide Wege werden gebraucht, weil sich
-	 * unter Contao 4.13 einstellen laesst, welche Adressform erzeugt wird.
+	 * namenlose Anhängsel `auto_item`. Beide Wege werden gebraucht, weil sich
+	 * unter Contao 4.13 einstellen lässt, welche Adressform erzeugt wird.
 	 *
 	 * @return mixed Albumnummer, Alias oder 0, wenn nichts angegeben ist
 	 */
@@ -244,7 +244,7 @@ class ImageViewParser extends ViewParser
 	 * Erzeugt zu jedem Foto ein Teil-Template.
 	 *
 	 * Durchlaufen werden **alle** Fotos des Albums, nicht nur die der aktuellen
-	 * Seite: Die uebrigen kommen als unsichtbare Verweise ins Markup, damit die
+	 * Seite: Die übrigen kommen als unsichtbare Verweise ins Markup, damit die
 	 * Lightbox das ganze Album kennt. Sie tragen ein leeres Ein-Punkt-Bild,
 	 * laden also nichts nach.
 	 *
@@ -336,8 +336,8 @@ class ImageViewParser extends ViewParser
 			}
 			elseif ($blnVideo)
 			{
-				// Ein Video gehoert nicht in die Lightbox-Gruppe der Fotos: Die
-				// Lightbox des Themes wuerde die Datei als Bild zu laden
+				// Ein Video gehört nicht in die Lightbox-Gruppe der Fotos: Die
+				// Lightbox des Themes würde die Datei als Bild zu laden
 				// versuchen. Videos anderer Seiten bleiben deshalb ganz weg.
 				continue;
 			}
@@ -354,11 +354,11 @@ class ImageViewParser extends ViewParser
 	}
 
 	/**
-	 * Baut den Rueckverweis auf die Alben-Uebersicht.
+	 * Baut den Rückverweis auf die Alben-Übersicht.
 	 *
-	 * Ziel ist die im Modul eingestellte Uebersichtsseite; ist keine
+	 * Ziel ist die im Modul eingestellte Übersichtsseite; ist keine
 	 * eingestellt, wird die Seite genommen, von der der Besucher gekommen ist.
-	 * Deren Nummer und die Seitenzahl der Blaetterliste hat die Alben-Uebersicht
+	 * Deren Nummer und die Seitenzahl der Blätterliste hat die Alben-Übersicht
 	 * beim Aufbau in der Sitzung hinterlegt.
 	 *
 	 * @return void

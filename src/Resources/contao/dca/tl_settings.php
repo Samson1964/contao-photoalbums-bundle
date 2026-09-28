@@ -10,10 +10,10 @@ declare(strict_types=1);
  */
 
 /*
- * Ergaenzung an tl_settings
+ * Ergänzung an tl_settings
  *
  * tl_settings ist ein DC_File-Datenbereich und schreibt in die
- * localconfig.php; ein 'sql'-Schluessel waere hier wirkungslos und fehlt
+ * localconfig.php; ein 'sql'-Schlüssel wäre hier wirkungslos und fehlt
  * deshalb bewusst.
  */
 if (!isset($GLOBALS['TL_DCA']['tl_settings']['palettes']['default']))

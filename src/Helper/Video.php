@@ -17,15 +17,15 @@ namespace Schachbulle\ContaoPhotoalbumsBundle\Helper;
  * Ein Album darf neben Bildern auch Videos enthalten. Die beiden werden
  * unterschiedlich behandelt: Ein Bild geht durch die Bildbearbeitung von Contao
  * und landet skaliert in der Kachel; ein Video bekommt eine einheitliche
- * Platzhalterkachel und wird beim Anklicken im mitgelieferten Ueberlagerer
+ * Platzhalterkachel und wird beim Anklicken im mitgelieferten Überlagerer
  * abgespielt.
  *
- * Warum nicht die Lightbox des Themes? Sie bekommt die Verweise ueber das
- * Attribut `data-lightbox`, und die gaengigen Lightboxen — colorbox in Contaos
+ * Warum nicht die Lightbox des Themes? Sie bekommt die Verweise über das
+ * Attribut `data-lightbox`, und die gängigen Lightboxen — colorbox in Contaos
  * Template `j_colorbox`, mediabox unter MooTools — bekommen ihre Einstellungen
- * dort **einmal fuer alle** Verweise. colorbox erkennt am Dateinamen nur
- * Bilder und wuerde ein Video zu laden versuchen. Ein Video traegt deshalb
- * bewusst **kein** `data-lightbox`, sondern `data-pa2-video`; darum kuemmert
+ * dort **einmal für alle** Verweise. colorbox erkennt am Dateinamen nur
+ * Bilder und würde ein Video zu laden versuchen. Ein Video trägt deshalb
+ * bewusst **kein** `data-lightbox`, sondern `data-pa2-video`; darum kümmert
  * sich das eigene Skript.
  */
 class Video
@@ -33,7 +33,7 @@ class Video
 	/**
 	 * Voreinstellung der Dateiendungen, die als Video gelten.
 	 *
-	 * Alle vier duerfen mit Contaos Voreinstellung fuer `uploadTypes` ohne
+	 * Alle vier dürfen mit Contaos Voreinstellung für `uploadTypes` ohne
 	 * weitere Einrichtung hochgeladen werden.
 	 *
 	 * @var string
@@ -50,8 +50,8 @@ class Video
 	/**
 	 * Liefert die Dateiendungen, die als Video gelten.
 	 *
-	 * Eine Installation kann die Liste in ihrer eigenen `config.php` ergaenzen,
-	 * indem sie `$GLOBALS['pa2']['videoExtensions']` ueberschreibt.
+	 * Eine Installation kann die Liste in ihrer eigenen `config.php` ergänzen,
+	 * indem sie `$GLOBALS['pa2']['videoExtensions']` überschreibt.
 	 *
 	 * @return array<int, string> Die Endungen, klein geschrieben
 	 */
@@ -63,7 +63,7 @@ class Video
 	}
 
 	/**
-	 * Prueft, ob eine Dateiendung zu einem Video gehoert.
+	 * Prüft, ob eine Dateiendung zu einem Video gehört.
 	 *
 	 * @param string|null $strExtension Die Endung ohne Punkt
 	 *
@@ -80,7 +80,7 @@ class Video
 	}
 
 	/**
-	 * Liefert das Kuerzel des Medientyps fuer das `type`-Attribut.
+	 * Liefert das Kürzel des Medientyps für das `type`-Attribut.
 	 *
 	 * Ohne diese Angabe muss der Browser den Typ erraten; mit ihr entscheidet
 	 * er sofort, ob er die Datei abspielen kann.

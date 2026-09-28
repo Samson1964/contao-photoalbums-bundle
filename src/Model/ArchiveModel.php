@@ -16,10 +16,10 @@ use Contao\Model;
 /**
  * Datenbankmodell eines Fotoalben-Archivs.
  *
- * Das Archiv ist die Elterntabelle der Alben und traegt die Einstellungen fuer
+ * Das Archiv ist die Elterntabelle der Alben und trägt die Einstellungen für
  * Kommentare, Zugriffsschutz und den RSS-/Atom-Feed. Der Tabellenname bleibt
  * bewusst `tl_photoalbums2_archive`, damit Bestandsinstallationen von
- * photoalbums2 ohne Datenumzug auf dieses Bundle wechseln koennen.
+ * photoalbums2 ohne Datenumzug auf dieses Bundle wechseln können.
  *
  * @property int         $id
  * @property int         $pid

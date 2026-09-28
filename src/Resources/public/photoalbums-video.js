@@ -1,16 +1,16 @@
 /*
- * Video-Ueberlagerer der Fotoalben.
+ * Video-Überlagerer der Fotoalben.
  *
- * Die Lightbox eines Themes bekommt ihre Einstellungen einmal fuer alle
+ * Die Lightbox eines Themes bekommt ihre Einstellungen einmal für alle
  * Verweise mit data-lightbox; colorbox etwa erkennt am Dateinamen nur Bilder
- * und wuerde ein Video zu laden versuchen. Videos tragen deshalb
- * data-pa2-video, und dieses Skript legt sie in einen eigenen Ueberlagerer.
+ * und würde ein Video zu laden versuchen. Videos tragen deshalb
+ * data-pa2-video, und dieses Skript legt sie in einen eigenen Überlagerer.
  *
- * Es kommt ohne Bibliothek aus und laeuft damit unabhaengig davon, ob das
+ * Es kommt ohne Bibliothek aus und läuft damit unabhängig davon, ob das
  * Theme jQuery, MooTools oder gar nichts einbindet.
  *
- * Bedienung: Anklicken oeffnet, Escape oder ein Klick auf den Hintergrund
- * schliesst. Beim Schliessen haelt das Video an und springt an den Anfang.
+ * Bedienung: Anklicken öffnet, Escape oder ein Klick auf den Hintergrund
+ * schließt. Beim Schließen hält das Video an und springt an den Anfang.
  *
  * @license LGPL-3.0-or-later
  */
@@ -22,9 +22,9 @@
 	var letzterAnfasser = null;
 
 	/**
-	 * Baut den Ueberlagerer beim ersten Bedarf.
+	 * Baut den Überlagerer beim ersten Bedarf.
 	 *
-	 * @returns {HTMLElement} Das Wurzelelement des Ueberlagerers
+	 * @returns {HTMLElement} Das Wurzelelement des Überlagerers
 	 */
 	function erzeugen() {
 		if (overlay) {
@@ -57,7 +57,7 @@
 
 		schliessen.addEventListener('click', zu);
 
-		// Nur der Hintergrund schliesst, nicht ein Klick auf das Video selbst
+		// Nur der Hintergrund schließt, nicht ein Klick auf das Video selbst
 		overlay.addEventListener('click', function (event) {
 			if (event.target === overlay) {
 				zu();
@@ -68,11 +68,11 @@
 	}
 
 	/**
-	 * Oeffnet den Ueberlagerer mit einer Videodatei.
+	 * Öffnet den Überlagerer mit einer Videodatei.
 	 *
 	 * @param {string} quelle Die Adresse der Videodatei
 	 * @param {string} typ    Der MIME-Typ, darf leer sein
-	 * @param {string} titel  Beschriftung fuer Vorlesewerkzeuge
+	 * @param {string} titel  Beschriftung für Vorlesewerkzeuge
 	 */
 	function auf(quelle, typ, titel) {
 		erzeugen();
@@ -97,7 +97,7 @@
 		video.load();
 
 		// Ein abgewiesenes Abspielen ist kein Fehler: Manche Browser verlangen
-		// dafuer eine ausdrueckliche Geste. Die Bedienleiste steht ja bereit.
+		// dafür eine ausdrückliche Geste. Die Bedienleiste steht ja bereit.
 		var versuch = video.play();
 
 		if (versuch && typeof versuch.catch === 'function') {
@@ -108,7 +108,7 @@
 	}
 
 	/**
-	 * Schliesst den Ueberlagerer und haelt das Video an.
+	 * Schließt den Überlagerer und hält das Video an.
 	 */
 	function zu() {
 		if (!overlay || overlay.hidden) {

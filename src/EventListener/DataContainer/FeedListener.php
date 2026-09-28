@@ -16,28 +16,28 @@ use Schachbulle\ContaoPhotoalbumsBundle\Feed\FeedGenerator;
 use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 
 /**
- * Merkt vor, welche Feeds nach einer Aenderung neu zu erzeugen sind.
+ * Merkt vor, welche Feeds nach einer Änderung neu zu erzeugen sind.
  *
- * Das Erzeugen selbst geschieht nicht beim Speichern, sondern beim naechsten
+ * Das Erzeugen selbst geschieht nicht beim Speichern, sondern beim nächsten
  * Aufruf des Backend-Moduls. Das ist ein Kunstgriff aus dem Contao-Kern: Wer
  * zwanzig Alben hintereinander bearbeitet, soll nicht zwanzigmal auf das
- * Schreiben einer XML-Datei mit hunderten Eintraegen warten.
+ * Schreiben einer XML-Datei mit hunderten Einträgen warten.
  */
 class FeedListener
 {
 	/**
-	 * Schluessel, unter dem die vorgemerkten Archive in der Sitzung stehen.
+	 * Schlüssel, unter dem die vorgemerkten Archive in der Sitzung stehen.
 	 *
 	 * @var string
 	 */
 	private const SESSION_KEY = 'pa2_feed_updater';
 
 	/**
-	 * Merkt ein Archiv fuer die naechste Feed-Aktualisierung vor.
+	 * Merkt ein Archiv für die nächste Feed-Aktualisierung vor.
 	 *
 	 * @param int $intArchiveId Datensatznummer des Archivs
 	 *
-	 * @return void Ohne Sitzung oder ohne gueltige Nummer geschieht nichts
+	 * @return void Ohne Sitzung oder ohne gültige Nummer geschieht nichts
 	 */
 	public static function scheduleUpdate(int $intArchiveId): void
 	{

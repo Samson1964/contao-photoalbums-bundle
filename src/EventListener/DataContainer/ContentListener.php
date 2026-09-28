@@ -20,12 +20,12 @@ use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\ArchiveModel;
 
 /**
- * Rueckrufe des Datenbereichs `tl_content` fuer das Inhaltselement „Fotoalbum“.
+ * Rückrufe des Datenbereichs `tl_content` für das Inhaltselement „Fotoalbum“.
  */
 class ContentListener
 {
 	/**
-	 * Liefert die auswaehlbaren Alben, nach Archiven gruppiert.
+	 * Liefert die auswählbaren Alben, nach Archiven gruppiert.
 	 *
 	 * @return array<string, array<int, string>> Archivtitel als Gruppe,
 	 *                                           darunter Albumnummer und Titel
@@ -73,13 +73,13 @@ class ContentListener
 	/**
 	 * Erzeugt den Knopf „Album bearbeiten“ neben der Auswahlliste.
 	 *
-	 * Die Adresse wird ueber den Symfony-Router gebildet; das frueher benutzte
+	 * Die Adresse wird über den Symfony-Router gebildet; das früher benutzte
 	 * `contao/main.php` gibt es weder unter Contao 4.13 noch unter Contao 5.
 	 *
 	 * @param DataContainer $dc Der Data Container
 	 *
 	 * @return string Das Markup des Knopfes oder eine leere Zeichenkette,
-	 *                solange kein Album gewaehlt ist
+	 *                solange kein Album gewählt ist
 	 */
 	public function editAlbum(DataContainer $dc): string
 	{

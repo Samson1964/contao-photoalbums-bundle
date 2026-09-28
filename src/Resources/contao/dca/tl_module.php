@@ -15,7 +15,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\TemplateList
 use Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer\TimeFilterListener;
 
 /*
- * Ergaenzungen an tl_module fuer die drei Fotoalben-Module
+ * Ergänzungen an tl_module für die drei Fotoalben-Module
  */
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array(ModuleListener::class, 'fixPalette');
 $GLOBALS['TL_DCA']['tl_module']['config']['onsubmit_callback'][] = array(TimeFilterListener::class, 'onSubmit');
@@ -24,9 +24,9 @@ $GLOBALS['TL_DCA']['tl_module']['config']['onsubmit_callback'][] = array(ModuleL
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'pa2TimeFilter';
 
 /*
- * Die Palette fuer die Experten-Einstellungen unterscheidet sich zwischen den
+ * Die Palette für die Experten-Einstellungen unterscheidet sich zwischen den
  * Contao-Fassungen: `guests` gibt es unter Contao 5 nicht mehr, und ein
- * Palettenfeld ohne Felddefinition laesst den Data Container abbrechen.
+ * Palettenfeld ohne Felddefinition lässt den Data Container abbrechen.
  */
 $strExpertLegend = '{expert_legend:hide},'.(isset($GLOBALS['TL_DCA']['tl_module']['fields']['guests']) ? 'guests,' : '').'cssID';
 
@@ -225,10 +225,10 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pa2ImagesShowTeaser'] = array
 );
 
 /*
- * Die beiden Download-Schalter sind ausdruecklich keine Zugriffsgrenze: Wer
+ * Die beiden Download-Schalter sind ausdrücklich keine Zugriffsgrenze: Wer
  * ein Album sehen darf, darf es auch herunterladen. Sie entscheiden nur,
  * **wo** der Knopf erscheint — und dass ohne Knopf auch die Adresse mit
- * `pa2_download` nichts liefert, damit ein abgeschalteter Knopf nicht bloss
+ * `pa2_download` nichts liefert, damit ein abgeschalteter Knopf nicht bloß
  * unsichtbar, sondern wirklich aus ist.
  */
 $GLOBALS['TL_DCA']['tl_module']['fields']['pa2AlbumsDownload'] = array
@@ -428,7 +428,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pa2TimeFilterEnd'] = array
 
 /*
  * Der Teaser stand unter photoalbums2 in tl_translation_fields und wurde hier
- * nur als Verweisnummer gefuehrt. Jetzt steht der Text selbst im Feld.
+ * nur als Verweisnummer geführt. Jetzt steht der Text selbst im Feld.
  */
 $GLOBALS['TL_DCA']['tl_module']['fields']['pa2Teaser'] = array
 (

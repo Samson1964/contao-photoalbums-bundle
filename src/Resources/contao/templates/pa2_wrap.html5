@@ -2,7 +2,7 @@
 /*
  * Rahmen-Template der Fotoalben.
  *
- * Es umschliesst sowohl die Alben-Uebersicht als auch die Foto-Ansicht; die
+ * Es umschließt sowohl die Alben-Übersicht als auch die Foto-Ansicht; die
  * einzelnen Kacheln stehen fertig geparst in $this->items.
  *
  * @license LGPL-3.0-or-later
@@ -55,8 +55,8 @@
     <div class="ce_comments block">
       <<?= $this->hlc ?>><?= $this->hlcText ?></<?= $this->hlc ?>>
       <?= implode('', (array) $this->comments) ?>
-      <?php /* Die Blaetterliste der Kommentare entfaellt hier: $this->pagination
-             gehoert in diesem Template den Alben beziehungsweise Fotos. */ ?>
+      <?php /* Die Blätterliste der Kommentare entfällt hier: $this->pagination
+             gehört in diesem Template den Alben beziehungsweise Fotos. */ ?>
       <<?= $this->hlc ?>><?= $this->addComment ?></<?= $this->hlc ?>>
       <?php $this->insert('mod_comment_form', $this->arrData); ?>
     </div>

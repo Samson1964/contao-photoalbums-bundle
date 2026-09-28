@@ -18,11 +18,11 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Runtime;
 /*
  * Tabelle tl_photoalbums2_album
  *
- * Der Tabellenname stammt aus der Vorgaengererweiterung photoalbums2 und
- * bleibt bewusst unveraendert, damit Bestandsinstallationen ohne Datenumzug
- * auf dieses Bundle wechseln koennen.
+ * Der Tabellenname stammt aus der Vorgängererweiterung photoalbums2 und
+ * bleibt bewusst unverändert, damit Bestandsinstallationen ohne Datenumzug
+ * auf dieses Bundle wechseln können.
  *
- * Die Felder `event`, `place`, `photographer` und `description` fuehrten unter
+ * Die Felder `event`, `place`, `photographer` und `description` führten unter
  * photoalbums2 nur eine Verweisnummer auf `tl_translation_fields`. Dieses
  * Bundle speichert dort wieder den Text selbst; den Umzug erledigt die
  * Migration TranslationFieldsMigration.
@@ -113,7 +113,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_album'] = array
 				'icon'       => 'delete.svg',
 				'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '').'\'))return false;Backend.getScrollOffset();"',
 			),
-			// Der eingebaute Umschalter: Feld "published" traegt 'toggle' => true,
+			// Der eingebaute Umschalter: Feld "published" trägt 'toggle' => true,
 			// deshalb braucht es hier kein eigenes button_callback mehr
 			'toggle' => array
 			(
@@ -192,7 +192,7 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_album'] = array
 		(
 			'label'      => &$GLOBALS['TL_LANG']['tl_photoalbums2_album']['author'],
 			// Nur im Backend nach dem angemeldeten Benutzer fragen: Im Frontend
-			// gaebe es keinen, und Contao 4.13 loest hier keine Closures auf
+			// gäbe es keinen, und Contao 4.13 löst hier keine Closures auf
 			'default'    => Runtime::isBackend() ? BackendUser::getInstance()->id : 0,
 			'exclude'    => true,
 			'filter'     => true,
@@ -203,9 +203,9 @@ $GLOBALS['TL_DCA']['tl_photoalbums2_album'] = array
 			'relation'   => array('type' => 'hasOne', 'load' => 'eager'),
 		),
 
-		// Start- und Enddatum sind Unix-Zeitstempel und duerfen negativ sein.
-		// varchar(11) statt der frueheren varchar(10): Ein Zeitstempel vor
-		// 1970 traegt ein Minuszeichen und braucht die elfte Stelle.
+		// Start- und Enddatum sind Unix-Zeitstempel und dürfen negativ sein.
+		// varchar(11) statt der früheren varchar(10): Ein Zeitstempel vor
+		// 1970 trägt ein Minuszeichen und braucht die elfte Stelle.
 		'startdate' => array
 		(
 			'label'     => &$GLOBALS['TL_LANG']['tl_photoalbums2_album']['startdate'],

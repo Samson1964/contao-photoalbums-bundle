@@ -14,16 +14,16 @@ namespace Schachbulle\ContaoPhotoalbumsBundle\EventListener\DataContainer;
 use Contao\Controller;
 
 /**
- * Fuellt die Auswahllisten der Templates.
+ * Füllt die Auswahllisten der Templates.
  *
  * Die Methoden werden als `options_callback` in `tl_module` und `tl_content`
- * eingetragen. Ein Options-Rueckruf ist hier noetig statt einer festen Liste,
+ * eingetragen. Ein Options-Rückruf ist hier nötig statt einer festen Liste,
  * weil eigene Templates in `templates/` erst zur Laufzeit gefunden werden.
  */
 class TemplateListener
 {
 	/**
-	 * Liefert die Templates fuer den Rahmen einer Ansicht.
+	 * Liefert die Templates für den Rahmen einer Ansicht.
 	 *
 	 * @return array<int|string, string> Die gefundenen Templates
 	 */
@@ -33,7 +33,7 @@ class TemplateListener
 	}
 
 	/**
-	 * Liefert die Templates fuer ein einzelnes Album in der Uebersicht.
+	 * Liefert die Templates für ein einzelnes Album in der Übersicht.
 	 *
 	 * @return array<int|string, string> Die gefundenen Templates
 	 */
@@ -43,7 +43,7 @@ class TemplateListener
 	}
 
 	/**
-	 * Liefert die Templates fuer ein einzelnes Foto in der Foto-Ansicht.
+	 * Liefert die Templates für ein einzelnes Foto in der Foto-Ansicht.
 	 *
 	 * @return array<int|string, string> Die gefundenen Templates
 	 */

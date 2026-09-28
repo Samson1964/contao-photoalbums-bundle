@@ -1,5 +1,17 @@
 # Fotoalben Changelog
 
+## Version 1.3.0 (2026-09-28)
+
+* Change: Echte Umlaute im gesamten Altbestand. Kommentare, Meldungen der
+  Prüfwerkzeuge und Fehlermeldungen schrieben seit der Portierung `ue`, `oe`,
+  `ae` und `ss` — 909 Stellen in 80 Dateien. Ersetzt wurde nach einer
+  ausdrücklichen Wortliste und nur in Kommentaren und Textzeichenketten; für
+  jede PHP-Datei und jedes Template ist nachgewiesen, dass der Codeanteil
+  byte-gleich geblieben ist. Bewusst unverändert: Wörter mit echtem `ue`
+  („neue“, „Quelle“, „aktuell“), Wörter mit `ss` nach heutiger Rechtschreibung
+  („dass“, „muss“, „Klasse“) sowie Datei- und Bezeichnernamen wie
+  `tools/pruefstand.php`.
+
 ## Version 1.2.0 (2026-09-28)
 
 * Add: **Album als ZIP-Archiv herunterladen.** Zwei neue Schalter in den

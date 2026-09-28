@@ -12,11 +12,11 @@ declare(strict_types=1);
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 /*
- * Ergaenzungen an tl_user: Rechte auf die Fotoalben-Archive
+ * Ergänzungen an tl_user: Rechte auf die Fotoalben-Archive
  *
- * Eingehaengt wird hinter der Gruppe „Dateisystemrechte“ (fop), so wie es auch
- * die Kernmodule tun. Der PaletteManipulator ersetzt das frueher benutzte
- * str_replace, das an einer geaenderten Kernpalette scheitern wuerde.
+ * Eingehängt wird hinter der Gruppe „Dateisystemrechte“ (fop), so wie es auch
+ * die Kernmodule tun. Der PaletteManipulator ersetzt das früher benutzte
+ * str_replace, das an einer geänderten Kernpalette scheitern würde.
  */
 foreach (array('extend', 'custom') as $strPalette)
 {

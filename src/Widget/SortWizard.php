@@ -19,20 +19,20 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
  * Backend-Assistent zum Sortieren einer Auswahlliste.
  *
  * Gebraucht wird er im Frontend-Modul, um die Alben von Hand in eine eigene
- * Reihenfolge zu bringen. Gespeichert wird die **vollstaendige** Liste der
- * Albumnummern in der gewuenschten Reihenfolge; die Ausgabe im Frontend
- * beruecksichtigt sie nur, wenn als Sortierung „Eigene Sortierung“ gewaehlt ist.
+ * Reihenfolge zu bringen. Gespeichert wird die **vollständige** Liste der
+ * Albumnummern in der gewünschten Reihenfolge; die Ausgabe im Frontend
+ * berücksichtigt sie nur, wenn als Sortierung „Eigene Sortierung“ gewählt ist.
  *
- * Die Klasse stammt urspruenglich aus der Erweiterung
+ * Die Klasse stammt ursprünglich aus der Erweiterung
  * `craffft/contao-sortwizard` und ist hier fest eingebaut. Wie beim
  * {@see ImageSortWizard} wurde das MooTools-Ziehen durch ein eigenes Skript
- * ersetzt und der Umweg ueber Adressparameter samt sofortigem
+ * ersetzt und der Umweg über Adressparameter samt sofortigem
  * Datenbankschreibvorgang gestrichen.
  */
 class SortWizard extends Widget
 {
 	/**
-	 * Der Wert dieses Feldes wird beim Absenden uebernommen.
+	 * Der Wert dieses Feldes wird beim Absenden übernommen.
 	 *
 	 * @var bool
 	 */
@@ -49,7 +49,7 @@ class SortWizard extends Widget
 	protected $strTemplate = 'be_widget_chk';
 
 	/**
-	 * Die zur Auswahl stehenden Eintraege.
+	 * Die zur Auswahl stehenden Einträge.
 	 *
 	 * @var array<int, array<string, mixed>>
 	 */
@@ -59,7 +59,7 @@ class SortWizard extends Widget
 	 * Nimmt die Auswahlliste entgegen.
 	 *
 	 * @param string $strKey   Der Name der Eigenschaft
-	 * @param mixed  $varValue Der Wert; bei `options` ein Feld von Eintraegen
+	 * @param mixed  $varValue Der Wert; bei `options` ein Feld von Einträgen
 	 *                         mit `value` und `label`
 	 *
 	 * @return void
@@ -79,7 +79,7 @@ class SortWizard extends Widget
 	/**
 	 * Erzeugt das Markup des Assistenten.
 	 *
-	 * @return string Die sortierbare Liste; ohne Eintraege ein Hinweistext
+	 * @return string Die sortierbare Liste; ohne Einträge ein Hinweistext
 	 */
 	public function generate()
 	{
@@ -118,10 +118,10 @@ class SortWizard extends Widget
 	/**
 	 * Bringt die Auswahlliste in die gespeicherte Reihenfolge.
 	 *
-	 * Eintraege, die in der gespeicherten Reihenfolge vorkommen, stehen vorn
-	 * und in genau dieser Folge; alles Neue haengt hinten an. Damit
+	 * Einträge, die in der gespeicherten Reihenfolge vorkommen, stehen vorn
+	 * und in genau dieser Folge; alles Neue hängt hinten an. Damit
 	 * verschwindet ein neu angelegtes Album nicht aus der Liste, nur weil die
-	 * Reihenfolge aelter ist als das Album.
+	 * Reihenfolge älter ist als das Album.
 	 *
 	 * @return array<int, array<string, mixed>> Die sortierte Auswahlliste
 	 */

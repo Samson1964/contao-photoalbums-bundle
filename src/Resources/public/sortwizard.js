@@ -1,11 +1,11 @@
 /*
  * Sortier-Assistenten der Fotoalben.
  *
- * Ersetzt die frueher benutzten MooTools-"Sortables": Contao 5 liefert
- * MooTools im Backend nicht mehr aus, und die alte Loesung schrieb bei jedem
+ * Ersetzt die früher benutzten MooTools-"Sortables": Contao 5 liefert
+ * MooTools im Backend nicht mehr aus, und die alte Lösung schrieb bei jedem
  * Klick auf "hoch"/"runter" sofort in die Datenbank. Hier wird nur im Browser
  * umsortiert; gespeichert wird beim Absenden des Formulars, weil die
- * versteckten Eingabefelder mit den Eintraegen mitwandern.
+ * versteckten Eingabefelder mit den Einträgen mitwandern.
  *
  * Bedienung: mit der Maus ziehen oder den Eintrag anklicken und mit
  * Strg+Pfeiltaste verschieben.
@@ -16,7 +16,7 @@
 	'use strict';
 
 	/**
-	 * Haengt die Ereignisse an eine Liste.
+	 * Hängt die Ereignisse an eine Liste.
 	 *
 	 * @param {HTMLElement} container Das Element mit data-pa2-sortwizard
 	 */
@@ -56,11 +56,11 @@
 				try {
 					event.dataTransfer.setData('text/plain', '');
 				} catch (e) {
-					// Aeltere Browser kennen nur "Text"
+					// Ältere Browser kennen nur "Text"
 					try {
 						event.dataTransfer.setData('Text', '');
 					} catch (e2) {
-						// Ohne Daten laesst sich hier nichts mehr retten
+						// Ohne Daten lässt sich hier nichts mehr retten
 					}
 				}
 			}

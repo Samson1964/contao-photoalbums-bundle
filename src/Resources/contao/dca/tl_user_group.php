@@ -12,7 +12,7 @@ declare(strict_types=1);
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 /*
- * Ergaenzungen an tl_user_group: Rechte auf die Fotoalben-Archive
+ * Ergänzungen an tl_user_group: Rechte auf die Fotoalben-Archive
  */
 if (isset($GLOBALS['TL_DCA']['tl_user_group']['palettes']['default']) && false === strpos($GLOBALS['TL_DCA']['tl_user_group']['palettes']['default'], 'photoalbums2s'))
 {

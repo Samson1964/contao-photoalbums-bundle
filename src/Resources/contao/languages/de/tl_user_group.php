@@ -4,7 +4,7 @@
  * Dieses Bundle verwaltet Fotoalben und gibt sie unter Contao 4.13
  * und Contao 5 im Frontend aus.
  *
- * Die Texte stammen in Teilen aus der Vorgaengererweiterung photoalbums2
+ * Die Texte stammen in Teilen aus der Vorgängererweiterung photoalbums2
  * von Daniel Kiesel.
  *
  * @license LGPL-3.0-or-later

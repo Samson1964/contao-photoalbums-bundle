@@ -25,16 +25,16 @@ use Schachbulle\ContaoPhotoalbumsBundle\Sorter\FileSorter;
 /**
  * Backend-Assistent zum Sortieren der Fotos eines Albums.
  *
- * Der Assistent zeigt alle Fotos, die im Feld `images` ausgewaehlt sind — auch
- * die aus ausgewaehlten Ordnern — als Daumennagelreihe und laesst sie mit der
- * Maus in die gewuenschte Reihenfolge ziehen. Gespeichert wird die Reihenfolge
+ * Der Assistent zeigt alle Fotos, die im Feld `images` ausgewählt sind — auch
+ * die aus ausgewählten Ordnern — als Daumennagelreihe und lässt sie mit der
+ * Maus in die gewünschte Reihenfolge ziehen. Gespeichert wird die Reihenfolge
  * als Feld von Datei-UUIDs.
  *
- * Die Klasse stammt urspruenglich aus der Erweiterung
+ * Die Klasse stammt ursprünglich aus der Erweiterung
  * `craffft/contao-imagesortwizard` und ist hier fest eingebaut. Zwei Dinge
  * wurden dabei ersetzt:
  *
- * 1. Das Umsortieren lief frueher ueber Adressparameter (`cmd_imageSort=up`)
+ * 1. Das Umsortieren lief früher über Adressparameter (`cmd_imageSort=up`)
  *    mit einem sofortigen Datenbankschreibvorgang je Klick. Jetzt wird nur noch
  *    im Browser umsortiert; gespeichert wird beim Absenden des Formulars.
  * 2. Das Ziehen mit der Maus benutzte MooTools (`Sortables`). Contao 5 liefert
@@ -44,7 +44,7 @@ use Schachbulle\ContaoPhotoalbumsBundle\Sorter\FileSorter;
 class ImageSortWizard extends Widget
 {
 	/**
-	 * Der Wert dieses Feldes wird beim Absenden uebernommen.
+	 * Der Wert dieses Feldes wird beim Absenden übernommen.
 	 *
 	 * @var bool
 	 */
@@ -58,22 +58,22 @@ class ImageSortWizard extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
-	 * Prueft und normalisiert die abgeschickten Werte.
+	 * Prüft und normalisiert die abgeschickten Werte.
 	 *
-	 * Der Browser schickt die UUIDs in lesbarer Form zurueck; gespeichert wird
-	 * die binaere Form, so wie sie auch im Feld `images` steht.
+	 * Der Browser schickt die UUIDs in lesbarer Form zurück; gespeichert wird
+	 * die binäre Form, so wie sie auch im Feld `images` steht.
 	 *
 	 * Die Elternfassung wird bewusst **nicht** aufgerufen: `Widget::validator()`
-	 * ruft sich bei einem Feld ueber `array_map` selbst fuer jeden Eintrag auf.
-	 * Da die eigene Fassung dann mit einer einzelnen Zeichenkette ankaeme,
-	 * entstuende bei jedem Speichern ein Feld aus leeren Feldern — die
-	 * Reihenfolge waere weg. Die Pflichtfeldpruefung wird deshalb hier selbst
+	 * ruft sich bei einem Feld über `array_map` selbst für jeden Eintrag auf.
+	 * Da die eigene Fassung dann mit einer einzelnen Zeichenkette ankäme,
+	 * entstünde bei jedem Speichern ein Feld aus leeren Feldern — die
+	 * Reihenfolge wäre weg. Die Pflichtfeldprüfung wird deshalb hier selbst
 	 * erledigt.
 	 *
 	 * @param mixed $varInput Das Feld der UUIDs aus dem Formular
 	 *
-	 * @return array<int, string> Das Feld mit binaeren UUIDs; ungueltige
-	 *                            Eintraege fallen heraus
+	 * @return array<int, string> Das Feld mit binären UUIDs; ungültige
+	 *                            Einträge fallen heraus
 	 */
 	public function validator($varInput)
 	{
@@ -86,8 +86,8 @@ class ImageSortWizard extends Widget
 				continue;
 			}
 
-			// Erst auf die binaere Form pruefen: Ein trim() koennte dort
-			// Bytes abschneiden, die zufaellig wie Leerraum aussehen
+			// Erst auf die binäre Form prüfen: Ein trim() könnte dort
+			// Bytes abschneiden, die zufällig wie Leerraum aussehen
 			if (Validator::isBinaryUuid($varValue))
 			{
 				$arrUuids[] = $varValue;
@@ -114,8 +114,8 @@ class ImageSortWizard extends Widget
 	/**
 	 * Erzeugt das Markup des Assistenten.
 	 *
-	 * @return string Die Liste der Daumennaegel mit versteckten Eingabefeldern;
-	 *                ohne ausgewaehlte Fotos ein Hinweistext
+	 * @return string Die Liste der Daumennägel mit versteckten Eingabefeldern;
+	 *                ohne ausgewählte Fotos ein Hinweistext
 	 */
 	public function generate()
 	{
@@ -135,7 +135,7 @@ class ImageSortWizard extends Widget
 			return '<p class="tl_noopt">'.($GLOBALS['TL_LANG']['MSC']['noResult'] ?? '').'</p>';
 		}
 
-		// Die Datensaetze nach UUID greifbar machen, damit die Ausgabe der
+		// Die Datensätze nach UUID greifbar machen, damit die Ausgabe der
 		// gespeicherten Reihenfolge folgt und nicht der Sortierung der Abfrage
 		$arrFiles = array();
 
@@ -174,10 +174,10 @@ class ImageSortWizard extends Widget
 	 * Bringt gespeicherte Reihenfolge und aktuelle Auswahl zur Deckung.
 	 *
 	 * Fotos, die aus dem Album entfernt wurden, fallen heraus; neu
-	 * hinzugekommene werden hinten angehaengt. Nur so bleibt eine von Hand
-	 * festgelegte Reihenfolge erhalten, wenn nachtraeglich Fotos dazukommen.
+	 * hinzugekommene werden hinten angehängt. Nur so bleibt eine von Hand
+	 * festgelegte Reihenfolge erhalten, wenn nachträglich Fotos dazukommen.
 	 *
-	 * @return array<int, string> Die Datei-UUIDs in binaerer Form
+	 * @return array<int, string> Die Datei-UUIDs in binärer Form
 	 */
 	private function getOrderedUuids(): array
 	{
@@ -212,13 +212,13 @@ class ImageSortWizard extends Widget
 	}
 
 	/**
-	 * Liest die im Album ausgewaehlten Fotos aus der Datenbank.
+	 * Liest die im Album ausgewählten Fotos aus der Datenbank.
 	 *
 	 * Gelesen wird das Feld, das in der DCA unter `eval.sortfiles` genannt ist
-	 * — beim Fotoalbum also `images`. Ausgewaehlte Ordner werden dabei
-	 * rekursiv aufgeloest.
+	 * — beim Fotoalbum also `images`. Ausgewählte Ordner werden dabei
+	 * rekursiv aufgelöst.
 	 *
-	 * @return array<int, string> Die Datei-UUIDs in binaerer Form; leer, wenn
+	 * @return array<int, string> Die Datei-UUIDs in binärer Form; leer, wenn
 	 *                            der Datensatz noch gar nicht angelegt ist
 	 */
 	private function getSelectedUuids(): array
@@ -231,7 +231,7 @@ class ImageSortWizard extends Widget
 			return array();
 		}
 
-		// Feldnamen gegen die DCA pruefen, damit nichts Fremdes in die Abfrage geraet
+		// Feldnamen gegen die DCA prüfen, damit nichts Fremdes in die Abfrage gerät
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]))
 		{
 			return array();
@@ -258,7 +258,7 @@ class ImageSortWizard extends Widget
 	 * `$dc->id` liefert in beiden Contao-Fassungen die Datensatznummer und ist
 	 * dem seit Contao 5 veralteten `activeRecord` vorzuziehen.
 	 *
-	 * @return int Die Nummer oder 0, wenn sie sich nicht ermitteln laesst
+	 * @return int Die Nummer oder 0, wenn sie sich nicht ermitteln lässt
 	 */
 	private function getRecordId(): int
 	{
@@ -280,13 +280,13 @@ class ImageSortWizard extends Widget
 	 *
 	 * Ein Video geht nicht durch die Bildbearbeitung — das Bundle greift kein
 	 * Einzelbild aus der Datei. Es bekommt deshalb dieselbe Platzhaltergrafik
-	 * wie im Frontend, damit die Kachel im Assistenten so aussieht wie spaeter
+	 * wie im Frontend, damit die Kachel im Assistenten so aussieht wie später
 	 * auf der Seite.
 	 *
 	 * Der Pfad bleibt relativ, genau wie der von Contao erzeugte Daumennagel
 	 * eine Zeile weiter (`assets/images/…`): Das Backend liegt unter `/contao`
-	 * ohne Schraegstrich am Ende, ein relativer Pfad richtet sich also am
-	 * Wurzelverzeichnis der Installation aus — und traegt ein etwaiges
+	 * ohne Schrägstrich am Ende, ein relativer Pfad richtet sich also am
+	 * Wurzelverzeichnis der Installation aus — und trägt ein etwaiges
 	 * Unterverzeichnis von selbst mit.
 	 *
 	 * @param string $strPath      Projektrelativer Pfad der Datei
@@ -294,9 +294,9 @@ class ImageSortWizard extends Widget
 	 * @param string $strExtension Dateiendung ohne Punkt; entscheidet, ob es
 	 *                             sich um ein Video handelt
 	 *
-	 * @return string Das img-Element oder — wenn sich kein Bild erzeugen laesst
+	 * @return string Das img-Element oder — wenn sich kein Bild erzeugen lässt
 	 *                — der Dateiname als Text, damit sich der Eintrag trotzdem
-	 *                anfassen und verschieben laesst
+	 *                anfassen und verschieben lässt
 	 */
 	private function generateThumbnail(string $strPath, string $strName, string $strExtension = ''): string
 	{

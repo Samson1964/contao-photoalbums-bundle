@@ -16,8 +16,8 @@ use Schachbulle\ContaoPhotoalbumsBundle\Helper\Assets;
 /**
  * Frontend-Modul „Fotoalbum Leser“.
  *
- * Zeigt ausschliesslich die Fotos eines Albums. Ist kein Album in der Adresse
- * angegeben, geht es zurueck zur eingestellten Alben-Uebersicht.
+ * Zeigt ausschließlich die Fotos eines Albums. Ist kein Album in der Adresse
+ * angegeben, geht es zurück zur eingestellten Alben-Übersicht.
  */
 class ModulePhotoalbums2View extends ModulePhotoalbums2
 {
@@ -29,7 +29,7 @@ class ModulePhotoalbums2View extends ModulePhotoalbums2
 	protected $strPa2Type = 'MOD_VIEW';
 
 	/**
-	 * Schluessel der Modulbezeichnung fuer den Platzhalter im Backend.
+	 * Schlüssel der Modulbezeichnung für den Platzhalter im Backend.
 	 *
 	 * @var string
 	 */
@@ -49,7 +49,7 @@ class ModulePhotoalbums2View extends ModulePhotoalbums2
 	 * Nimmt die Foto-Ansicht-Seite aus den Einstellungen.
 	 *
 	 * Dieses Modul *ist* die Foto-Ansicht; eine Weiterleitung auf eine andere
-	 * Seite ergaebe hier keinen Sinn.
+	 * Seite ergäbe hier keinen Sinn.
 	 *
 	 * @return void
 	 */
@@ -59,7 +59,7 @@ class ModulePhotoalbums2View extends ModulePhotoalbums2
 	}
 
 	/**
-	 * Zeigt die Fotos oder leitet zur Alben-Uebersicht zurueck.
+	 * Zeigt die Fotos oder leitet zur Alben-Übersicht zurück.
 	 *
 	 * @return void
 	 */

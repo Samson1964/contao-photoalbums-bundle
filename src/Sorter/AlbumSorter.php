@@ -15,10 +15,10 @@ use Contao\StringUtil;
 use Schachbulle\ContaoPhotoalbumsBundle\Model\AlbumModel;
 
 /**
- * Bringt die Alben einer Uebersicht in die im Modul gewaehlte Reihenfolge.
+ * Bringt die Alben einer Übersicht in die im Modul gewählte Reihenfolge.
  *
  * Sortiert wird nicht in der Datenbank, sondern auf der bereits ermittelten
- * Nummernliste. Das ist noetig, weil die Liste zu diesem Zeitpunkt schon durch
+ * Nummernliste. Das ist nötig, weil die Liste zu diesem Zeitpunkt schon durch
  * den Zugriffsschutz und den Zeitfilter gegangen ist und weil die Reihenfolge
  * `custom` gar nicht aus einer Spalte kommt, sondern aus dem Sortier-Assistenten
  * des Moduls.
@@ -64,7 +64,7 @@ class AlbumSorter
 	 * Liefert die sortierten Albumnummern.
 	 *
 	 * @return array<int, int|string> Die Nummern in Ausgabereihenfolge; ohne
-	 *                                gesetztes Kriterium unveraendert
+	 *                                gesetztes Kriterium unverändert
 	 */
 	public function getSortedIds(): array
 	{
@@ -88,13 +88,13 @@ class AlbumSorter
 	}
 
 	/**
-	 * Fuehrt die Sortierung durch und schreibt das Ergebnis nach $arrIds.
+	 * Führt die Sortierung durch und schreibt das Ergebnis nach $arrIds.
 	 *
 	 * Bei `custom` wird die Reihenfolge des Assistenten vorangestellt und alles
-	 * dahinter angehaengt, was der Assistent noch nicht kennt — sonst wuerden
+	 * dahinter angehängt, was der Assistent noch nicht kennt — sonst würden
 	 * neu angelegte Alben aus der Ausgabe verschwinden.
 	 *
-	 * Die Datumssortierung nutzt ausdruecklich SORT_NUMERIC, damit auch
+	 * Die Datumssortierung nutzt ausdrücklich SORT_NUMERIC, damit auch
 	 * **negative** Zeitstempel (Aufnahmen vor 1970) richtig einsortiert werden.
 	 *
 	 * @param string $strSortKey       Kriterium ohne Richtungsendung
@@ -160,7 +160,7 @@ class AlbumSorter
 						break;
 
 					default:
-						// Unbekanntes Kriterium: Reihenfolge unveraendert lassen
+						// Unbekanntes Kriterium: Reihenfolge unverändert lassen
 						return false;
 				}
 			}

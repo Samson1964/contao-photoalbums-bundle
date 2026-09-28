@@ -15,21 +15,21 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 
 /**
- * Loest eine Auswahl aus Dateien und Ordnern in eine sortierte Bilderliste auf.
+ * Löst eine Auswahl aus Dateien und Ordnern in eine sortierte Bilderliste auf.
  *
- * Diese Klasse stammt urspruenglich aus der Erweiterung
+ * Diese Klasse stammt ursprünglich aus der Erweiterung
  * `craffft/contao-imagesortwizard` und ist hier fest eingebaut, damit das
- * Bundle ohne Fremdabhaengigkeiten auskommt.
+ * Bundle ohne Fremdabhängigkeiten auskommt.
  *
- * Zwei Aufgaben stecken darin: Erstens werden ausgewaehlte **Ordner**
+ * Zwei Aufgaben stecken darin: Erstens werden ausgewählte **Ordner**
  * rekursiv durchlaufen, so dass am Ende nur noch Dateien in der Liste stehen.
- * Zweitens laesst sich diese Liste nach Meta-Titel, Dateiname oder
- * Aenderungsdatum sortieren.
+ * Zweitens lässt sich diese Liste nach Meta-Titel, Dateiname oder
+ * Änderungsdatum sortieren.
  */
 class FileSorter
 {
 	/**
-	 * Die aufgeloesten Datei-UUIDs in ihrer aktuellen Reihenfolge.
+	 * Die aufgelösten Datei-UUIDs in ihrer aktuellen Reihenfolge.
 	 *
 	 * @var array<int, string>
 	 */
@@ -45,14 +45,14 @@ class FileSorter
 	private $arrExtensions = array();
 
 	/**
-	 * Nimmt die Auswahl entgegen und loest sie sofort auf.
+	 * Nimmt die Auswahl entgegen und löst sie sofort auf.
 	 *
 	 * @param mixed       $arrUuids      Feld mit UUIDs von Dateien und/oder
 	 *                                   Ordnern; alles andere ergibt eine leere
 	 *                                   Liste
 	 * @param string|null $strExtensions Kommagetrennte Liste zugelassener
 	 *                                   Dateiendungen, etwa "png,jpg,jpeg,gif,webp";
-	 *                                   null laesst alle Dateien zu
+	 *                                   null lässt alle Dateien zu
 	 */
 	public function __construct($arrUuids, ?string $strExtensions = null)
 	{
@@ -69,7 +69,7 @@ class FileSorter
 	 *
 	 * @param string|null $strExtensions Kommagetrennte Endungen oder null
 	 *
-	 * @return void Setzt ausschliesslich die Eigenschaft $arrExtensions
+	 * @return void Setzt ausschließlich die Eigenschaft $arrExtensions
 	 */
 	private function setExtensions(?string $strExtensions): void
 	{
@@ -82,11 +82,11 @@ class FileSorter
 	}
 
 	/**
-	 * Loest jede uebergebene UUID auf und sammelt die gefundenen Dateien.
+	 * Löst jede übergebene UUID auf und sammelt die gefundenen Dateien.
 	 *
 	 * @param array<int, mixed> $arrUuids Die Auswahl aus dem Dateibaum
 	 *
-	 * @return void Setzt ausschliesslich die Eigenschaft $arrUuids
+	 * @return void Setzt ausschließlich die Eigenschaft $arrUuids
 	 */
 	private function setAllImageUuids(array $arrUuids): void
 	{
@@ -139,7 +139,7 @@ class FileSorter
 				break;
 
 			case 'file':
-				// Ohne Endungsfilter zaehlt jede Datei, sonst nur die passenden
+				// Ohne Endungsfilter zählt jede Datei, sonst nur die passenden
 				if (empty($this->arrExtensions) || \in_array(strtolower((string) $objFile->extension), $this->arrExtensions, true))
 				{
 					$arrUuids[] = $objFile->uuid;
@@ -151,12 +151,12 @@ class FileSorter
 	}
 
 	/**
-	 * Sortiert die aufgeloeste Dateiliste.
+	 * Sortiert die aufgelöste Dateiliste.
 	 *
 	 * @param string $strSortKey       Sortierkriterium: `metatitle`, `name`,
 	 *                                 `date`, `random` oder `custom`. Bei
 	 *                                 `custom` bleibt die Reihenfolge, wie sie
-	 *                                 uebergeben wurde
+	 *                                 übergeben wurde
 	 * @param string $strSortDirection `ASC` oder `DESC`; bei `DESC` wird die
 	 *                                 fertige Liste am Ende umgedreht
 	 *
@@ -175,7 +175,7 @@ class FileSorter
 
 		if ('custom' === $strSortKey)
 		{
-			// Die uebergebene Reihenfolge ist bereits die gewuenschte
+			// Die übergebene Reihenfolge ist bereits die gewünschte
 		}
 		elseif ('random' === $strSortKey)
 		{
@@ -213,7 +213,7 @@ class FileSorter
 						break;
 
 					default:
-						// Unbekanntes Kriterium: Reihenfolge unveraendert lassen
+						// Unbekanntes Kriterium: Reihenfolge unverändert lassen
 						return false;
 				}
 			}
@@ -252,9 +252,9 @@ class FileSorter
 	}
 
 	/**
-	 * Liefert die aufgeloeste und gegebenenfalls sortierte Dateiliste.
+	 * Liefert die aufgelöste und gegebenenfalls sortierte Dateiliste.
 	 *
-	 * @return array<int, string> Die UUIDs in binaerer Form
+	 * @return array<int, string> Die UUIDs in binärer Form
 	 */
 	public function getImageUuids(): array
 	{

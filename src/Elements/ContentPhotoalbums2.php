@@ -21,10 +21,10 @@ use Schachbulle\ContaoPhotoalbumsBundle\Parser\ImageViewParser;
  * Inhaltselement „Fotoalbum“.
  *
  * Anders als die Frontend-Module zeigt das Inhaltselement immer die Fotos
- * **eines fest ausgewaehlten** Albums; die Adresse spielt keine Rolle. Damit
- * laesst sich ein Album mitten in einen Artikel setzen.
+ * **eines fest ausgewählten** Albums; die Adresse spielt keine Rolle. Damit
+ * lässt sich ein Album mitten in einen Artikel setzen.
  *
- * Die Registrierung erfolgt ueber `$GLOBALS['TL_CTE']` mit dem vollen
+ * Die Registrierung erfolgt über `$GLOBALS['TL_CTE']` mit dem vollen
  * Klassennamen; das funktioniert unter Contao 4.13 wie unter Contao 5
  * (`ContentElement::findClass()`).
  */
@@ -47,8 +47,8 @@ class ContentPhotoalbums2 extends ContentElement
 	/**
 	 * Bereitet die Elementdaten auf und erzeugt die Ausgabe.
 	 *
-	 * Im Backend werden Ueberschrift, Titel und Teaser ausgeblendet und die
-	 * Bilder auf Daumennagelgroesse gesetzt: Dort dient die Ausgabe nur der
+	 * Im Backend werden Überschrift, Titel und Teaser ausgeblendet und die
+	 * Bilder auf Daumennagelgröße gesetzt: Dort dient die Ausgabe nur der
 	 * Wiedererkennung des Elements.
 	 *
 	 * @return string Das fertige Markup des Inhaltselements
@@ -88,7 +88,7 @@ class ContentPhotoalbums2 extends ContentElement
 	}
 
 	/**
-	 * Baut die Foto-Ansicht des ausgewaehlten Albums.
+	 * Baut die Foto-Ansicht des ausgewählten Albums.
 	 *
 	 * @return void
 	 */
